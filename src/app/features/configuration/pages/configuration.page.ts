@@ -1,12 +1,14 @@
-import { Component } from "@angular/core";
+import { Component, OnInit, inject } from "@angular/core";
 import { TabsModule } from "primeng/tabs";
-import { ButtonModule } from "primeng/button";
+import { PageHeaderService } from "../../../core/services/page-header.service";
+import { ModulesTableComponent } from "../components/modules/modules-table.component";
+import { PermissionsTableComponent } from "../components/permissions/permissions-table.component";
+import { TemplatesTableComponent } from "../components/templates/templates-table.component";
 
 @Component({
     selector: 'app-configuration',
     template: `
     <div class="space-y-4">
-            <button type="button" pButton (click)="value = 'tab2'">Go to Payment</button>
             <p-tabs [(value)]="value">
                 <p-tablist>
                     @for (tab of tabs; track tab.id) {
@@ -16,22 +18,51 @@ import { ButtonModule } from "primeng/button";
                 <p-tabpanels>
                     @for (tab of tabs; track tab.id) {
                         <p-tabpanel [value]="tab.id">
-                            <h2 class="text-lg font-bold">{{ tab.title }}</h2>
-                            <p class="text-surface-500 mt-1">{{ tab.content }}</p>
+                            @switch (tab.id) {
+                                @case ('modules') {
+                                    <app-modules-table />
+                                }
+                                @case ('templates') {
+                                    <app-templates-table />
+                                }
+                                @case ('permissions') {
+                                    <app-permissions-table />
+                                }
+                                @default {
+                                    <h2 class="text-lg font-bold">{{ tab.title }}</h2>
+                                    <p class="text-surface-500 mt-1">{{ tab.content }}</p>
+                                }
+                            }
                         </p-tabpanel>
                     }
                 </p-tabpanels>
             </p-tabs>
         </div>
     `,
-    styles: [],
-    imports: [TabsModule, ButtonModule],
+    styles: [`
+        .p-tabs {
+            border-radius: 12px;
+        }
+        .p-tablist {
+            border-radius: 12px 12px 0 0;
+        }
+        .p-tabpanels {
+            border-radius: 0 0 12px 12px;
+        }
+        `],
+    imports: [TabsModule, ModulesTableComponent, PermissionsTableComponent, TemplatesTableComponent],
 })
-export class ConfigurationPage {
-    value: string = 'tab1';
+export class ConfigurationPage implements OnInit {
+    private readonly pageHeader = inject(PageHeaderService);
+
+    value: string = 'modules';
     tabs = [
-        { id: 'tab1', title: 'Account Info', content: 'Update your personal information such as name, email address, and profile picture.' },
-        { id: 'tab2', title: 'Payment', content: 'Manage your subscription plan, view invoices, and update your payment method.' },
-        { id: 'tab3', title: 'Preferences', content: 'Customize how the application looks and behaves to match your personal preferences.' }
+        { id: 'modules', title: 'Módulos', content: '' },
+        { id: 'permissions', title: 'Permisos', content: '' },
+        { id: 'templates', title: 'Plantillas', content: '' },
     ];
+
+    ngOnInit(): void {
+        this.pageHeader.setTitle('Configuración');
+    }
 }
