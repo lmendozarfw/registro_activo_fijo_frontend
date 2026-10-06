@@ -6,7 +6,7 @@ import { Home } from '@primeicons/angular/home';
 import { Inbox } from '@primeicons/angular/inbox';
 import { Search } from '@primeicons/angular/search';
 import { Users } from '@primeicons/angular/users';
-import { Bell } from '@primeicons/angular/bell';
+import { Bell, Phone } from '@primeicons/angular';
 import { Cog } from '@primeicons/angular/cog';
 import { Sidebar } from '@primeicons/angular/sidebar';
 import { MenuItem } from 'primeng/api';
@@ -40,44 +40,58 @@ import { HeaderTitleComponent } from '../components/header-title/header-title.co
                             </p-sidebar-header>
                             <p-sidebar-content>
                                 <p-sidebar-group>
-                                    <p-sidebar-group-label>Menu</p-sidebar-group-label>
+                                    <p-sidebar-group-label>Menú</p-sidebar-group-label>
                                     <p-sidebar-group-content>
                                         <p-sidebar-menu>
                                             <p-sidebar-menu-item>
                                                 <button pSidebarMenuButton [isActive]="true">
                                                     <svg data-p-icon="home"></svg>
-                                                    <span>Home</span>
-                                                </button>
-                                            </p-sidebar-menu-item>
-                                            <p-sidebar-menu-item>
-                                                <button pSidebarMenuButton>
-                                                    <svg data-p-icon="inbox"></svg>
-                                                    <span>Inbox</span>
-                                                </button>
-                                                <p-sidebar-menu-badge>3</p-sidebar-menu-badge>
-                                            </p-sidebar-menu-item>
-                                            <p-sidebar-menu-item>
-                                                <button pSidebarMenuButton>
-                                                    <svg data-p-icon="search"></svg>
-                                                    <span>Search</span>
+                                                    <span>Indicadores</span>
                                                 </button>
                                             </p-sidebar-menu-item>
                                             <p-sidebar-menu-item>
                                                 <button pSidebarMenuButton>
                                                     <svg data-p-icon="users"></svg>
-                                                    <span>Team</span>
+                                                    <span>Empleados</span>
+                                                </button>
+                                                <p-sidebar-menu-badge>3</p-sidebar-menu-badge>
+                                            </p-sidebar-menu-item>
+                                            <p-sidebar-menu-item>
+                                                <button pSidebarMenuButton>
+                                                    <svg data-p-icon="phone"></svg>
+                                                    <span>Celulares</span>
+                                                </button>
+                                                <p-sidebar-menu-badge>3</p-sidebar-menu-badge>
+                                            </p-sidebar-menu-item>
+                                            <p-sidebar-menu-item>
+                                                <button pSidebarMenuButton>
+                                                    <svg data-p-icon="inbox"></svg>
+                                                    <span>Asignaciones</span>
+                                                </button>
+                                                <p-sidebar-menu-badge>3</p-sidebar-menu-badge>
+                                            </p-sidebar-menu-item>
+                                            <p-sidebar-menu-item>
+                                                <button pSidebarMenuButton>
+                                                    <svg data-p-icon="users"></svg>
+                                                    <span>Activo Fijo</span>
+                                                </button>
+                                            </p-sidebar-menu-item>
+                                            <p-sidebar-menu-item>
+                                                <button pSidebarMenuButton>
+                                                    <svg data-p-icon="search"></svg>
+                                                    <span>Credenciales</span>
                                                 </button>
                                             </p-sidebar-menu-item>
                                             <p-sidebar-menu-item>
                                                 <button pSidebarMenuButton>
                                                     <svg data-p-icon="bell"></svg>
-                                                    <span>Notifications</span>
+                                                    <span>Reportes</span>
                                                 </button>
                                             </p-sidebar-menu-item>
                                             <p-sidebar-menu-item>
                                                 <button pSidebarMenuButton>
                                                     <svg data-p-icon="cog"></svg>
-                                                    <span>Settings</span>
+                                                    <span>Configuración</span>
                                                 </button>
                                             </p-sidebar-menu-item>
                                         </p-sidebar-menu>
@@ -114,7 +128,8 @@ import { HeaderTitleComponent } from '../components/header-title/header-title.co
         </div>
     `,
     standalone: true,
-    imports: [AvatarModule, SidebarModule, ButtonModule, Home, Inbox, Search, Users, Bell, Cog, Sidebar, Menu, ChevronDown, MenuModule, RouterOutlet, HeaderTitleComponent],
+    imports: [AvatarModule, SidebarModule, ButtonModule, Home, Inbox, Search, Users, Bell, Phone,
+         Cog, Sidebar, Menu, ChevronDown, MenuModule, RouterOutlet, HeaderTitleComponent],
 })
 export class MainTemplate {
     isMobile = signal(false);
