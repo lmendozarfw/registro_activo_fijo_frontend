@@ -16,7 +16,7 @@ export const routes: Routes = [
         loadComponent: () => import('./shared/templates/main.template').then(t => t.MainTemplate),
         children: [
             {
-                path: 'configuration',
+                path: 'settings',
                 loadComponent: () => import('./features/configuration/pages/configuration.page').then(p => p.ConfigurationPage),
             }
         ]

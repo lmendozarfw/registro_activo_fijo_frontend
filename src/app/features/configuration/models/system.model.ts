@@ -1,8 +1,14 @@
-import { ITimestamps } from "../../../core/interfaces/timestamps.interface";
-
-export interface System extends ITimestamps {
+export interface System {
     id: string;
-    code: string;
     name: string;
-    description?: string;
+    code: string;
+    description?: string | null;
+    createdAt?: string;
+    updatedAt?: string | null;
+}
+
+export interface SystemRequest {
+    name: string;
+    code: string;
+    description?: string | null;
 }

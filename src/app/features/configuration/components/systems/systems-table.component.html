@@ -1,0 +1,123 @@
+<div>
+    <div class="mb-4 flex items-start justify-between gap-4">
+        <p class="text-sm text-slate-600 max-w-[80%]">Un sistema es una aplicación o plataforma donde la institución
+            tiene cuentas, por ejemplo el ERP, Gmail, Outlook o Trello. Aquí se dan de alta para luego asignarlos a los
+            empleados junto con su credencial.</p>
+        <button pButton type="button" (click)="openCreate()">
+            <span class="flex items-center gap-2">
+                <svg data-p-icon="plus" [size]="16"></svg>
+                Nuevo sistema
+            </span>
+        </button>
+    </div>
+
+    @if (store.systems().length > 0) {
+    <p-table [value]="store.systems()" [loading]="store.loading()" [paginator]="true" [rows]="10"
+        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template #header>
+            <tr>
+                <th style="width: 12rem">Código</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th style="width: 8rem">Acciones</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-system>
+            <tr>
+                <td>
+                    <span class="inline-block rounded-md bg-slate-100 px-2 py-1 font-mono text-xs">{{ system.code
+                        }}</span>
+                </td>
+                <td>{{ system.name }}</td>
+                <td>{{ system.description || '—' }}</td>
+                <td>
+                    <div class="flex gap-1">
+                        <button pButton type="button" severity="secondary" text pTooltip="Editar" aria-label="Editar"
+                            (click)="openEdit(system)">
+                            <svg data-p-icon="pencil" [size]="16"></svg>
+                        </button>
+                        <button pButton type="button" severity="danger" text pTooltip="Eliminar" aria-label="Eliminar"
+                            (click)="openDelete(system)">
+                            <svg data-p-icon="trash" [size]="16"></svg>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    } @else {
+    <app-empty-state message="No se encontraron sistemas" description="Puedes agregar nuevos sitemas." />
+    }
+
+    <app-form-dialog [(visible)]="dialogVisible" [header]="dialogTitle" width="28rem">
+        <form [formGroup]="form" class="flex flex-col gap-4" (ngSubmit)="save()">
+            <div class="flex flex-col gap-1.5">
+                <app-form-label required>Nombre</app-form-label>
+                <input pInputText formControlName="name" class="w-full" placeholder="Nombre del sistema (ej. Gmail)"
+                    [invalid]="form.controls.name.invalid && form.controls.name.touched" />
+                @if (form.controls.name.invalid && form.controls.name.touched) {
+                <span class="text-xs text-rose-600">El nombre es requerido</span>
+                }
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <app-form-label required>Código</app-form-label>
+                <div class="flex flex-col gap-2">
+                    <input pInputText formControlName="code"
+                        class="w-full disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
+                        placeholder="Código único (ej. GMAIL)" [attr.disabled]="autoCode ? true : null"
+                        [invalid]="form.controls.code.invalid && form.controls.code.touched" />
+                    <div class="flex items-center justify-between w-full gap-2">
+                        @if (autoCode) {
+                        <span class="text-xs text-slate-500">Se genera automáticamente a partir del nombre.</span>
+                        }
+                        <button pButton type="button" severity="secondary" text size="small" (click)="toggleCodeMode()">
+                            <span class="flex items-center gap-1.5">
+                                @if (autoCode) {
+                                <svg data-p-icon="pencil" [size]="14"></svg>
+                                Cambiar código
+                                } @else {
+                                <svg data-p-icon="refresh" [size]="14"></svg>
+                                Usar automático
+                                }
+                            </span>
+                        </button>
+                    </div>
+                </div>
+                @if (form.controls.code.invalid && form.controls.code.touched) {
+                <span class="text-xs text-rose-600">
+                    @if (form.controls.code.errors?.['required']) {
+                    {{ autoCode ? 'El nombre debe contener letras o números' : 'El código es requerido' }}
+                    } @else {
+                    Solo se permiten letras, números, guiones y guiones bajos
+                    }
+                </span>
+                }
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <app-form-label>Descripción</app-form-label>
+                <textarea pTextarea formControlName="description" class="w-full" rows="3"
+                    placeholder="Descripción opcional..."></textarea>
+            </div>
+        </form>
+
+        <div dialog-footer class="flex justify-end gap-2">
+            <button pButton type="button" severity="secondary" (click)="dialogVisible = false">Cancelar</button>
+            <button pButton type="button" [loading]="store.saving()" (click)="save()">Guardar</button>
+        </div>
+    </app-form-dialog>
+
+    <app-form-dialog [(visible)]="deleteDialogVisible" header="Eliminar sistema" width="24rem">
+        <p class="text-sm text-slate-600">
+            ¿Seguro que deseas eliminar el sistema <strong>{{ systemToDelete?.name }}</strong>? Esta acción no se puede
+            deshacer.
+        </p>
+
+        <div dialog-footer class="flex justify-end gap-2">
+            <button pButton type="button" severity="secondary" (click)="deleteDialogVisible = false">Cancelar</button>
+            <button pButton type="button" severity="danger" [loading]="store.saving()"
+                (click)="confirmDelete()">Eliminar</button>
+        </div>
+    </app-form-dialog>
+</div>

@@ -1,4 +1,7 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter, map } from 'rxjs';
 
 export interface MenuItem {
   key: string;
@@ -14,54 +17,87 @@ export interface MenuItem {
   providedIn: 'root',
 })
 export class MenuService {
+  private readonly router = inject(Router);
+
   private readonly allItems = signal<MenuItem[]>([
     {
-      key: 'dashboard',
-      label: 'Dashboard',
-      icon: 'dashboard',
-      route: '/o/dashboard',
+      key: 'kpis',
+      label: 'Indicadores',
+      icon: 'chart-bar',
+      route: '/app/kpis',
       allowedRoles: [],
     },
     {
-      key: 'authorization-codes',
-      label: 'Códigos de autorización',
-      icon: 'safety',
-      route: '/o/authorization-codes',
+      key: 'employees',
+      label: 'Empleados',
+      icon: 'users',
+      route: '/app/employees',
       allowedRoles: [],
     },
     {
-      key: 'registers',
-      label: 'Bitácora de defectos',
-      icon: 'solution',
-      route: '/o/inspection-logs',
+      key: 'phones',
+      label: 'Celulares',
+      icon: 'mobile',
+      route: '/app/phones',
       allowedRoles: [],
     },
     {
-      key: 'report',
+      key: 'assignments',
+      label: 'Asignaciones',
+      icon: 'list-check',
+      route: '/app/assignments',
+      allowedRoles: [],
+    },
+    {
+      key: 'assets',
+      label: 'Activo fijo',
+      icon: 'briefcase',
+      route: '/app/assets',
+      allowedRoles: [],
+    },
+    {
+      key: 'credentials',
+      label: 'Credenciales',
+      icon: 'key',
+      route: '/app/credentials',
+      allowedRoles: [],
+    },
+    {
+      key: 'reports',
       label: 'Reportes',
-      icon: 'bar-chart',
-      route: '/o/reports',
+      icon: 'file-pdf',
+      route: '/app/reports',
       allowedRoles: [],
     },
     {
       key: 'settings',
       label: 'Configuración',
-      icon: 'setting',
-      route: '/o/settings',
-      allowedRoles: [],
-    },
-    {
-      key: 'users',
-      label: 'Usuarios',
-      icon: 'user',
-      route: '/o/users',
+      icon: 'cog',
+      route: '/app/settings',
       allowedRoles: [],
     },
   ]);
 
-  readonly items = computed<MenuItem[]>(() =>
-    this.allItems()
+  private readonly currentUrl = toSignal(
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+      map(() => this.router.url),
+    ),
+    { initialValue: this.router.url },
   );
+
+  readonly items = computed<MenuItem[]>(() =>
+    this.allItems().filter((item) => item.visible !== false),
+  );
+
+  isActive(item: MenuItem): boolean {
+    if (!item.route) return false;
+
+    const url = this.currentUrl();
+    const route = item.route.endsWith('/') ? item.route.slice(0, -1) : item.route;
+
+    return url === route || url.startsWith(`${route}/`);
+  }
 
   setItems(items: MenuItem[]): void {
     this.allItems.set(items);

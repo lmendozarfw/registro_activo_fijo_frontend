@@ -1,20 +1,16 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { AvatarModule } from 'primeng/avatar';
 import { SidebarModule } from 'primeng/sidebar';
 import { ButtonModule } from 'primeng/button';
-import { Home } from '@primeicons/angular/home';
-import { Inbox } from '@primeicons/angular/inbox';
-import { Search } from '@primeicons/angular/search';
-import { Users } from '@primeicons/angular/users';
-import { Bell, Phone } from '@primeicons/angular';
-import { Cog } from '@primeicons/angular/cog';
-import { Sidebar } from '@primeicons/angular/sidebar';
+import { ChevronDown, Sidebar } from '@primeicons/angular';
+import { PIcon } from '@primeicons/angular/p-icon';
 import { MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';
-import { ChevronDown } from '@primeicons/angular';
 import { MenuModule } from 'primeng/menu';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { HeaderTitleComponent } from '../components/header-title/header-title.component';
+import { MenuService } from '../../core/services/menu.service';
+import { AuthStore } from '../../features/auth/stores/auth.store';
 
 @Component({
     selector: 'main-template',
@@ -24,7 +20,7 @@ import { HeaderTitleComponent } from '../components/header-title/header-title.co
                 @if (isMobile()) {
                     <p-sidebar-backdrop class="absolute!" />
                 }
-                <p-sidebar id="mobile-nav" [collapsible]="isMobile() ? 'offcanvas' : 'icon'" [overlay]="isMobile()" [open]="!isMobile()" width="14rem">
+                <p-sidebar id="mobile-nav" [collapsible]="isMobile() ? 'offcanvas' : 'icon'" [overlay]="isMobile()" [open]="sidebarOpen()" (openChange)="mobileNavOpen.set($event)" width="14rem">
                     <p-sidebar-spacer />
                     <p-sidebar-aside>
                         <p-sidebar-panel>
@@ -43,57 +39,14 @@ import { HeaderTitleComponent } from '../components/header-title/header-title.co
                                     <p-sidebar-group-label>Menú</p-sidebar-group-label>
                                     <p-sidebar-group-content>
                                         <p-sidebar-menu>
-                                            <p-sidebar-menu-item>
-                                                <button pSidebarMenuButton [isActive]="true">
-                                                    <svg data-p-icon="home"></svg>
-                                                    <span>Indicadores</span>
-                                                </button>
-                                            </p-sidebar-menu-item>
-                                            <p-sidebar-menu-item>
-                                                <button pSidebarMenuButton>
-                                                    <svg data-p-icon="users"></svg>
-                                                    <span>Empleados</span>
-                                                </button>
-                                                <p-sidebar-menu-badge>3</p-sidebar-menu-badge>
-                                            </p-sidebar-menu-item>
-                                            <p-sidebar-menu-item>
-                                                <button pSidebarMenuButton>
-                                                    <svg data-p-icon="phone"></svg>
-                                                    <span>Celulares</span>
-                                                </button>
-                                                <p-sidebar-menu-badge>3</p-sidebar-menu-badge>
-                                            </p-sidebar-menu-item>
-                                            <p-sidebar-menu-item>
-                                                <button pSidebarMenuButton>
-                                                    <svg data-p-icon="inbox"></svg>
-                                                    <span>Asignaciones</span>
-                                                </button>
-                                                <p-sidebar-menu-badge>3</p-sidebar-menu-badge>
-                                            </p-sidebar-menu-item>
-                                            <p-sidebar-menu-item>
-                                                <button pSidebarMenuButton>
-                                                    <svg data-p-icon="users"></svg>
-                                                    <span>Activo Fijo</span>
-                                                </button>
-                                            </p-sidebar-menu-item>
-                                            <p-sidebar-menu-item>
-                                                <button pSidebarMenuButton>
-                                                    <svg data-p-icon="search"></svg>
-                                                    <span>Credenciales</span>
-                                                </button>
-                                            </p-sidebar-menu-item>
-                                            <p-sidebar-menu-item>
-                                                <button pSidebarMenuButton>
-                                                    <svg data-p-icon="bell"></svg>
-                                                    <span>Reportes</span>
-                                                </button>
-                                            </p-sidebar-menu-item>
-                                            <p-sidebar-menu-item>
-                                                <button pSidebarMenuButton>
-                                                    <svg data-p-icon="cog"></svg>
-                                                    <span>Configuración</span>
-                                                </button>
-                                            </p-sidebar-menu-item>
+                                            @for (item of menuService.items(); track item.key) {
+                                                <p-sidebar-menu-item>
+                                                    <a pSidebarMenuButton [routerLink]="item.route" [isActive]="menuService.isActive(item)" (click)="closeNav()">
+                                                        <svg [pIcon]="item.icon || ''"></svg>
+                                                        <span>{{ item.label }}</span>
+                                                    </a>
+                                                </p-sidebar-menu-item>
+                                            }
                                         </p-sidebar-menu>
                                     </p-sidebar-group-content>
                                 </p-sidebar-group>
@@ -128,21 +81,38 @@ import { HeaderTitleComponent } from '../components/header-title/header-title.co
         </div>
     `,
     standalone: true,
-    imports: [AvatarModule, SidebarModule, ButtonModule, Home, Inbox, Search, Users, Bell, Phone,
-         Cog, Sidebar, Menu, ChevronDown, MenuModule, RouterOutlet, HeaderTitleComponent],
+    imports: [AvatarModule, SidebarModule, ButtonModule, PIcon, Sidebar, ChevronDown, Menu, MenuModule,
+        RouterOutlet, RouterLink, HeaderTitleComponent],
 })
 export class MainTemplate {
     isMobile = signal(false);
-     userItems: MenuItem[] = [
+    protected readonly mobileNavOpen = signal(false);
+    protected readonly sidebarOpen = computed(() => !this.isMobile() || this.mobileNavOpen());
+
+    userItems: MenuItem[] = [
         {
             label: 'Menú',
-            items: [{ label: 'Cerrar sesión', icon: 'pi pi-sign-out' }]
+            items: [{ label: 'Cerrar sesión', icon: 'pi pi-sign-out', command: () => this.logout() }]
         }
     ];
+
+    protected menuService = inject(MenuService);
+    private readonly authStore = inject(AuthStore);
+    private readonly router = inject(Router);
+
     constructor() {
         if (typeof window === 'undefined') return;
         const mql = window.matchMedia('(max-width: 1023px)');
         this.isMobile.set(mql.matches);
         mql.addEventListener('change', (e) => this.isMobile.set(e.matches));
+    }
+
+    protected closeNav(): void {
+        if (this.isMobile()) this.mobileNavOpen.set(false);
+    }
+
+    private logout(): void {
+        this.authStore.logout();
+        void this.router.navigate(['/auth/login']);
     }
 }

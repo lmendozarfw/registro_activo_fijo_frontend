@@ -4,6 +4,7 @@ import { PageHeaderService } from "../../../core/services/page-header.service";
 import { ModulesTableComponent } from "../components/modules/modules-table.component";
 import { PermissionsTableComponent } from "../components/permissions/permissions-table.component";
 import { TemplatesTableComponent } from "../components/templates/templates-table.component";
+import { SystemsTableComponent } from "../components/systems/systems-table.component";
 
 @Component({
     selector: 'app-configuration',
@@ -28,6 +29,9 @@ import { TemplatesTableComponent } from "../components/templates/templates-table
                                 @case ('permissions') {
                                     <app-permissions-table />
                                 }
+                                @case ('systems') {
+                                    <app-systems-table />
+                                }
                                 @default {
                                     <h2 class="text-lg font-bold">{{ tab.title }}</h2>
                                     <p class="text-surface-500 mt-1">{{ tab.content }}</p>
@@ -50,7 +54,7 @@ import { TemplatesTableComponent } from "../components/templates/templates-table
             border-radius: 0 0 12px 12px;
         }
         `],
-    imports: [TabsModule, ModulesTableComponent, PermissionsTableComponent, TemplatesTableComponent],
+    imports: [TabsModule, ModulesTableComponent, PermissionsTableComponent, TemplatesTableComponent, SystemsTableComponent],
 })
 export class ConfigurationPage implements OnInit {
     private readonly pageHeader = inject(PageHeaderService);
@@ -60,6 +64,7 @@ export class ConfigurationPage implements OnInit {
         { id: 'modules', title: 'Módulos', content: '' },
         { id: 'permissions', title: 'Permisos', content: '' },
         { id: 'templates', title: 'Plantillas', content: '' },
+        { id: 'systems', title: 'Sistemas', content: '' },
     ];
 
     ngOnInit(): void {
