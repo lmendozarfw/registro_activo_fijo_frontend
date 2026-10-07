@@ -115,6 +115,16 @@ export class SystemsTableComponent implements OnInit {
         }
     }
 
+    protected formatDate(value?: string | null): string {
+        if (!value) return '—';
+
+        const date = new Date(value);
+
+        return isNaN(date.getTime()) ? '—' : date.toLocaleString('es-ES', {
+            day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
+        });
+    }
+
     private syncAutoCode(): void {
         if (!this.autoCode) return;
 

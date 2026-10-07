@@ -13,12 +13,14 @@
 
     @if (store.systems().length > 0) {
     <p-table [value]="store.systems()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '50rem' }">
+        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '70rem' }">
         <ng-template #header>
             <tr>
-                <th style="width: 12rem">Código</th>
+                <th style="width: 10rem">Código</th>
                 <th>Nombre</th>
                 <th>Descripción</th>
+                <th style="width: 12rem">Fecha de creación</th>
+                <th style="width: 12rem">Fecha de modificación</th>
                 <th style="width: 8rem">Acciones</th>
             </tr>
         </ng-template>
@@ -30,6 +32,8 @@
                 </td>
                 <td>{{ system.name }}</td>
                 <td>{{ system.description || '—' }}</td>
+                <td>{{ formatDate(system.createdAt) }}</td>
+                <td>{{ formatDate(system.updatedAt) }}</td>
                 <td>
                     <div class="flex gap-1">
                         <button pButton type="button" severity="secondary" text pTooltip="Editar" aria-label="Editar"
