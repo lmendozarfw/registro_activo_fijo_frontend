@@ -12,7 +12,7 @@ import { JobsTableComponent } from "../components/jobs/jobs-table.component";
     selector: 'app-configuration',
     template: `
     <div class="space-y-4">
-            <p-tabs [(value)]="value">
+            <p-tabs [(value)]="value" [lazy]="true">
                 <p-tablist>
                     @for (tab of tabs; track tab.id) {
                         <p-tab [value]="tab.id">{{ tab.title }}</p-tab>

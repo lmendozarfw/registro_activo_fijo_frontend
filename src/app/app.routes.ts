@@ -18,7 +18,11 @@ export const routes: Routes = [
             {
                 path: 'settings',
                 loadComponent: () => import('./features/configuration/pages/configuration.page').then(p => p.ConfigurationPage),
-            }
+            },
+            {
+                path: 'employees',
+                loadComponent: () => import('./features/employees/pages/employees.page').then(p => p.EmployeesPage),
+            },
         ]
     },
     {
