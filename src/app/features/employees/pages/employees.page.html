@@ -12,18 +12,18 @@
 
     @if (store.employees().length > 0) {
     <p-table [value]="store.employees()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '100rem' }">
+        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '1850px' }">
         <ng-template #header>
             <tr>
-                <th style="width: 8rem">No. empleado</th>
+                <th style="width: 150px">No. empleado</th>
                 <th>Empleado</th>
-                <th style="width: 10rem">Puesto</th>
-                <th style="width: 10rem">Departamento</th>
+                <th style="width: 250px">Puesto</th>
+                <th style="width: 250px">Departamento</th>
                 <th>Correo</th>
-                <th style="width: 9rem">Teléfono</th>
-                <th style="width: 10rem">Fecha de creación</th>
-                <th style="width: 10rem">Fecha de modificación</th>
-                <th style="width: 8rem">Acciones</th>
+                <th style="width: 150px">Teléfono</th>
+                <th style="width: 250px">Fecha de creación</th>
+                <th style="width: 250px">Fecha de modificación</th>
+                <th style="width: 200px">Acciones</th>
             </tr>
         </ng-template>
         <ng-template #body let-employee>
@@ -33,8 +33,8 @@
                         employee.employeeNumber }}</span>
                 </td>
                 <td>{{ fullName(employee) }}</td>
-                <td>{{ jobName(employee.jobId) }}</td>
-                <td>{{ departmentName(employee.departmentId) }}</td>
+                <td>{{ employee.jobTitle || '—' }}</td>
+                <td>{{ employee.departmentName || '—' }}</td>
                 <td>{{ employee.email || '—' }}</td>
                 <td>{{ employee.phoneNumber || '—' }}</td>
                 <td>{{ formatDate(employee.createdAt) }}</td>

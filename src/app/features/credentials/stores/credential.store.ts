@@ -2,6 +2,7 @@ import { inject } from "@angular/core";
 import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
 import { firstValueFrom } from "rxjs";
 import { ToastService } from "../../../core/services/toast.service";
+import { resolveErrorMessage } from "../../../core/utils/error.utils";
 import { Credential, CredentialRequest } from "../models/credential.model";
 import { CredentialService } from "../services/credential.service";
 
@@ -13,11 +14,6 @@ type CredentialState = {
     revealedPassword: string | null;
     error: string | null;
 };
-
-function resolveErrorMessage(error: unknown): string {
-    const payload = (error as { error?: { mensaje?: string; message?: string } })?.error;
-    return payload?.mensaje || payload?.message || 'Ocurrió un error inesperado';
-}
 
 export const CredentialStore = signalStore(
     { providedIn: 'root' },
@@ -42,8 +38,9 @@ export const CredentialStore = signalStore(
                     const credentials = await firstValueFrom(service.getAll());
                     patchState(store, { credentials, loading: false });
                 } catch (error) {
-                    patchState(store, { loading: false, error: resolveErrorMessage(error) });
-                    toast.error('No se pudieron cargar las credenciales');
+                    const message = resolveErrorMessage(error, 'No se pudieron cargar las credenciales');
+                    patchState(store, { loading: false, error: message });
+                    toast.error(message);
                 }
             },
 
@@ -57,8 +54,9 @@ export const CredentialStore = signalStore(
                     await this.load();
                     return true;
                 } catch (error) {
-                    patchState(store, { saving: false, error: resolveErrorMessage(error) });
-                    toast.error('No se pudo crear la credencial');
+                    const message = resolveErrorMessage(error, 'No se pudo crear la credencial');
+                    patchState(store, { saving: false, error: message });
+                    toast.error(message);
                     return false;
                 }
             },
@@ -73,8 +71,9 @@ export const CredentialStore = signalStore(
                     await this.load();
                     return true;
                 } catch (error) {
-                    patchState(store, { saving: false, error: resolveErrorMessage(error) });
-                    toast.error('No se pudo actualizar la credencial');
+                    const message = resolveErrorMessage(error, 'No se pudo actualizar la credencial');
+                    patchState(store, { saving: false, error: message });
+                    toast.error(message);
                     return false;
                 }
             },
@@ -89,8 +88,9 @@ export const CredentialStore = signalStore(
                     await this.load();
                     return true;
                 } catch (error) {
-                    patchState(store, { saving: false, error: resolveErrorMessage(error) });
-                    toast.error('No se pudo eliminar la credencial');
+                    const message = resolveErrorMessage(error, 'No se pudo eliminar la credencial');
+                    patchState(store, { saving: false, error: message });
+                    toast.error(message);
                     return false;
                 }
             },
@@ -103,8 +103,9 @@ export const CredentialStore = signalStore(
                     const password = typeof response === 'string' ? response : response?.password;
                     patchState(store, { passwordLoading: false, revealedPassword: password ?? null });
                 } catch (error) {
-                    patchState(store, { passwordLoading: false, error: resolveErrorMessage(error) });
-                    toast.error('No se pudo obtener la contraseña');
+                    const message = resolveErrorMessage(error, 'No se pudo obtener la contraseña');
+                    patchState(store, { passwordLoading: false, error: message });
+                    toast.error(message);
                 }
             },
 

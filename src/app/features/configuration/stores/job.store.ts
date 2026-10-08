@@ -2,6 +2,7 @@ import { inject } from "@angular/core";
 import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
 import { firstValueFrom } from "rxjs";
 import { ToastService } from "../../../core/services/toast.service";
+import { resolveErrorMessage } from "../../../core/utils/error.utils";
 import { Job, JobRequest } from "../models/job.model";
 import { JobService } from "../services/job.service";
 
@@ -11,11 +12,6 @@ type JobState = {
     saving: boolean;
     error: string | null;
 };
-
-function resolveErrorMessage(error: unknown): string {
-    const payload = (error as { error?: { mensaje?: string; message?: string } })?.error;
-    return payload?.mensaje || payload?.message || 'Ocurrió un error inesperado';
-}
 
 export const JobStore = signalStore(
     { providedIn: 'root' },
@@ -38,8 +34,9 @@ export const JobStore = signalStore(
                     const jobs = await firstValueFrom(service.getAll());
                     patchState(store, { jobs, loading: false });
                 } catch (error) {
-                    patchState(store, { loading: false, error: resolveErrorMessage(error) });
-                    toast.error('No se pudieron cargar los puestos de trabajo');
+                    const message = resolveErrorMessage(error, 'No se pudieron cargar los puestos de trabajo');
+                    patchState(store, { loading: false, error: message });
+                    toast.error(message);
                 }
             },
 
@@ -53,8 +50,9 @@ export const JobStore = signalStore(
                     await this.load();
                     return true;
                 } catch (error) {
-                    patchState(store, { saving: false, error: resolveErrorMessage(error) });
-                    toast.error('No se pudo crear el puesto de trabajo');
+                    const message = resolveErrorMessage(error, 'No se pudo crear el puesto de trabajo');
+                    patchState(store, { saving: false, error: message });
+                    toast.error(message);
                     return false;
                 }
             },
@@ -69,8 +67,9 @@ export const JobStore = signalStore(
                     await this.load();
                     return true;
                 } catch (error) {
-                    patchState(store, { saving: false, error: resolveErrorMessage(error) });
-                    toast.error('No se pudo actualizar el puesto de trabajo');
+                    const message = resolveErrorMessage(error, 'No se pudo actualizar el puesto de trabajo');
+                    patchState(store, { saving: false, error: message });
+                    toast.error(message);
                     return false;
                 }
             },
@@ -85,8 +84,9 @@ export const JobStore = signalStore(
                     await this.load();
                     return true;
                 } catch (error) {
-                    patchState(store, { saving: false, error: resolveErrorMessage(error) });
-                    toast.error('No se pudo eliminar el puesto de trabajo');
+                    const message = resolveErrorMessage(error, 'No se pudo eliminar el puesto de trabajo');
+                    patchState(store, { saving: false, error: message });
+                    toast.error(message);
                     return false;
                 }
             },

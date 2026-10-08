@@ -52,14 +52,6 @@ export class EmployeesPage implements OnInit {
         this.departmentStore.load();
     }
 
-    protected jobName(jobId: string): string {
-        return this.jobStore.jobs().find((job) => job.id === jobId)?.name ?? '—';
-    }
-
-    protected departmentName(departmentId: string): string {
-        return this.departmentStore.departments().find((department) => department.id === departmentId)?.name ?? '—';
-    }
-
     protected fullName(employee: Employee): string {
         return `${employee.firstName} ${employee.paternalSurname} ${employee.maternalSurname}`;
     }
@@ -88,8 +80,8 @@ export class EmployeesPage implements OnInit {
             firstName: employee.firstName,
             paternalSurname: employee.paternalSurname,
             maternalSurname: employee.maternalSurname,
-            jobId: employee.jobId,
-            departmentId: employee.departmentId,
+            jobId: this.jobStore.jobs().find((job) => job.name === employee.jobTitle)?.id ?? '',
+            departmentId: this.departmentStore.departments().find((department) => department.name === employee.departmentName)?.id ?? '',
             email: employee.email ?? '',
             phoneNumber: employee.phoneNumber ?? '',
         });

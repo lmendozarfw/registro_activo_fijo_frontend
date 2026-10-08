@@ -27,6 +27,10 @@ export const routes: Routes = [
                 path: 'credentials',
                 loadComponent: () => import('./features/credentials/pages/credentials.page').then(p => p.CredentialsPage),
             },
+            {
+                path: 'my-credentials',
+                loadComponent: () => import('./features/credentials/pages/my-credentials.page').then(p => p.MyCredentialsPage),
+            },
         ]
     },
     {

@@ -3,6 +3,7 @@ import { computed, inject } from "@angular/core";
 import { AuthService } from "../services/auth.service";
 import { firstValueFrom } from "rxjs";
 import { LocalStorageService } from "../../../core/services/storage.service";
+import { resolveErrorMessage } from "../../../core/utils/error.utils";
 import { IPermissionAuth, IUserAuth } from "../models/auth.model";
 
 type AuthState = {
@@ -72,7 +73,7 @@ export const AuthStore = signalStore(
         } catch (error: any) {
           patchState(store, {
             loading: false,
-            error: error?.error?.mensaje || 'Usuario o contraseña incorrectos',
+            error: resolveErrorMessage(error, 'Usuario o contraseña incorrectos'),
           });
         }
       },
@@ -100,7 +101,7 @@ export const AuthStore = signalStore(
         } catch (error: any) {
           patchState(store, {
             loading: false,
-            error: error?.error?.mensaje || 'No se ha podido restaurar la sesión',
+            error: resolveErrorMessage(error, 'No se ha podido restaurar la sesión'),
           });
         }
       },

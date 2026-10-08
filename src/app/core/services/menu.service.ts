@@ -63,6 +63,13 @@ export class MenuService {
       allowedRoles: [],
     },
     {
+      key: 'my-credentials',
+      label: 'Mis credenciales',
+      icon: 'id-card',
+      route: '/app/my-credentials',
+      allowedRoles: [],
+    },
+    {
       key: 'reports',
       label: 'Reportes',
       icon: 'file-pdf',

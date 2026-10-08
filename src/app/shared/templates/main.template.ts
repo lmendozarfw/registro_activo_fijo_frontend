@@ -80,6 +80,13 @@ import { AuthStore } from '../../features/auth/stores/auth.store';
             </p-sidebar-layout>
         </div>
     `,
+    styles: [
+        `
+        .p-sidebar-layout {
+            display: block;
+        }
+        `
+    ],
     standalone: true,
     imports: [AvatarModule, SidebarModule, ButtonModule, PIcon, Sidebar, ChevronDown, Menu, MenuModule,
         RouterOutlet, RouterLink, HeaderTitleComponent],

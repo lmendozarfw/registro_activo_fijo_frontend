@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { map, Observable, timer } from "rxjs";
 import { ApiService } from "../../../core/services/api.service";
 import { Credential, CredentialRequest } from "../models/credential.model";
 
@@ -10,6 +10,10 @@ export class CredentialService {
 
     getAll(): Observable<Credential[]> {
         return this.api.getAll<Credential>(this.endpoint);
+    }
+
+    getMy(): Observable<Credential[]> {
+        return this.api.getAll<Credential>(`${this.endpoint}/My`);
     }
 
     getById(id: string): Observable<Credential> {
@@ -30,5 +34,9 @@ export class CredentialService {
 
     getPassword(id: string): Observable<string | { password: string }> {
         return this.api.get<string | { password: string }>(`${this.endpoint}/${id}/password`);
+    }
+
+    requestViewPassword(id: string): Observable<string> {
+        return timer(2500).pipe(map(() => `Clave#${id.slice(0, 6)}!2026`));
     }
 }

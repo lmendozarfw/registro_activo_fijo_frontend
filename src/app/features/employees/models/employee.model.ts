@@ -4,11 +4,10 @@ export interface Employee {
     firstName: string;
     paternalSurname: string;
     maternalSurname: string;
-    jobId: string;
-    departmentId: string;
+    jobTitle: string;
+    departmentName: string;
     email?: string | null;
     phoneNumber?: string | null;
-    active?: boolean;
     createdAt?: string;
     updatedAt?: string | null;
 }

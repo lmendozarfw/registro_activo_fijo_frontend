@@ -2,6 +2,7 @@ import { inject } from "@angular/core";
 import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
 import { firstValueFrom } from "rxjs";
 import { ToastService } from "../../../core/services/toast.service";
+import { resolveErrorMessage } from "../../../core/utils/error.utils";
 import { Employee, EmployeeRequest } from "../models/employee.model";
 import { EmployeeService } from "../services/employee.service";
 
@@ -11,11 +12,6 @@ type EmployeeState = {
     saving: boolean;
     error: string | null;
 };
-
-function resolveErrorMessage(error: unknown): string {
-    const payload = (error as { error?: { mensaje?: string; message?: string } })?.error;
-    return payload?.mensaje || payload?.message || 'Ocurrió un error inesperado';
-}
 
 export const EmployeeStore = signalStore(
     { providedIn: 'root' },
@@ -38,8 +34,9 @@ export const EmployeeStore = signalStore(
                     const employees = await firstValueFrom(service.getAll());
                     patchState(store, { employees, loading: false });
                 } catch (error) {
-                    patchState(store, { loading: false, error: resolveErrorMessage(error) });
-                    toast.error('No se pudieron cargar los empleados');
+                    const message = resolveErrorMessage(error, 'No se pudieron cargar los empleados');
+                    patchState(store, { loading: false, error: message });
+                    toast.error(message);
                 }
             },
 
@@ -53,8 +50,9 @@ export const EmployeeStore = signalStore(
                     await this.load();
                     return true;
                 } catch (error) {
-                    patchState(store, { saving: false, error: resolveErrorMessage(error) });
-                    toast.error('No se pudo crear el empleado');
+                    const message = resolveErrorMessage(error, 'No se pudo crear el empleado');
+                    patchState(store, { saving: false, error: message });
+                    toast.error(message);
                     return false;
                 }
             },
@@ -69,8 +67,9 @@ export const EmployeeStore = signalStore(
                     await this.load();
                     return true;
                 } catch (error) {
-                    patchState(store, { saving: false, error: resolveErrorMessage(error) });
-                    toast.error('No se pudo actualizar el empleado');
+                    const message = resolveErrorMessage(error, 'No se pudo actualizar el empleado');
+                    patchState(store, { saving: false, error: message });
+                    toast.error(message);
                     return false;
                 }
             },
@@ -85,8 +84,9 @@ export const EmployeeStore = signalStore(
                     await this.load();
                     return true;
                 } catch (error) {
-                    patchState(store, { saving: false, error: resolveErrorMessage(error) });
-                    toast.error('No se pudo eliminar el empleado');
+                    const message = resolveErrorMessage(error, 'No se pudo eliminar el empleado');
+                    patchState(store, { saving: false, error: message });
+                    toast.error(message);
                     return false;
                 }
             },
