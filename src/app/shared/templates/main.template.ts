@@ -16,7 +16,7 @@ import { AuthStore } from '../../features/auth/stores/auth.store';
     selector: 'main-template',
     template: `
         <div class="h-dvh overflow-hidden">
-            <p-sidebar-layout class="relative! h-full">
+            <p-sidebar-layout class="relative! h-full min-h-full!">
                 @if (isMobile()) {
                     <p-sidebar-backdrop class="absolute!" />
                 }
@@ -65,7 +65,7 @@ import { AuthStore } from '../../features/auth/stores/auth.store';
                         </p-sidebar-panel>
                     </p-sidebar-aside>
                 </p-sidebar>
-                <p-sidebar-main>
+                <p-sidebar-main class="min-w-0 overflow-hidden">
                     <header class="flex h-12 shrink-0 items-center gap-2 border-b border-slate-200 px-4">
                         <button pButton pSidebarTrigger target="mobile-nav" severity="secondary" text size="small">
                             <svg data-p-icon="sidebar"></svg>
@@ -73,7 +73,7 @@ import { AuthStore } from '../../features/auth/stores/auth.store';
                         <app-header-title />
                         <span class="ml-auto text-xs text-slate-900 rounded-md bg-slate-100 px-2 py-1"> <span class="text-xs text-slate-600">Empleado</span> {{ '#5366' }}</span>
                     </header>
-                    <div class="flex-1 min-h-0 overflow-y-auto p-4 flex flex-col">
+                    <div class="flex-1 min-h-0 overflow-y-auto overflow-x-auto p-4 flex flex-col">
                         <router-outlet />
                     </div>
                 </p-sidebar-main>
@@ -83,7 +83,6 @@ import { AuthStore } from '../../features/auth/stores/auth.store';
     styles: [
         `
         .p-sidebar-layout {
-            display: block;
         }
         `
     ],

@@ -3,7 +3,7 @@ export interface Credential {
     employeeSystemId: string;
     employeeId?: string | null;
     systemId?: string | null;
-    employeeName?: string | null;
+    employeeFullName?: string | null;
     systemName?: string | null;
     canView: boolean;
     note?: string | null;
@@ -14,7 +14,7 @@ export interface Credential {
 export interface CredentialRequest {
     employeeId?: string;
     systemId?: string;
-    encryptedPassword?: string;
+    password?: string;
     canView: boolean;
     note?: string | null;
 }

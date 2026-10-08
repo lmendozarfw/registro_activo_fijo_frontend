@@ -52,7 +52,7 @@ export class CredentialsPage implements OnInit {
     form = new FormGroup({
         employeeId: new FormControl('', { nonNullable: true, validators: Validators.required }),
         systemId: new FormControl('', { nonNullable: true, validators: Validators.required }),
-        encryptedPassword: new FormControl('', { nonNullable: true, validators: Validators.required }),
+        password: new FormControl('', { nonNullable: true, validators: Validators.required }),
         canView: new FormControl(true, { nonNullable: true }),
         note: new FormControl('', { nonNullable: true }),
     });
@@ -69,11 +69,11 @@ export class CredentialsPage implements OnInit {
         this.form.reset({
             employeeId: '',
             systemId: '',
-            encryptedPassword: '',
+            password: '',
             canView: true,
             note: '',
         });
-        this.form.controls.encryptedPassword.setValidators(Validators.required);
+        this.form.controls.password.setValidators(Validators.required);
         this.dialogVisible = true;
     }
 
@@ -83,11 +83,11 @@ export class CredentialsPage implements OnInit {
         this.form.reset({
             employeeId: credential.employeeId ?? '',
             systemId: credential.systemId ?? '',
-            encryptedPassword: '',
+            password: '',
             canView: credential.canView,
             note: credential.note ?? '',
         });
-        this.form.controls.encryptedPassword.setValidators(null);
+        this.form.controls.password.setValidators(null);
         this.dialogVisible = true;
     }
 
@@ -98,7 +98,7 @@ export class CredentialsPage implements OnInit {
         }
 
         const value = this.form.getRawValue();
-        const password = value.encryptedPassword.trim();
+        const password = value.password.trim();
         const payload: CredentialRequest = {
             canView: value.canView,
             note: value.note.trim() || null,
@@ -107,11 +107,11 @@ export class CredentialsPage implements OnInit {
         if (this.editingCredential) {
             if (this.editingCredential.employeeId) payload.employeeId = this.editingCredential.employeeId;
             if (this.editingCredential.systemId) payload.systemId = this.editingCredential.systemId;
-            if (password) payload.encryptedPassword = password;
+            if (password) payload.password = password;
         } else {
             payload.employeeId = value.employeeId;
             payload.systemId = value.systemId;
-            payload.encryptedPassword = password;
+            payload.password = password;
         }
 
         const success = this.editingCredential
