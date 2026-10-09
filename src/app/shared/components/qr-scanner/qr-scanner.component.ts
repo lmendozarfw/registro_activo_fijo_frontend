@@ -121,7 +121,6 @@ export class QrScannerComponent implements AfterViewInit, OnDestroy {
 
   private onScanSuccess(decodedText: string): void {
     this.scanner?.pause(true);
-    const data = {usuario: 'inspector', password: 'Password123*'};
-    this.scanned.emit(JSON.stringify(data));
+    this.scanned.emit(decodedText);
   }
 }

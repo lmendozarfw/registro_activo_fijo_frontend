@@ -19,36 +19,7 @@ export function parseBadgeQr(raw: string): BadgeCredentials | null {
   console.log('parseBadgeQr', raw);
   const text = raw.trim();
   if (!text) return null;
-
-  if (text.startsWith('{')) {
-    try {
-      const data = JSON.parse(text) as Record<string, unknown>;
-      console.log('parseBadgeQr - Parsed JSON:', data);
-      return toCredentials(
-        data['usuario'] ?? data['user'] ?? data['username'],
-        data['password'] ?? data['clave'],
-      );
-    } catch {
-      return null;
-    }
-  }
-
-  if (text.startsWith('?') || /^[a-z][a-z0-9+.-]*:\/\//i.test(text)) {
-    try {
-      const params = new URL(text, window.location.origin).searchParams;
-      return toCredentials(
-        params.get('usuario') ?? params.get('user') ?? params.get('username'),
-        params.get('password') ?? params.get('clave'),
-      );
-    } catch {
-      return null;
-    }
-  }
-
-  const separator = text.includes('|') ? '|' : text.includes(':') ? ':' : null;
-  if (!separator) return null;
-  const index = text.indexOf(separator);
-  return toCredentials(text.slice(0, index), text.slice(index + 1));
+  return toCredentials(raw, raw);
 }
 
 function toCredentials(username: unknown, password: unknown): BadgeCredentials | null {
@@ -154,6 +125,6 @@ export class LoginPage {
       this.resumeScanner();
       return;
     }
-    // dejar asi hasta tener otra funcionalidad
+    await this.router.navigate(['app']);
   }
 }

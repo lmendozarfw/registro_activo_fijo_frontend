@@ -125,7 +125,7 @@ export class CredentialsPage implements OnInit {
 
     openPassword(credential: Credential): void {
         this.passwordDialogVisible = true;
-        this.store.revealPassword(credential.id);
+        this.store.revealPassword(credential.employeeId, credential.systemId);
     }
 
     onPasswordDialogChange(visible: boolean): void {

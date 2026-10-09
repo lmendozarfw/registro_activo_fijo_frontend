@@ -1,8 +1,8 @@
 export interface Credential {
     id: string;
     employeeSystemId: string;
-    employeeId?: string | null;
-    systemId?: string | null;
+    employeeId: string;
+    systemId: string;
     employeeFullName?: string | null;
     systemName?: string | null;
     canView: boolean;
@@ -17,4 +17,10 @@ export interface CredentialRequest {
     password?: string;
     canView: boolean;
     note?: string | null;
+}
+
+export interface CreateSupportRequest {
+    employeeId: string;
+    systemId: string;
+    message: string;
 }

@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { map, Observable, timer } from "rxjs";
 import { ApiService } from "../../../core/services/api.service";
-import { Credential, CredentialRequest } from "../models/credential.model";
+import { CreateSupportRequest, Credential, CredentialRequest } from "../models/credential.model";
 
 @Injectable({ providedIn: 'root' })
 export class CredentialService {
@@ -32,8 +32,8 @@ export class CredentialService {
         return this.api.delete<void>(this.endpoint, id);
     }
 
-    getPassword(id: string): Observable<string | { password: string }> {
-        return this.api.get<string | { password: string }>(`${this.endpoint}/${id}/password`);
+    getPassword(employeeId: string, systemId: string): Observable<{ message: string }> {
+        return this.api.post<CreateSupportRequest, { message: string }>(`${this.endpoint}/support-request`, {employeeId, systemId, message: "Solicitud"});
     }
 
     requestViewPassword(id: string): Observable<string> {

@@ -95,12 +95,12 @@ export const CredentialStore = signalStore(
                 }
             },
 
-            async revealPassword(id: string): Promise<void> {
+            async revealPassword(employeeId: string, systemId: string): Promise<void> {
                 patchState(store, { passwordLoading: true, revealedPassword: null, error: null });
 
                 try {
-                    const response = await firstValueFrom(service.getPassword(id));
-                    const password = typeof response === 'string' ? response : response?.password;
+                    const response = await firstValueFrom(service.getPassword(employeeId, systemId));
+                    const password = response?.message;
                     patchState(store, { passwordLoading: false, revealedPassword: password ?? null });
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudo obtener la contraseña');
