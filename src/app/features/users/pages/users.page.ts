@@ -13,7 +13,7 @@ import { EmptyStateComponent } from "../../../shared/components/empty-state/empt
 import { PageHeaderService } from "../../../core/services/page-header.service";
 import { UserStore } from "../stores/user.store";
 import { User, CreateUserRequest, UpdateUserRequest } from "../models/user.model";
-import { PermissionsGroupByModuleDto } from "../models/permission.model";
+import { PermissionsGroupByModuleDto } from "../../configuration/models/permission.model";
 import { ChevronDown, Pencil, Plus, Trash } from '@primeicons/angular';
 
 type ModuleSelectionState = 'all' | 'some' | 'none';

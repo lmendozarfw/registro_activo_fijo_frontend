@@ -1,8 +1,14 @@
-import { ITimestamps } from "../../../core/interfaces/timestamps.interface";
+import { PermissionDto } from "./permission.model";
 
-export interface ITemplate extends ITimestamps {
+export interface ITemplate {
     id: string;
     name: string;
-    description?: string;
-    active: boolean;
+    description?: string | null;
+    permissions: PermissionDto[];
+}
+
+export interface TemplateRequest {
+    name: string;
+    description?: string | null;
+    permissionIds: string[];
 }

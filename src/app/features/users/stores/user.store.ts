@@ -6,10 +6,10 @@ import { resolveErrorMessage } from "../../../core/utils/error.utils";
 import { Employee } from "../../employees/models/employee.model";
 import { EmployeeService } from "../../employees/services/employee.service";
 import { ITemplate } from "../../configuration/models/template.model";
-import { PermissionsGroupByModuleDto } from "../models/permission.model";
+import { PermissionsGroupByModuleDto } from "../../configuration/models/permission.model";
 import { CreateUserRequest, UpdateUserRequest, User } from "../models/user.model";
-import { PermissionService } from "../services/permission.service";
-import { TemplateService } from "../services/template.service";
+import { PermissionService } from "../../configuration/services/permission.service";
+import { TemplateService } from "../../configuration/services/template.service";
 import { UserService } from "../services/user.service";
 
 type UserState = {

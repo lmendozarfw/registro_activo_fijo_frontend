@@ -1,57 +1,153 @@
 <div>
     <div class="mb-4 flex items-start justify-between gap-4">
-        <p class="text-sm text-slate-600">Una plantilla de permisos es un conjunto de permisos predefinidos que pueden ser asignados a usuarios dentro del sistema.</p>
-        <button pButton type="button" icon="pi pi-plus" (click)="openDialog()">Nueva plantilla</button>
+        <p class="text-sm text-slate-600 max-w-[80%]">Una plantilla de permisos es un conjunto de permisos predefinidos
+            que pueden ser asignados a usuarios dentro del sistema.</p>
+        <button pButton type="button" (click)="openCreate()">
+            <span class="flex items-center gap-2">
+                <svg data-p-icon="plus" [size]="16"></svg>
+                Nueva plantilla
+            </span>
+        </button>
     </div>
 
-    <p-table [value]="templates()" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '50rem' }">
+    @if (store.templates().length > 0) {
+    <p-table [value]="store.templates()" [loading]="store.loading()" [paginator]="true" [rows]="10"
+        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '50rem' }">
         <ng-template #header>
             <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Permisos</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th style="width: 10rem">Permisos</th>
+                <th style="width: 8rem">Acciones</th>
             </tr>
         </ng-template>
-        <ng-template #body let-product>
+        <ng-template #body let-template>
             <tr>
-                <td>{{ product.name }}</td>
-                <td>{{ product.description }}</td>
-                <td>{{ product.permisos }}</td>
+                <td>{{ template.name }}</td>
+                <td>{{ template.description || '—' }}</td>
+                <td>
+                    <span class="inline-block rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600">
+                        {{ template.permissions.length }}
+                    </span>
+                </td>
+                <td>
+                    <div class="flex gap-1">
+                        <button pButton type="button" severity="secondary" text pTooltip="Editar" aria-label="Editar"
+                            (click)="openEdit(template)">
+                            <svg data-p-icon="pencil" [size]="16"></svg>
+                        </button>
+                        <button pButton type="button" severity="danger" text pTooltip="Eliminar" aria-label="Eliminar"
+                            (click)="openDelete(template)">
+                            <svg data-p-icon="trash" [size]="16"></svg>
+                        </button>
+                    </div>
+                </td>
             </tr>
         </ng-template>
     </p-table>
+    } @else {
+    <app-empty-state message="No se encontraron plantillas"
+        description="Puedes agregar nuevas plantillas de permisos." />
+    }
 
-    <app-form-dialog [(visible)]="dialogVisible" header="Nueva plantilla" width="28rem">
-        <form [formGroup]="form" class="flex flex-col gap-4" (ngSubmit)="save()">
-            <div class="flex flex-col gap-1.5">
-                <app-form-label required>Nombre</app-form-label>
-                <input pInputText formControlName="name" class="w-full" placeholder="Nombre de la plantilla"
-                    [invalid]="form.controls.name.invalid && form.controls.name.touched" />
-                @if (form.controls.name.invalid && form.controls.name.touched) {
+    <app-form-dialog [(visible)]="dialogVisible" [header]="dialogTitle" width="68rem">
+        <form [formGroup]="form" class="grid grid-cols-1 gap-5 lg:grid-cols-3" (ngSubmit)="save()">
+            <div class="flex flex-col gap-4 lg:col-span-1 h-max sticky top-0">
+                <div class="flex flex-col gap-1.5">
+                    <app-form-label required>Nombre</app-form-label>
+                    <input pInputText formControlName="name" class="w-full" placeholder="Nombre de la plantilla"
+                        [invalid]="form.controls.name.invalid && form.controls.name.touched" />
+                    @if (form.controls.name.invalid && form.controls.name.touched) {
                     <span class="text-xs text-rose-600">El nombre es requerido</span>
-                }
+                    }
+                </div>
+
+                <div class="flex flex-col gap-1.5">
+                    <app-form-label>Descripción</app-form-label>
+                    <textarea pTextarea formControlName="description" class="w-full" rows="5"
+                        placeholder="Descripción opcional..."></textarea>
+                </div>
+
+                <div class="flex items-center justify-between gap-2 rounded-md bg-slate-50 px-3 py-2">
+                    <span class="text-xs text-slate-500">Permisos seleccionados</span>
+                    <span class="rounded-md bg-white px-2 py-1 text-xs font-semibold text-slate-700">
+                        {{ selectedCount() }} / {{ totalPermissions() }}
+                    </span>
+                </div>
             </div>
 
-            <div class="flex flex-col gap-1.5">
-                <app-form-label>Descripción</app-form-label>
-                <textarea pTextarea formControlName="description" class="w-full" rows="3"
-                    placeholder="Descripción opcional..."></textarea>
-            </div>
+            <div class="flex flex-col gap-3 lg:col-span-2">
+                <div
+                    class="flex items-center justify-between gap-3 rounded-md border border-slate-200 bg-slate-50 px-3 py-2">
+                    <div class="flex items-center gap-2">
+                        <p-checkbox [binary]="true" [inputId]="'select-all-permissions'"
+                            [indeterminate]="someSelected() && !allSelected()" [ngModel]="allSelected()"
+                            [ngModelOptions]="{ standalone: true }" (ngModelChange)="toggleAll($event)" />
+                        <label for="select-all-permissions" class="cursor-pointer text-sm font-medium text-slate-700">
+                            Seleccionar todos los permisos
+                        </label>
+                    </div>
+                    <span class="text-xs text-slate-500">{{ selectedCount() }} de {{ totalPermissions() }}</span>
+                </div>
 
-            <div class="flex flex-col gap-1.5">
-                <app-form-label required>Permisos</app-form-label>
-                <p-select formControlName="permission" [multiple]="true" [options]="permissionOptions()" optionLabel="name"
-                    placeholder="Selecciona un permiso" appendTo="body" class="w-full"
-                    [invalid]="form.controls.permission.invalid && form.controls.permission.touched" />
-                @if (form.controls.permission.invalid && form.controls.permission.touched) {
-                    <span class="text-xs text-rose-600">Selecciona al menos un permiso</span>
+                @if (store.permissionsLoading()) {
+                <div class="flex items-center justify-center rounded-md border border-slate-200 py-10">
+                    <svg data-p-icon="spinner" [spin]="true" [size]="24"></svg>
+                </div>
+                } @else {
+                <div class="flex flex-col gap-3 overflow-y-auto pr-1">
+                    @for (module of store.permissionGroups(); track module.moduleName; let i = $index) {
+                    <div class="overflow-hidden rounded-md border border-slate-200 bg-white">
+                        <div class="flex items-center gap-2 border-b border-slate-100 bg-slate-50 px-3 py-2">
+                            <p-checkbox [binary]="true" [inputId]="'module-' + i"
+                                [indeterminate]="moduleState(module) === 'some'" [ngModel]="moduleState(module) === 'all'"
+                                [ngModelOptions]="{ standalone: true }" (ngModelChange)="toggleModule(module, $event)" />
+                            <label [for]="'module-' + i" class="cursor-pointer text-sm font-semibold text-slate-700">
+                                {{ module.moduleName }}
+                            </label>
+                            <span class="ml-auto rounded-md bg-white px-2 py-0.5 text-xs font-medium text-slate-500">
+                                {{ moduleSelectedCount(module) }}/{{ module.permissions.length }}
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-1 gap-0.5 p-2 md:grid-cols-2">
+                            @for (permission of module.permissions; track permission.id) {
+                            <div class="flex items-start gap-2 rounded-md px-2 py-1.5 hover:bg-slate-50">
+                                <p-checkbox [binary]="true" [inputId]="'permission-' + permission.id"
+                                    [ngModel]="isPermissionSelected(permission.id)"
+                                    [ngModelOptions]="{ standalone: true }"
+                                    (ngModelChange)="togglePermission(permission.id, $event)" />
+                                <label [for]="'permission-' + permission.id" class="flex cursor-pointer flex-col">
+                                    <span class="text-sm text-slate-700">{{ permission.name }}</span>
+                                    <span class="font-mono text-[11px] text-slate-400">{{ permission.code }}</span>
+                                </label>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    } @empty {
+                    <p class="py-4 text-center text-sm text-slate-400">No hay permisos disponibles.</p>
+                    }
+                </div>
                 }
             </div>
         </form>
 
         <div dialog-footer class="flex justify-end gap-2">
             <button pButton type="button" severity="secondary" (click)="dialogVisible = false">Cancelar</button>
-            <button pButton type="button" (click)="save()">Guardar</button>
+            <button pButton type="button" [loading]="store.saving()" (click)="save()">Guardar</button>
+        </div>
+    </app-form-dialog>
+
+    <app-form-dialog [(visible)]="deleteDialogVisible" header="Eliminar plantilla" width="24rem">
+        <p class="text-sm text-slate-600">
+            ¿Seguro que deseas eliminar la plantilla <strong>{{ templateToDelete?.name }}</strong>? Esta acción no se
+            puede deshacer.
+        </p>
+
+        <div dialog-footer class="flex justify-end gap-2">
+            <button pButton type="button" severity="secondary" (click)="deleteDialogVisible = false">Cancelar</button>
+            <button pButton type="button" severity="danger" [loading]="store.saving()"
+                (click)="confirmDelete()">Eliminar</button>
         </div>
     </app-form-dialog>
 </div>
