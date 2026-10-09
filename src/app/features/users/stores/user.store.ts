@@ -3,7 +3,7 @@ import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
 import { firstValueFrom } from "rxjs";
 import { ToastService } from "../../../core/services/toast.service";
 import { resolveErrorMessage } from "../../../core/utils/error.utils";
-import { Employee } from "../../employees/models/employee.model";
+import { Employee, EmployeeItem } from "../../employees/models/employee.model";
 import { EmployeeService } from "../../employees/services/employee.service";
 import { ITemplate } from "../../configuration/models/template.model";
 import { PermissionsGroupByModuleDto } from "../../configuration/models/permission.model";
@@ -17,7 +17,7 @@ type UserState = {
     loading: boolean;
     saving: boolean;
     error: string | null;
-    availableEmployees: Employee[];
+    availableEmployees: EmployeeItem[];
     templates: ITemplate[];
     permissionGroups: PermissionsGroupByModuleDto[];
     optionsLoading: boolean;

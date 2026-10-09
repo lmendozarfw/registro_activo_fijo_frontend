@@ -50,7 +50,7 @@ export class UsersPage implements OnInit {
     protected readonly employeeOptions = computed(() =>
         this.store.availableEmployees().map((employee) => ({
             id: employee.id,
-            label: `${employee.firstName} ${employee.paternalSurname} ${employee.maternalSurname} (No. ${employee.employeeNumber})`,
+            label: `${employee.fullName} (No. ${employee.employeeNumber})`,
         })),
     );
 

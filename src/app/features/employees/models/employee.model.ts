@@ -12,6 +12,12 @@ export interface Employee {
     updatedAt?: string | null;
 }
 
+export interface EmployeeItem {
+    id: string;
+    fullName: string;
+    employeeNumber: string;
+}
+
 export interface EmployeeRequest {
     employeeNumber: string;
     firstName: string;

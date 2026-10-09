@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { ApiService } from "../../../core/services/api.service";
-import { Employee, EmployeeRequest } from "../models/employee.model";
+import { Employee, EmployeeItem, EmployeeRequest } from "../models/employee.model";
 
 @Injectable({ providedIn: 'root' })
 export class EmployeeService {
@@ -12,8 +12,8 @@ export class EmployeeService {
         return this.api.getAll<Employee>(this.endpoint);
     }
 
-    getAvailable(): Observable<Employee[]> {
-        return this.api.getAll<Employee>(`${this.endpoint}/available`);
+    getAvailable(): Observable<EmployeeItem[]> {
+        return this.api.getAll<EmployeeItem>(`${this.endpoint}/available`);
     }
 
     getById(id: string): Observable<Employee> {
