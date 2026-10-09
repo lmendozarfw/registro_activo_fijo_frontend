@@ -7,6 +7,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { SelectModule } from 'primeng/select';
 import { TooltipModule } from 'primeng/tooltip';
+import { TagModule } from 'primeng/tag';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormDialogComponent } from "../../../shared/components/form-dialog/form-dialog.component";
 import { FormLabelComponent } from "../../../shared/components/form-label/form-label.component";
@@ -14,18 +15,20 @@ import { EmptyStateComponent } from "../../../shared/components/empty-state/empt
 import { PageHeaderService } from "../../../core/services/page-header.service";
 import { ToastService } from "../../../core/services/toast.service";
 import { CredentialStore } from "../stores/credential.store";
-import { Credential, CredentialRequest } from "../models/credential.model";
+import { AuditEventType, Credential, CredentialAuditEvent, CredentialRequest } from "../models/credential.model";
 import { EmployeeStore } from "../../employees/stores/employee.store";
 import { SystemStore } from "../../configuration/stores/system.store";
-import { Copy, Eye, Pencil, Plus, Spinner, Trash } from '@primeicons/angular';
+import { Copy, Eye, History, Pencil, Plus, Spinner, Trash } from '@primeicons/angular';
+
+type TagSeverity = 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast';
 
 @Component({
     selector: 'app-credentials-page',
     templateUrl: './credentials.page.html',
     styles: [],
     imports: [TableModule, ButtonModule, InputText, InputPassword, TextareaModule, ToggleSwitchModule,
-        SelectModule, TooltipModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent,
-        EmptyStateComponent, Copy, Eye, Pencil, Plus, Spinner, Trash],
+        SelectModule, TooltipModule, TagModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent,
+        EmptyStateComponent, Copy, Eye, History, Pencil, Plus, Spinner, Trash],
 })
 export class CredentialsPage implements OnInit {
     protected readonly store = inject(CredentialStore);
@@ -38,8 +41,10 @@ export class CredentialsPage implements OnInit {
     dialogTitle = 'Nueva credencial';
     deleteDialogVisible = false;
     passwordDialogVisible = false;
+    auditDialogVisible = false;
     editingCredential: Credential | null = null;
     credentialToDelete: Credential | null = null;
+    auditCredential: Credential | null = null;
     private optionsLoaded = false;
 
     protected readonly employeeOptions = computed(() =>
@@ -150,6 +155,42 @@ export class CredentialsPage implements OnInit {
     openDelete(credential: Credential): void {
         this.credentialToDelete = credential;
         this.deleteDialogVisible = true;
+    }
+
+    openAuditEvents(credential: Credential): void {
+        this.auditCredential = credential;
+        this.auditDialogVisible = true;
+        this.store.loadAuditEvents(credential.id);
+    }
+
+    onAuditDialogChange(visible: boolean): void {
+        this.auditDialogVisible = visible;
+        if (!visible) {
+            this.auditCredential = null;
+            this.store.clearAuditEvents();
+        }
+    }
+
+    protected eventLabel(event: CredentialAuditEvent): string {
+        switch (event.type) {
+            case AuditEventType.CREATED: return 'Credencial creada';
+            case AuditEventType.UPDATED: return 'Credencial actualizada';
+            case AuditEventType.VIEWED: return 'Contraseña consultada';
+            case AuditEventType.DELETED: return 'Credencial eliminada';
+            case AuditEventType.RESET_REQUESTED: return 'Restablecimiento solicitado';
+            default: return 'Movimiento';
+        }
+    }
+
+    protected eventSeverity(event: CredentialAuditEvent): TagSeverity {
+        switch (event.type) {
+            case AuditEventType.CREATED: return 'success';
+            case AuditEventType.UPDATED: return 'info';
+            case AuditEventType.VIEWED: return 'secondary';
+            case AuditEventType.DELETED: return 'danger';
+            case AuditEventType.RESET_REQUESTED: return 'warn';
+            default: return 'secondary';
+        }
     }
 
     async confirmDelete(): Promise<void> {

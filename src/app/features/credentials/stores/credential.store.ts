@@ -3,7 +3,7 @@ import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
 import { firstValueFrom } from "rxjs";
 import { ToastService } from "../../../core/services/toast.service";
 import { resolveErrorMessage } from "../../../core/utils/error.utils";
-import { Credential, CredentialRequest } from "../models/credential.model";
+import { Credential, CredentialAuditEvent, CredentialRequest } from "../models/credential.model";
 import { CredentialService } from "../services/credential.service";
 
 type CredentialState = {
@@ -12,6 +12,8 @@ type CredentialState = {
     saving: boolean;
     passwordLoading: boolean;
     revealedPassword: string | null;
+    auditEvents: CredentialAuditEvent[];
+    auditLoading: boolean;
     error: string | null;
 };
 
@@ -23,6 +25,8 @@ export const CredentialStore = signalStore(
         saving: false,
         passwordLoading: false,
         revealedPassword: null,
+        auditEvents: [],
+        auditLoading: false,
         error: null,
     }),
     withMethods(
@@ -111,6 +115,23 @@ export const CredentialStore = signalStore(
 
             clearPassword(): void {
                 patchState(store, { revealedPassword: null, passwordLoading: false });
+            },
+
+            async loadAuditEvents(credentialId: string): Promise<void> {
+                patchState(store, { auditLoading: true, auditEvents: [], error: null });
+
+                try {
+                    const auditEvents = await firstValueFrom(service.getAuditEvents(credentialId));
+                    patchState(store, { auditEvents, auditLoading: false });
+                } catch (error) {
+                    const message = resolveErrorMessage(error, 'No se pudieron cargar los movimientos');
+                    patchState(store, { auditLoading: false, error: message });
+                    toast.error(message);
+                }
+            },
+
+            clearAuditEvents(): void {
+                patchState(store, { auditEvents: [], auditLoading: false });
             },
         }),
     ),

@@ -12,6 +12,10 @@ export class EmployeeService {
         return this.api.getAll<Employee>(this.endpoint);
     }
 
+    getAvailable(): Observable<Employee[]> {
+        return this.api.getAll<Employee>(`${this.endpoint}/available`);
+    }
+
     getById(id: string): Observable<Employee> {
         return this.api.getById<Employee>(this.endpoint, id);
     }

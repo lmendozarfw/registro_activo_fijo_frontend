@@ -28,6 +28,10 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/credentials/pages/credentials.page').then(p => p.CredentialsPage),
             },
             {
+                path: 'users',
+                loadComponent: () => import('./features/users/pages/users.page').then(p => p.UsersPage),
+            },
+            {
                 path: 'my-credentials',
                 loadComponent: () => import('./features/credentials/pages/my-credentials.page').then(p => p.MyCredentialsPage),
             },

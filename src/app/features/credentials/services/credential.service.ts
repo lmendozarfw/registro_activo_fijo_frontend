@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { map, Observable, timer } from "rxjs";
 import { ApiService } from "../../../core/services/api.service";
-import { CreateSupportRequest, Credential, CredentialRequest } from "../models/credential.model";
+import { CreateSupportRequest, Credential, CredentialAuditEvent, CredentialRequest } from "../models/credential.model";
 
 @Injectable({ providedIn: 'root' })
 export class CredentialService {
@@ -38,5 +38,9 @@ export class CredentialService {
 
     requestViewPassword(id: string): Observable<string> {
         return timer(2500).pipe(map(() => `Clave#${id.slice(0, 6)}!2026`));
+    }
+
+    getAuditEvents(credentialId: string): Observable<CredentialAuditEvent[]> {
+        return this.api.get<CredentialAuditEvent[]>(`${this.endpoint}/${credentialId}/view-events`);
     }
 }
