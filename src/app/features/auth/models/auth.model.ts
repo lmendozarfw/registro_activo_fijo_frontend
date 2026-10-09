@@ -3,8 +3,27 @@ export interface ILoginRequest {
     password: string;
 }
 
+export interface IAuthTokens {
+    accessToken: string;
+    refreshToken: string;
+}
+
 export interface ILoginResponse {
-    token: string;
+    accessToken?: string;
+    refreshToken?: string;
+    access_token?: string;
+    refresh_token?: string;
+}
+
+export interface IRefreshTokenRequest {
+    refreshToken: string;
+}
+
+export interface IRefreshTokenResponse {
+    accessToken?: string;
+    refreshToken?: string;
+    access_token?: string;
+    refresh_token?: string;
 }
 
 export interface IPermissionAuth {

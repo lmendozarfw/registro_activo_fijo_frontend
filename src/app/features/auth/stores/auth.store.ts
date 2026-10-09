@@ -1,15 +1,22 @@
 import { patchState, signalStore, withComputed, withMethods, withState } from "@ngrx/signals";
 import { computed, inject } from "@angular/core";
-import { AuthService } from "../services/auth.service";
+import {
+    AuthService,
+    ACCESS_TOKEN_KEY,
+    PERMISSIONS_KEY,
+    REFRESH_TOKEN_KEY,
+    USER_KEY,
+} from "../services/auth.service";
 import { firstValueFrom } from "rxjs";
 import { LocalStorageService } from "../../../core/services/storage.service";
 import { resolveErrorMessage } from "../../../core/utils/error.utils";
-import { IPermissionAuth, IUserAuth } from "../models/auth.model";
+import { IAuthTokens, IPermissionAuth, IUserAuth } from "../models/auth.model";
 
 type AuthState = {
   user: IUserAuth | null;
   permissions: IPermissionAuth[] | null;
-  token: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   loading: boolean;
   error: string | null;
 };
@@ -19,15 +26,16 @@ export const AuthStore = signalStore(
   withState<AuthState>(() => {
     const storageService = inject(LocalStorageService);
     return {
-      user: storageService.get<IUserAuth>('user'),
-      permissions: storageService.get<IPermissionAuth[]>('permissions') ?? null,
-      token: storageService.get<string>('access_token') ?? null,
+      user: storageService.get<IUserAuth>(USER_KEY),
+      permissions: storageService.get<IPermissionAuth[]>(PERMISSIONS_KEY) ?? null,
+      accessToken: storageService.get<string>(ACCESS_TOKEN_KEY) ?? null,
+      refreshToken: storageService.get<string>(REFRESH_TOKEN_KEY) ?? null,
       loading: false,
       error: null,
     };
   }),
-  withComputed(({ user, permissions, token }) => ({
-    isAuthenticated: computed(() => !!user() && !!permissions() && !!token()),
+  withComputed(({ user, permissions, accessToken }) => ({
+    isAuthenticated: computed(() => !!user() && !!permissions() && !!accessToken()),
   })),
   withMethods(
     (
@@ -36,20 +44,38 @@ export const AuthStore = signalStore(
       storageService = inject(LocalStorageService),
     ) => ({
       setUser(user: IUserAuth) {
+        patchState(store, { user });
+      },
+
+      setAccessToken(accessToken: string) {
+        patchState(store, { accessToken });
+      },
+
+      setRefreshToken(refreshToken: string) {
+        patchState(store, { refreshToken });
+      },
+
+      setTokens(tokens: IAuthTokens) {
         patchState(store, {
-          user,
+          accessToken: tokens.accessToken || null,
+          refreshToken: tokens.refreshToken || store.refreshToken(),
         });
       },
 
-      setToken(token: string) {
-        patchState(store, { token });
-      },
       setPermissions(permissions: IPermissionAuth[]) {
         patchState(store, { permissions });
       },
+
       logout() {
-        patchState(store, { user: null, token: null, permissions: null });
-        storageService.clear();
+        patchState(store, {
+          user: null,
+          permissions: null,
+          accessToken: null,
+          refreshToken: null,
+        });
+        storageService.remove(USER_KEY);
+        storageService.remove(PERMISSIONS_KEY);
+        authService.clearTokens();
       },
 
       async login(username: string, password: string) {
@@ -59,14 +85,14 @@ export const AuthStore = signalStore(
         });
 
         try {
-          const response = await firstValueFrom(
+          const tokens = await firstValueFrom(
             authService.login({
               username,
               password,
             }),
           );
-          this.setToken(response.token);
-          storageService.set('access_token', response.token);
+          this.setTokens(tokens);
+          authService.saveTokens(tokens);
           patchState(store, {
             loading: false,
           });
@@ -86,14 +112,13 @@ export const AuthStore = signalStore(
 
         try {
           const response = await firstValueFrom(authService.me());
-          console.log({response});
           const user: IUserAuth = response.user;
 
           this.setUser(user);
           this.setPermissions(response.permissions);
 
-          storageService.set('user', user);
-          storageService.set('permissions', response.permissions);
+          storageService.set(USER_KEY, user);
+          storageService.set(PERMISSIONS_KEY, response.permissions);
 
           patchState(store, {
             loading: false,
