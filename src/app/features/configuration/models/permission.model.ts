@@ -9,6 +9,7 @@ export interface Permission {
 export interface PermissionDto {
     id: string;
     moduleId: string;
+    moduleCode?: string | null;
     code: string;
     name: string;
     description?: string | null;

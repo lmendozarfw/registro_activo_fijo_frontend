@@ -49,6 +49,7 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
 
     return next(authorizedRequest).pipe(
         catchError((error: unknown) => {
+            console.log({ error });
             if (!(error instanceof HttpErrorResponse) || error.status !== 401) {
                 return throwError(() => error);
             }
