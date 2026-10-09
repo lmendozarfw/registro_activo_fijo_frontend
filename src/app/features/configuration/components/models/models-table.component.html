@@ -1,0 +1,105 @@
+<div>
+    <div class="mb-4 flex items-start justify-between gap-4">
+        <p class="text-sm text-slate-600 max-w-[80%]">Un modelo identifica la línea o referencia de un recurso y
+            pertenece a una marca, por ejemplo OptiPlex 7090 o ThinkPad E14. Aquí se dan de alta para clasificar los
+            recursos de activo fijo.</p>
+        <button pButton type="button" (click)="openCreate()">
+            <span class="flex items-center gap-2">
+                <svg data-p-icon="plus" [size]="16"></svg>
+                Nuevo modelo
+            </span>
+        </button>
+    </div>
+
+    @if (store.models().length > 0) {
+    <p-table [value]="store.models()" [loading]="store.loading()" [paginator]="true" [rows]="10"
+        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '70rem' }">
+        <ng-template #header>
+            <tr>
+                <th style="width: 16rem">Marca</th>
+                <th>Nombre</th>
+                <th style="width: 12rem">Tipo de recurso</th>
+                <th style="width: 12rem">Fecha de creación</th>
+                <th style="width: 12rem">Fecha de modificación</th>
+                <th style="width: 8rem">Acciones</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-model>
+            <tr>
+                <td>{{ model.brandName || '—' }}</td>
+                <td>{{ model.name }}</td>
+                <td>
+                    <p-tag [value]="getTypeLabel(model.type)" severity="secondary" />
+                </td>
+                <td>{{ formatDate(model.createdAt) }}</td>
+                <td>{{ formatDate(model.updatedAt) }}</td>
+                <td>
+                    <div class="flex gap-1">
+                        <button pButton type="button" severity="secondary" text pTooltip="Editar" aria-label="Editar"
+                            (click)="openEdit(model)">
+                            <svg data-p-icon="pencil" [size]="16"></svg>
+                        </button>
+                        <button pButton type="button" severity="danger" text pTooltip="Eliminar" aria-label="Eliminar"
+                            (click)="openDelete(model)">
+                            <svg data-p-icon="trash" [size]="16"></svg>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    } @else {
+    <app-empty-state message="No se encontraron modelos" description="Puedes agregar nuevos modelos." />
+    }
+
+    <app-form-dialog [(visible)]="dialogVisible" [header]="dialogTitle" width="26rem">
+        <form [formGroup]="form" class="flex flex-col gap-4" (ngSubmit)="save()">
+            <div class="flex flex-col gap-1.5">
+                <app-form-label required>Marca</app-form-label>
+                <p-select formControlName="brandId" [options]="brandStore.brands()" optionLabel="name" optionValue="id"
+                    placeholder="Selecciona una marca" appendTo="body" class="w-full"
+                    [invalid]="form.controls.brandId.invalid && form.controls.brandId.touched" />
+                @if (form.controls.brandId.invalid && form.controls.brandId.touched) {
+                <span class="text-xs text-rose-600">Selecciona una marca</span>
+                }
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <app-form-label required>Nombre</app-form-label>
+                <input pInputText formControlName="name" class="w-full" placeholder="Nombre del modelo (ej. OptiPlex 7090)"
+                    [invalid]="form.controls.name.invalid && form.controls.name.touched" />
+                @if (form.controls.name.invalid && form.controls.name.touched) {
+                <span class="text-xs text-rose-600">El nombre es requerido</span>
+                }
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <app-form-label required>Tipo de recurso</app-form-label>
+                <p-select formControlName="type" [options]="resourceTypeOptions" optionLabel="label"
+                    optionValue="value" placeholder="Selecciona un tipo" appendTo="body" class="w-full"
+                    [invalid]="form.controls.type.invalid && form.controls.type.touched" />
+                @if (form.controls.type.invalid && form.controls.type.touched) {
+                <span class="text-xs text-rose-600">Selecciona un tipo de recurso</span>
+                }
+            </div>
+        </form>
+
+        <div dialog-footer class="flex justify-end gap-2">
+            <button pButton type="button" severity="secondary" (click)="dialogVisible = false">Cancelar</button>
+            <button pButton type="button" [loading]="store.saving()" (click)="save()">Guardar</button>
+        </div>
+    </app-form-dialog>
+
+    <app-form-dialog [(visible)]="deleteDialogVisible" header="Eliminar modelo" width="24rem">
+        <p class="text-sm text-slate-600">
+            ¿Seguro que deseas eliminar el modelo <strong>{{ modelToDelete?.name }}</strong>? Esta acción no se puede
+            deshacer.
+        </p>
+
+        <div dialog-footer class="flex justify-end gap-2">
+            <button pButton type="button" severity="secondary" (click)="deleteDialogVisible = false">Cancelar</button>
+            <button pButton type="button" severity="danger" [loading]="store.saving()"
+                (click)="confirmDelete()">Eliminar</button>
+        </div>
+    </app-form-dialog>
+</div>
