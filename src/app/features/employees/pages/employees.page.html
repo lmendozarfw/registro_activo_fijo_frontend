@@ -12,14 +12,14 @@
 
     @if (store.employees().length > 0) {
     <p-table [value]="store.employees()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '1850px' }">
+        [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '2050px' }">
         <ng-template #header>
             <tr>
                 <th style="width: 150px">No. empleado</th>
-                <th>Empleado</th>
+                <th style="width: 300px">Empleado</th>
                 <th style="width: 250px">Puesto</th>
                 <th style="width: 250px">Departamento</th>
-                <th>Correo</th>
+                <th style="width: 250px">Correo</th>
                 <th style="width: 150px">Teléfono</th>
                 <th style="width: 250px">Fecha de creación</th>
                 <th style="width: 250px">Fecha de modificación</th>

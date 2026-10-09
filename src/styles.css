@@ -5,3 +5,12 @@
 :root {
   color-scheme: light;
 }
+
+.p-paginator {
+  border: none !important;
+  padding: 10px 0 0 0 !important;
+}
+
+p-table {
+  @apply block p-4 rounded-md bg-white;
+}

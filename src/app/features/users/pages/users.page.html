@@ -13,14 +13,12 @@
 
     @if (store.users().length > 0) {
     <p-table [value]="store.users()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '60rem' }">
+        [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '60rem' }">
         <ng-template #header>
             <tr>
                 <th style="width: 14rem">Usuario</th>
                 <th>Empleado</th>
-                <th style="width: 10rem">Permisos</th>
                 <th style="width: 12rem">Fecha de creación</th>
-                <th style="width: 12rem">Fecha de modificación</th>
                 <th style="width: 8rem">Acciones</th>
             </tr>
         </ng-template>
@@ -30,13 +28,8 @@
                     <span class="inline-block rounded-md bg-slate-100 px-2 py-1 font-mono text-xs">{{
                         user.username }}</span>
                 </td>
-                <td>{{ user.employeeName || '—' }}</td>
-                <td>
-                    <span class="inline-block rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600">{{
-                        permissionCount(user) }}</span>
-                </td>
+                <td>{{ user.employeeFullName || '—' }}</td>
                 <td>{{ formatDate(user.createdAt) }}</td>
-                <td>{{ formatDate(user.updatedAt) }}</td>
                 <td>
                     <div class="flex gap-1">
                         <button pButton type="button" severity="secondary" text pTooltip="Editar" aria-label="Editar"

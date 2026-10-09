@@ -3,7 +3,7 @@
         <p class="text-sm text-slate-600">Puedes ver los permisos disponibles en el sistema.</p>
     </div>
 
-    <p-table [value]="permissions()" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '50rem' }">
+    <p-table [value]="permissions()" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '50rem' }">
         <ng-template #header>
             <tr>
                 <th>Code</th>

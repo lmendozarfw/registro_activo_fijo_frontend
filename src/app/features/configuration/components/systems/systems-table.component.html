@@ -13,7 +13,7 @@
 
     @if (store.systems().length > 0) {
     <p-table [value]="store.systems()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '70rem' }">
+        [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '70rem' }">
         <ng-template #header>
             <tr>
                 <th style="width: 10rem">Código</th>

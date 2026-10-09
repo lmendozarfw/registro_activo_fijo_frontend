@@ -3,13 +3,11 @@ import { PermissionDto } from "../../configuration/models/permission.model";
 export interface User {
     id: string;
     username: string;
+    employeeFullName?: string | null;
+    createdAt?: string;
     employeeId?: string | null;
-    employeeName?: string | null;
-    active?: boolean;
     permissionIds?: string[];
     permissions?: PermissionDto[];
-    createdAt?: string;
-    updatedAt?: string | null;
 }
 
 export interface CreateUserRequest {

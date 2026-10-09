@@ -217,10 +217,6 @@ export class UsersPage implements OnInit {
         });
     }
 
-    protected permissionCount(user: User): number {
-        return user.permissionIds?.length ?? user.permissions?.length ?? 0;
-    }
-
     protected formatDate(value?: string | null): string {
         if (!value) return '—';
 
