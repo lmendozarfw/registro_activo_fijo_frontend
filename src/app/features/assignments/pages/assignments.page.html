@@ -39,7 +39,8 @@
                         [severity]="a.isActive ? 'success' : 'secondary'" /></td>
                 <td>
                     <div class="flex gap-1">
-                        <button pButton type="button" severity="danger" text pTooltip="Devolver" aria-label="Devolver">
+                        <button pButton type="button" severity="danger" text pTooltip="Devolver" aria-label="Devolver"
+                            (click)="openReturn()">
                             <svg data-p-icon="undo" [size]="16"></svg>
                         </button>
                         <button pButton type="button" severity="warn" text pTooltip="Renovar" aria-label="Renovar">
@@ -65,8 +66,8 @@
 
             <div class="flex flex-col gap-1.5">
                 <app-form-label required>Recurso</app-form-label>
-                <p-select formControlName="resourceId" [options]="avaiableResources()" [group]="true"
-                    optionLabel="name" optionValue="id" optionGroupLabel="name" optionGroupChildren="resourceItems"
+                <p-select formControlName="resourceId" [options]="avaiableResources()" [group]="true" optionLabel="name"
+                    optionValue="id" optionGroupLabel="name" optionGroupChildren="resourceItems"
                     placeholder="Selecciona un recurso" appendTo="body" class="w-full">
                     <ng-template #selectedItem let-selectedOption>
                         <div class="flex items-center gap-2">
@@ -81,7 +82,9 @@
                     </ng-template>
                     <ng-template let-member #item>
                         <div class="w-full flex items-center gap-3 py-1">
-                            <span class="inline-block rounded-md bg-slate-200 px-2 py-1 font-mono text-xs flex-1 max-w-max">{{member.assetCode }}</span>
+                            <span
+                                class="inline-block rounded-md bg-slate-200 px-2 py-1 font-mono text-xs flex-1 max-w-max">{{member.assetCode
+                                }}</span>
                             <div class="flex-auto flex flex-col">
                                 <span class="font-medium">{{ member.name }}</span>
                                 @if (member.metadata?.['name']) {
@@ -114,6 +117,24 @@
         <div dialog-footer class="flex justify-end gap-2">
             <button pButton type="button" severity="secondary" (click)="dialogVisible = false">Cancelar</button>
             <button pButton type="button" [loading]="store.saving()" (click)="save()">Guardar</button>
+        </div>
+    </app-form-dialog>
+
+    <app-form-dialog [(visible)]="dialogReturnVisible" [header]="'Devolver recurso'" width="400px">
+        <div class="p-2 rounded-md bg-slate-100">
+            <span class="text-xs text-slate-500">El sistema registrará el usuario que va a realizar esta
+                acción.</span>
+        </div>
+        <form [formGroup]="formReturn" class="flex flex-col gap-4" (ngSubmit)="returnResource()">
+            <div class="flex flex-col gap-1.5">
+                <app-form-label required>Observaciones</app-form-label>
+                <textarea pTextarea formControlName="observation" class="w-full" rows="3" placeholder="Observación opcional..."></textarea>
+            </div>
+        </form>
+
+        <div dialog-footer class="flex justify-end gap-2">
+            <button pButton type="button" severity="secondary" (click)="dialogReturnVisible = false">Cancelar</button>
+            <button pButton type="button" [loading]="store.saving()" (click)="returnResource()">Guardar</button>
         </div>
     </app-form-dialog>
 </div>

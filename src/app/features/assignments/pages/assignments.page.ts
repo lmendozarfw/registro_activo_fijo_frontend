@@ -5,7 +5,7 @@ import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { TextareaModule } from 'primeng/textarea';
 import { TagModule } from 'primeng/tag';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormControlName, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormDialogComponent } from "../../../shared/components/form-dialog/form-dialog.component";
 import { FormLabelComponent } from "../../../shared/components/form-label/form-label.component";
 import { EmptyStateComponent } from "../../../shared/components/empty-state/empty-state.component";
@@ -44,6 +44,10 @@ export class AssignmentsPage implements OnInit {
         observation: new FormControl(''),
     });
 
+    dialogReturnVisible = false;
+    formReturn = new FormGroup({
+        observation: new FormControl('', [])
+    });
     ngOnInit(): void {
         this.store.load();
         this.employeeStore.loadAvailablToAssignments();
@@ -59,6 +63,14 @@ export class AssignmentsPage implements OnInit {
             observation: '',
         });
         this.dialogVisible = true;
+    }
+
+    openReturn(): void {
+        console.log('hola mundo');
+        this.formReturn.reset({
+            observation: ''
+        });
+        this.dialogReturnVisible = true;
     }
 
     async save(): Promise<void> {
@@ -80,6 +92,10 @@ export class AssignmentsPage implements OnInit {
         if (success) {
             this.dialogVisible = false;
         }
+    }
+
+    async returnResource(): Promise<void> {
+
     }
 
     protected formatDate(value?: string | null): string {
