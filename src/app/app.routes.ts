@@ -24,6 +24,14 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/employees/pages/employees.page').then(p => p.EmployeesPage),
             },
             {
+                path: 'phones',
+                loadComponent: () => import('./features/resources/pages/phones.page').then(p => p.PhonesPage)
+            },
+            {
+                path: 'fixed-asset',
+                loadComponent: () => import('./features/resources/pages/resources.page').then(p => p.ResourcesPage)
+            },
+            {
                 path: 'credentials',
                 loadComponent: () => import('./features/credentials/pages/credentials.page').then(p => p.CredentialsPage),
             },
