@@ -13,15 +13,16 @@ import { AssignmentStore } from "../stores/assignment.store";
 import { EmployeeStore } from "../../employees/stores/employee.store";
 import { ResourceStore } from "../../resources/stores/resource.store";
 import { CreateAssignmentCommand } from "../models/assignment.model";
-import { Plus } from '@primeicons/angular';
+import { ChevronDown, Pencil, Plus, Undo, ArrowRightArrowLeft } from '@primeicons/angular';
 import { AuthStore } from "../../../features/auth/stores/auth.store";
+import { TooltipModule } from "primeng/tooltip";
 
 @Component({
     selector: "app-assignments-page",
     templateUrl: "./assignments.page.html",
     styles: [],
-    imports: [TableModule, ButtonModule, SelectModule, DatePickerModule, TextareaModule, TagModule,
-        ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent, Plus]
+    imports: [TableModule, ButtonModule, SelectModule, DatePickerModule, TextareaModule, TagModule, TooltipModule,
+        ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent, Plus, Pencil, Undo, ArrowRightArrowLeft]
 })
 export class AssignmentsPage implements OnInit {
     protected readonly store = inject(AssignmentStore);
@@ -31,6 +32,7 @@ export class AssignmentsPage implements OnInit {
 
     protected readonly availableEmployees = computed(() => this.employeeStore.employeesItem());
     protected readonly availableMobiles = computed(() => this.resourceStore.mobileResources());
+    protected readonly avaiableResources = computed(() => this.resourceStore.availableResourceGroups());
 
     dialogVisible = false;
 
@@ -45,7 +47,7 @@ export class AssignmentsPage implements OnInit {
     ngOnInit(): void {
         this.store.load();
         this.employeeStore.loadAvailablToAssignments();
-        this.resourceStore.loadMobile();
+        this.resourceStore.loadAvailableToAssign();
     }
 
     openCreate(): void {

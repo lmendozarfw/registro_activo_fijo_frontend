@@ -11,7 +11,7 @@
 
     @if (store.assignments().length > 0) {
     <p-table [value]="store.assignments()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '1700px' }">
+        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '1860px' }">
         <ng-template #header>
             <tr>
                 <th style="width: 150px">Activo</th>
@@ -22,18 +22,31 @@
                 <th style="width: 200px">Renovación</th>
                 <th style="width: 200px">Devolución</th>
                 <th style="width: 150px">Activa</th>
+                <th style="width: 150px;">Acciones</th>
             </tr>
         </ng-template>
         <ng-template #body let-a>
             <tr>
-                <td><span class="inline-block rounded-md bg-slate-100 px-2 py-1 font-mono text-xs">{{ a.assetCode }}</span></td>
+                <td><span class="inline-block rounded-md bg-slate-100 px-2 py-1 font-mono text-xs">{{ a.assetCode
+                        }}</span></td>
                 <td>{{ a.resourceName }}</td>
                 <td>{{ a.brandName }} / {{ a.modelName }}</td>
                 <td>{{ a.employeeName }}</td>
                 <td>{{ formatDate(a.assignmentDate) }}</td>
                 <td>{{ formatDate(a.renewalDate) }}</td>
                 <td>{{ formatDate(a.returnDate) }}</td>
-                <td><p-tag [value]="a.isActive ? 'Activa' : 'Finalizada'" [severity]="a.isActive ? 'success' : 'secondary'" /></td>
+                <td><p-tag [value]="a.isActive ? 'Activa' : 'Finalizada'"
+                        [severity]="a.isActive ? 'success' : 'secondary'" /></td>
+                <td>
+                    <div class="flex gap-1">
+                        <button pButton type="button" severity="danger" text pTooltip="Devolver" aria-label="Devolver">
+                            <svg data-p-icon="undo" [size]="16"></svg>
+                        </button>
+                        <button pButton type="button" severity="warn" text pTooltip="Renovar" aria-label="Renovar">
+                            <svg data-p-icon="arrow-right-arrow-left" [size]="16"></svg>
+                        </button>
+                    </div>
+                </td>
             </tr>
         </ng-template>
     </p-table>
@@ -51,10 +64,34 @@
             </div>
 
             <div class="flex flex-col gap-1.5">
-                <app-form-label required>Celular (recurso móvil)</app-form-label>
-                <p-select formControlName="resourceId" [options]="availableMobiles()" optionLabel="assetCode"
-                    optionValue="resourceId" placeholder="Selecciona un celular" appendTo="body" class="w-full" />
-                <span class="text-xs text-slate-500">Solo se muestran celulares disponibles.</span>
+                <app-form-label required>Recurso</app-form-label>
+                <p-select formControlName="resourceId" [options]="avaiableResources()" [group]="true"
+                    optionLabel="name" optionValue="id" optionGroupLabel="name" optionGroupChildren="resourceItems"
+                    placeholder="Selecciona un recurso" appendTo="body" class="w-full">
+                    <ng-template #selectedItem let-selectedOption>
+                        <div class="flex items-center gap-2">
+                            <span>{{ selectedOption.name }}</span>
+                            @if (selectedOption.metadata?.['name']) {
+                            <span class="text-xs text-surface-500">{{ selectedOption.metadata['name'] }}</span>
+                            }
+                        </div>
+                    </ng-template>
+                    <ng-template #group let-group>
+                        <div class="px-2 py-1 text-xs font-semibold uppercase text-surface-500">{{ group.name }}</div>
+                    </ng-template>
+                    <ng-template let-member #item>
+                        <div class="w-full flex items-center gap-3 py-1">
+                            <span class="inline-block rounded-md bg-slate-200 px-2 py-1 font-mono text-xs flex-1 max-w-max">{{member.assetCode }}</span>
+                            <div class="flex-auto flex flex-col">
+                                <span class="font-medium">{{ member.name }}</span>
+                                @if (member.metadata?.['name']) {
+                                <span class="text-xs text-surface-500">{{ member.metadata['name'] }}</span>
+                                }
+                            </div>
+                        </div>
+                    </ng-template>
+                </p-select>
+                <span class="text-xs text-slate-500">Solo se muestran recursos disponibles.</span>
             </div>
 
             <div class="grid grid-cols-2 gap-4">

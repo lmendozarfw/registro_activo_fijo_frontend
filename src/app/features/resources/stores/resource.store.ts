@@ -3,12 +3,13 @@ import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
 import { firstValueFrom } from "rxjs";
 import { ToastService } from "../../../core/services/toast.service";
 import { resolveErrorMessage } from "../../../core/utils/error.utils";
-import { ResourceDto, CreateResourceCommand, MobileResourceDto, CreateMobileResourceCommand } from "../models/resource.model";
+import { ResourceDto, ResourceGroupItemDto, CreateResourceCommand, MobileResourceDto, CreateMobileResourceCommand } from "../models/resource.model";
 import { ResourceService } from "../services/resource.service";
 import { MobileResourceService } from "../services/mobile-resource.service";
 
 type ResourceState = {
     resources: ResourceDto[];
+    availableResourceGroups: ResourceGroupItemDto[];
     mobileResources: MobileResourceDto[];
     loading: boolean;
     saving: boolean;
@@ -19,6 +20,7 @@ export const ResourceStore = signalStore(
     { providedIn: 'root' },
     withState<ResourceState>({
         resources: [],
+        availableResourceGroups: [],
         mobileResources: [],
         loading: false,
         saving: false,
@@ -36,6 +38,17 @@ export const ResourceStore = signalStore(
                 try {
                     const resources = await firstValueFrom(resourceService.getAll());
                     patchState(store, { resources, loading: false });
+                } catch (error) {
+                    const message = resolveErrorMessage(error, 'No se pudieron cargar los recursos');
+                    patchState(store, { loading: false, error: message });
+                    toast.error(message);
+                }
+            },
+            async loadAvailableToAssign(): Promise<void> {
+                patchState(store, { loading: true, error: null });
+                try {
+                    const resources = await firstValueFrom(resourceService.getAvailableToAssign());
+                    patchState(store, { availableResourceGroups: resources, loading: false });
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudieron cargar los recursos');
                     patchState(store, { loading: false, error: message });

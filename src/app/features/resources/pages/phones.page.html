@@ -174,11 +174,17 @@
         <form [formGroup]="lineForm" class="flex flex-col gap-4" (ngSubmit)="saveLine()">
             <div class="flex flex-col gap-1.5">
                 <app-form-label required>Número de teléfono</app-form-label>
-                <input pInputText formControlName="phoneNumber" class="w-full" />
+                <input pInputText formControlName="phoneNumber" class="w-full" [invalid]="lineForm.controls.phoneNumber.invalid && lineForm.controls.phoneNumber.touched" />
+                @if (lineForm.controls.phoneNumber.invalid && lineForm.controls.phoneNumber.touched) {
+                <span class="text-xs text-rose-600">El número de teléfono es requerido</span>
+                }
             </div>
             <div class="flex flex-col gap-1.5">
                 <app-form-label required>Operador</app-form-label>
-                <input pInputText formControlName="operator" class="w-full" />
+                <input pInputText formControlName="operator" class="w-full" [invalid]="lineForm.controls.operator.invalid && lineForm.controls.operator.touched" />
+                @if (lineForm.controls.operator.invalid && lineForm.controls.operator.touched) {
+                <span class="text-xs text-rose-600">El operador es requerido</span>
+                }
             </div>
             <div class="flex flex-col gap-1.5">
                 <app-form-label>Plan</app-form-label>
@@ -186,7 +192,10 @@
             </div>
             <div class="flex flex-col gap-1.5">
                 <app-form-label required>Fecha de activación</app-form-label>
-                <p-datepicker formControlName="activationDate" [showIcon]="true" appendTo="body" class="w-full" />
+                <p-datepicker formControlName="activationDate" [showIcon]="true" appendTo="body" class="w-full" [invalid]="lineForm.controls.activationDate.invalid && lineForm.controls.activationDate.touched" />
+                @if (lineForm.controls.activationDate.invalid && lineForm.controls.activationDate.touched) {
+                <span class="text-xs text-rose-600">La fecha de activación es requerida</span>
+                }
             </div>
             <div class="flex flex-col gap-1.5">
                 <app-form-label>Observaciones</app-form-label>

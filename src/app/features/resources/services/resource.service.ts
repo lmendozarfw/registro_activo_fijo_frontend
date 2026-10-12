@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { ApiService } from "../../../core/services/api.service";
-import { ResourceDto, CreateResourceCommand, MobileResourceDto, CreateMobileResourceCommand } from "../models/resource.model";
+import { ResourceDto, ResourceGroupItemDto, CreateResourceCommand, MobileResourceDto, CreateMobileResourceCommand } from "../models/resource.model";
 
 @Injectable({ providedIn: 'root' })
 export class ResourceService {
@@ -14,5 +14,9 @@ export class ResourceService {
 
     create(data: CreateResourceCommand): Observable<ResourceDto> {
         return this.api.create<CreateResourceCommand, ResourceDto>(this.endpoint, data);
+    }
+
+    getAvailableToAssign(): Observable<ResourceGroupItemDto[]> {
+        return this.api.getAll<ResourceGroupItemDto>(`${this.endpoint}/available-to-assignments`);
     }
 }

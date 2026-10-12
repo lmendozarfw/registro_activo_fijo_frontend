@@ -16,6 +16,23 @@ export interface ResourceDto {
     createdAt?: string;
 }
 
+export interface ResourceItemDto {
+    id: string;
+    assetCode: string;
+    name: string;
+    serialNumber?: string | null;
+    type: ResourceTypeEnum;
+    price: number;
+    status: StatusResourceEnum;
+    metadata: Record<string, string | null>;
+}
+
+export interface ResourceGroupItemDto {
+    type: ResourceTypeEnum;
+    name: string;
+    resourceItems: ResourceItemDto[];
+}
+
 export interface CreateResourceCommand {
     assetCode: string;
     name: string;
