@@ -1,0 +1,214 @@
+<div>
+    <p-tabs [(value)]="activeTab">
+        <p-tablist>
+            <p-tab value="mobiles">Celulares</p-tab>
+            <p-tab value="lines">Líneas</p-tab>
+        </p-tablist>
+        <p-tabpanels>
+            <p-tabpanel value="mobiles">
+                <div class="mb-4 flex items-start justify-between gap-4">
+                    <p class="text-sm text-slate-600 max-w-[80%]">Celulares registrados como recursos móviles.</p>
+                    <button pButton type="button" (click)="openCreateMobile()">
+                        <span class="flex items-center gap-2">
+                            <svg data-p-icon="plus" [size]="16"></svg>
+                            Nuevo celular
+                        </span>
+                    </button>
+                </div>
+
+                @if (store.mobileResources().length > 0) {
+                <p-table [value]="store.mobileResources()" [loading]="store.loading()" [paginator]="true" [rows]="10"
+                    [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '1700px' }">
+                    <ng-template #header>
+                        <tr>
+                            <th style="width: 200px">Código activo</th>
+                            <th style="width: 300px">Nombre</th>
+                            <th style="width: 200px">Marca</th>
+                            <th style="width: 200px">Modelo</th>
+                            <th style="width: 150px">IMEI</th>
+                            <th style="width: 150px">IMEI 2</th>
+                            <th style="width: 150px">Línea activa</th>
+                            <th style="width: 150px">Estado</th>
+                            <th style="width: 200px">Fecha</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template #body let-m>
+                        <tr>
+                            <td><span class="inline-block rounded-md bg-slate-100 px-2 py-1 font-mono text-xs">{{
+                                    m.assetCode }}</span></td>
+                            <td>{{ m.name }}</td>
+                            <td>{{ m.brandName }}</td>
+                            <td>{{ m.modelName }}</td>
+                            <td>{{ m.imei }}</td>
+                            <td>{{ m.imei2 || '—' }}</td>
+                            <td>{{ m.activeLinePhoneNumber || '—' }} {{ m.activeLineOperator ? '('+m.activeLineOperator+')'
+                                : '' }}</td>
+                            <td><p-tag [value]="getStatusLabel(m.status)" /></td>
+                            <td>{{ formatDate(m.createdAt) }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                } @else {
+                <app-empty-state message="No se encontraron celulares" description="Puedes agregar nuevos celulares." />
+                }
+
+                <app-form-dialog [(visible)]="dialogVisible" [header]="'Nuevo celular'" width="56rem">
+                    <form [formGroup]="form" class="flex flex-col gap-4" (ngSubmit)="saveMobile()">
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="flex flex-col gap-1.5">
+                                <app-form-label required>Modelo (MOBILE)</app-form-label>
+                                <p-select formControlName="modelId" [options]="mobileModels()" optionLabel="name"
+                                    optionValue="id" placeholder="Selecciona un modelo" appendTo="body" class="w-full"
+                                    [invalid]="form.controls.modelId.invalid && form.controls.modelId.touched" />
+                            </div>
+                            <div class="flex flex-col gap-1.5">
+                                <app-form-label required>Código de activo</app-form-label>
+                                <input pInputText formControlName="assetCode" class="w-full"
+                                    [invalid]="form.controls.assetCode.invalid && form.controls.assetCode.touched" />
+                            </div>
+                            <div class="flex flex-col gap-1.5">
+                                <app-form-label required>Nombre</app-form-label>
+                                <input pInputText formControlName="name" class="w-full"
+                                    [invalid]="form.controls.name.invalid && form.controls.name.touched" />
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="flex flex-col gap-1.5">
+                                <app-form-label>Número de serie</app-form-label>
+                                <input pInputText formControlName="serialNumber" class="w-full" />
+                            </div>
+                            <div class="flex flex-col gap-1.5">
+                                <app-form-label required>Precio</app-form-label>
+                                <p-inputnumber formControlName="price" class="w-full" mode="currency" currency="USD" locale="en-US" />
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="flex flex-col gap-1.5">
+                                <app-form-label required>IMEI</app-form-label>
+                                <input pInputText formControlName="imei" class="w-full"
+                                    [invalid]="form.controls.imei.invalid && form.controls.imei.touched" />
+                            </div>
+                            <div class="flex flex-col gap-1.5">
+                                <app-form-label>IMEI 2</app-form-label>
+                                <input pInputText formControlName="imei2" class="w-full" />
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <div class="flex items-center justify-between">
+                                <app-form-label>Línea</app-form-label>
+                                <button pButton type="button" text size="small" (click)="openCreateLine()">Nueva
+                                    línea</button>
+                            </div>
+                            <p-select formControlName="lineId" [options]="lineStore.lines()" optionLabel="phoneNumber"
+                                optionValue="id" placeholder="Selecciona una línea (opcional)" appendTo="body"
+                                class="w-full" />
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <app-form-label>Observaciones</app-form-label>
+                            <textarea pTextarea formControlName="observations" rows="3" class="w-full"></textarea>
+                        </div>
+                    </form>
+
+                    <div dialog-footer class="flex justify-end gap-2">
+                        <button pButton type="button" severity="secondary"
+                            (click)="dialogVisible = false">Cancelar</button>
+                        <button pButton type="button" [loading]="store.saving()" (click)="saveMobile()">Guardar</button>
+                    </div>
+                </app-form-dialog>
+            </p-tabpanel>
+
+            <p-tabpanel value="lines">
+                <div class="mb-4 flex items-start justify-between gap-4">
+                    <p class="text-sm text-slate-600 max-w-[80%]">Gestiona las líneas telefónicas.</p>
+                    <button pButton type="button" (click)="openCreateLine()">
+                        <span class="flex items-center gap-2">
+                            <svg data-p-icon="plus" [size]="16"></svg>
+                            Nueva línea
+                        </span>
+                    </button>
+                </div>
+
+                @if (lineStore.lines().length > 0) {
+                <p-table [value]="lineStore.lines()" [loading]="lineStore.loading()" [paginator]="true" [rows]="10"
+                    [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '1150px' }">
+                    <ng-template #header>
+                        <tr>
+                            <th style="width: 150px">Número</th>
+                            <th style="width: 150px">Operador</th>
+                            <th style="width: 150px">Plan</th>
+                            <th style="width: 200px">Fecha de activación</th>
+                            <th style="width: 200px">Fecha de registro</th>
+                            <th style="width: 150px">Estado</th>
+                            <th style="width: 150px">Acciones</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template #body let-line>
+                        <tr>
+                            <td>{{ line.phoneNumber }}</td>
+                            <td>{{ line.operator || '—' }}</td>
+                            <td>{{ line.plan || '—' }}</td>
+                            <td>{{ formatDate(line.activationDate) }}</td>
+                            <td>{{ formatDate(line.createdAt) }}</td>
+                            <td>{{ line.status || '—' }}</td>
+                            <td>
+                                <button pButton type="button" severity="danger" text pTooltip="Eliminar"
+                                    aria-label="Eliminar" (click)="openDeleteLine(line)">
+                                    <svg data-p-icon="trash" [size]="16"></svg>
+                                </button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                } @else {
+                <app-empty-state message="No se encontraron líneas" description="Puedes agregar nuevas líneas." />
+                }
+            </p-tabpanel>
+        </p-tabpanels>
+    </p-tabs>
+
+    <app-form-dialog [(visible)]="lineDialogVisible" [header]="'Nueva línea'" width="28rem">
+        <form [formGroup]="lineForm" class="flex flex-col gap-4" (ngSubmit)="saveLine()">
+            <div class="flex flex-col gap-1.5">
+                <app-form-label required>Número de teléfono</app-form-label>
+                <input pInputText formControlName="phoneNumber" class="w-full" />
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <app-form-label required>Operador</app-form-label>
+                <input pInputText formControlName="operator" class="w-full" />
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <app-form-label>Plan</app-form-label>
+                <input pInputText formControlName="plan" class="w-full" />
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <app-form-label required>Fecha de activación</app-form-label>
+                <p-datepicker formControlName="activationDate" [showIcon]="true" appendTo="body" class="w-full" />
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <app-form-label>Observaciones</app-form-label>
+                <textarea pTextarea formControlName="observations" rows="2" class="w-full"></textarea>
+            </div>
+        </form>
+
+        <div dialog-footer class="flex justify-end gap-2">
+            <button pButton type="button" severity="secondary" (click)="lineDialogVisible = false">Cancelar</button>
+            <button pButton type="button" [loading]="lineStore.saving()" (click)="saveLine()">Guardar</button>
+        </div>
+    </app-form-dialog>
+
+    <app-form-dialog [(visible)]="deleteLineDialogVisible" header="Eliminar línea" width="24rem">
+        <p class="text-sm text-slate-600">
+            ¿Seguro que deseas eliminar la línea <strong>{{ lineToDelete?.phoneNumber }}</strong>?
+        </p>
+
+        <div dialog-footer class="flex justify-end gap-2">
+            <button pButton type="button" severity="secondary" (click)="deleteLineDialogVisible = false">Cancelar</button>
+            <button pButton type="button" severity="danger" [loading]="lineStore.saving()"
+                (click)="confirmDeleteLine()">Eliminar</button>
+        </div>
+    </app-form-dialog>
+</div>

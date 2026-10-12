@@ -5,12 +5,12 @@
 
     @if (store.permissions().length > 0) {
     <p-table [value]="store.permissions()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '50rem' }">
+        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '900px' }">
         <ng-template #header>
             <tr>
-                <th style="width: 16rem">Módulo</th>
-                <th style="width: 18rem">Código</th>
-                <th style="width: 16rem">Nombre</th>
+                <th style="width: 200px">Módulo</th>
+                <th style="width: 200px">Código</th>
+                <th style="width: 200x">Nombre</th>
                 <th>Descripción</th>
             </tr>
         </ng-template>

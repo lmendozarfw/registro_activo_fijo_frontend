@@ -1,0 +1,115 @@
+<div>
+    <div class="mb-4 flex items-start justify-between gap-4">
+        <p class="text-sm text-slate-600 max-w-[80%]">Gestiona los recursos de activo fijo. Para registrar celulares
+            utiliza la pantalla de Celulares.</p>
+        <button pButton type="button" (click)="openCreate()">
+            <span class="flex items-center gap-2">
+                <svg data-p-icon="plus" [size]="16"></svg>
+                Nuevo recurso
+            </span>
+        </button>
+    </div>
+
+    @if (store.resources().length > 0) {
+    <p-table [value]="store.resources()" [loading]="store.loading()" [paginator]="true" [rows]="10"
+        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '1650px' }">
+        <ng-template #header>
+            <tr>
+                <th style="width: 200px">Código de activo</th>
+                <th style="width: 300px">Nombre</th>
+                <th style="width: 200px">Marca</th>
+                <th style="width: 200px">Modelo</th>
+                <th style="width: 200px">Tipo</th>
+                <th style="width: 150px">Número de serie</th>
+                <th style="width: 150px">Precio</th>
+                <th style="width: 150px">Estado</th>
+                <th style="width: 200px">Fecha de registro</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-resource>
+            <tr>
+                <td>
+                    <span class="inline-block rounded-md bg-slate-100 px-2 py-1 font-mono text-xs">{{ resource.assetCode
+                        }}</span>
+                </td>
+                <td>{{ resource.name }}</td>
+                <td>{{ resource.brandName }}</td>
+                <td>{{ resource.modelName }}</td>
+                <td>
+                    <p-tag [value]="getTypeLabel(resource.type)" severity="secondary" />
+                </td>
+                <td>{{ resource.serialNumber || '—' }}</td>
+                <td>{{ resource.price | currency:'MXN':'symbol':'1.2-2' }}</td>
+                <td>
+                    <p-tag [value]="getStatusLabel(resource.status)" />
+                </td>
+                <td>{{ formatDate(resource.createdAt) }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    } @else {
+    <app-empty-state message="No se encontraron recursos" description="Puedes agregar nuevos recursos." />
+    }
+
+    <app-form-dialog [(visible)]="dialogVisible" [header]="dialogTitle" width="48rem">
+        <form [formGroup]="form" class="flex flex-col gap-4" (ngSubmit)="save()">
+            <div class="grid grid-cols-3 gap-4">
+                <div class="flex flex-col gap-1.5">
+                    <app-form-label required>Tipo</app-form-label>
+                    <p-select formControlName="type" [options]="resourceTypeOptions" optionLabel="label"
+                        optionValue="value" appendTo="body" class="w-full" />
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <app-form-label>Marca (filtro)</app-form-label>
+                    <p-select formControlName="brandId" [options]="brandStore.brands()" optionLabel="name"
+                        optionValue="id" placeholder="Todas" [showClear]="true" appendTo="body" class="w-full" />
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <app-form-label required>Modelo</app-form-label>
+                    <p-select formControlName="modelId" [options]="filteredModels()" optionLabel="name"
+                        optionValue="id" placeholder="Selecciona un modelo" appendTo="body" class="w-full"
+                        [invalid]="form.controls.modelId.invalid && form.controls.modelId.touched" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4">
+                <div class="flex flex-col gap-1.5">
+                    <app-form-label required>Código de activo</app-form-label>
+                    <input pInputText formControlName="assetCode" class="w-full"
+                        [invalid]="form.controls.assetCode.invalid && form.controls.assetCode.touched" />
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <app-form-label required>Nombre</app-form-label>
+                    <input pInputText formControlName="name" class="w-full"
+                        [invalid]="form.controls.name.invalid && form.controls.name.touched" />
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <app-form-label>Número de serie</app-form-label>
+                    <input pInputText formControlName="serialNumber" class="w-full" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4">
+                <div class="flex flex-col gap-1.5">
+                    <app-form-label required>Precio</app-form-label>
+                    <p-inputNumber formControlName="price" class="w-full" mode="decimal" />
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <app-form-label required>Estado</app-form-label>
+                    <p-select formControlName="status" [options]="statusOptions" optionLabel="label"
+                        optionValue="value" appendTo="body" class="w-full" />
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <app-form-label>Observaciones</app-form-label>
+                <textarea pTextarea formControlName="observations" rows="3" class="w-full"></textarea>
+            </div>
+        </form>
+
+        <div dialog-footer class="flex justify-end gap-2">
+            <button pButton type="button" severity="secondary" (click)="dialogVisible = false">Cancelar</button>
+            <button pButton type="button" [loading]="store.saving()" (click)="save()">Guardar</button>
+        </div>
+    </app-form-dialog>
+</div>

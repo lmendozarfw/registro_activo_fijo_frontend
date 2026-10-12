@@ -13,13 +13,13 @@
 
     @if (store.users().length > 0) {
     <p-table [value]="store.users()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-        [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '60rem' }">
+        [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '1000px' }">
         <ng-template #header>
             <tr>
-                <th style="width: 14rem">Usuario</th>
+                <th style="width: 200px">Usuario</th>
                 <th>Empleado</th>
-                <th style="width: 12rem">Fecha de creación</th>
-                <th style="width: 8rem">Acciones</th>
+                <th style="width: 200px">Fecha de creación</th>
+                <th style="width: 300px">Acciones</th>
             </tr>
         </ng-template>
         <ng-template #body let-user>

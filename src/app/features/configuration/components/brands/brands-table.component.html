@@ -12,22 +12,18 @@
 
     @if (store.brands().length > 0) {
     <p-table [value]="store.brands()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '60rem' }">
+        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '1000px' }">
         <ng-template #header>
             <tr>
                 <th>Nombre</th>
-                <th style="width: 12rem">Tipo de recurso</th>
-                <th style="width: 12rem">Fecha de creación</th>
-                <th style="width: 12rem">Fecha de modificación</th>
-                <th style="width: 8rem">Acciones</th>
+                <th style="width: 200px">Fecha de creación</th>
+                <th style="width: 200px">Fecha de modificación</th>
+                <th style="width: 150px">Acciones</th>
             </tr>
         </ng-template>
         <ng-template #body let-brand>
             <tr>
                 <td>{{ brand.name }}</td>
-                <td>
-                    <p-tag [value]="getTypeLabel(brand.type)" severity="secondary" />
-                </td>
                 <td>{{ formatDate(brand.createdAt) }}</td>
                 <td>{{ formatDate(brand.updatedAt) }}</td>
                 <td>
@@ -57,16 +53,6 @@
                     [invalid]="form.controls.name.invalid && form.controls.name.touched" />
                 @if (form.controls.name.invalid && form.controls.name.touched) {
                 <span class="text-xs text-rose-600">El nombre es requerido</span>
-                }
-            </div>
-
-            <div class="flex flex-col gap-1.5">
-                <app-form-label required>Tipo de recurso</app-form-label>
-                <p-select formControlName="type" [options]="resourceTypeOptions" optionLabel="label"
-                    optionValue="value" placeholder="Selecciona un tipo" appendTo="body" class="w-full"
-                    [invalid]="form.controls.type.invalid && form.controls.type.touched" />
-                @if (form.controls.type.invalid && form.controls.type.touched) {
-                <span class="text-xs text-rose-600">Selecciona un tipo de recurso</span>
                 }
             </div>
         </form>

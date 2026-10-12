@@ -12,13 +12,13 @@
 
     @if (store.departments().length > 0) {
     <p-table [value]="store.departments()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-        [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '60rem' }">
+        [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '1000px' }">
         <ng-template #header>
             <tr>
                 <th>Nombre</th>
-                <th style="width: 12rem">Fecha de creación</th>
-                <th style="width: 12rem">Fecha de modificación</th>
-                <th style="width: 8rem">Acciones</th>
+                <th style="width: 200px">Fecha de creación</th>
+                <th style="width: 200px">Fecha de modificación</th>
+                <th style="width: 150px">Acciones</th>
             </tr>
         </ng-template>
         <ng-template #body let-department>

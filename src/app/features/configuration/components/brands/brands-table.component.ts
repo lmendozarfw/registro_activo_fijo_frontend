@@ -34,7 +34,6 @@ export class BrandsTableComponent implements OnInit {
 
     form = new FormGroup({
         name: new FormControl('', { nonNullable: true, validators: Validators.required }),
-        type: new FormControl<ResourceTypeEnum | null>(null, { validators: Validators.required }),
     });
 
     ngOnInit(): void {
@@ -44,14 +43,14 @@ export class BrandsTableComponent implements OnInit {
     openCreate(): void {
         this.editingBrand = null;
         this.dialogTitle = 'Nueva marca';
-        this.form.reset({ name: '', type: null });
+        this.form.reset({ name: '' });
         this.dialogVisible = true;
     }
 
     openEdit(brand: Brand): void {
         this.editingBrand = brand;
         this.dialogTitle = 'Editar marca';
-        this.form.reset({ name: brand.name, type: brand.type });
+        this.form.reset({ name: brand.name });
         this.dialogVisible = true;
     }
 
@@ -59,12 +58,9 @@ export class BrandsTableComponent implements OnInit {
         if (this.form.invalid) {
             this.form.markAllAsTouched();
             return;
-        }
+        };
 
-        const type = this.form.controls.type.value;
-        if (!type) return;
-
-        const payload: BrandRequest = { name: this.form.controls.name.value.trim(), type };
+        const payload: BrandRequest = { name: this.form.controls.name.value.trim() };
 
         const success = this.editingBrand
             ? await this.store.update(this.editingBrand.id, payload)
@@ -74,6 +70,7 @@ export class BrandsTableComponent implements OnInit {
             this.dialogVisible = false;
         }
     }
+
 
     openDelete(brand: Brand): void {
         this.brandToDelete = brand;

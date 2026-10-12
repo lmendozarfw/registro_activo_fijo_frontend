@@ -1,0 +1,33 @@
+export enum StatusLineEnum {
+    ACTIVE = 'ACTIVE',
+    CANCELLED = 'CANCELLED',
+    SUSPENDED = 'SUSPENDED',
+    UNKNOWN = 'UNKNOWN',
+}
+
+export interface LineDto {
+    id: string;
+    phoneNumber: string;
+    operator: string;
+    plan?: string | null;
+    activationDate?: string;
+    cancellationDate?: string | null;
+    observations?: string | null;
+    status?: string | StatusLineEnum;
+}
+
+export interface CreateLineCommand {
+    phoneNumber: string;
+    operator: string;
+    plan?: string | null;
+    activationDate: string;
+    observations?: string | null;
+}
+
+export interface UpdateLineCommand {
+    phoneNumber: string;
+    operator: string;
+    plan?: string | null;
+    activationDate: string;
+    observations?: string | null;
+}

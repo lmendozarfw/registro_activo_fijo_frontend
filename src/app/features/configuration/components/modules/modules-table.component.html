@@ -5,11 +5,11 @@
 
     @if (store.modules().length > 0) {
     <p-table [value]="store.modules()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '50rem' }">
+        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '700px' }">
         <ng-template #header>
             <tr>
-                <th style="width: 16rem">Código</th>
-                <th style="width: 18rem">Nombre</th>
+                <th style="width: 200px">Código</th>
+                <th style="width: 200px">Nombre</th>
                 <th>Descripción</th>
             </tr>
         </ng-template>

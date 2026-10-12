@@ -13,15 +13,15 @@
 
     @if (store.models().length > 0) {
     <p-table [value]="store.models()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '70rem' }">
+        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '1200px' }">
         <ng-template #header>
             <tr>
-                <th style="width: 16rem">Marca</th>
+                <th style="width: 200px">Marca</th>
                 <th>Nombre</th>
-                <th style="width: 12rem">Tipo de recurso</th>
-                <th style="width: 12rem">Fecha de creación</th>
-                <th style="width: 12rem">Fecha de modificación</th>
-                <th style="width: 8rem">Acciones</th>
+                <th style="width: 200px">Tipo de recurso</th>
+                <th style="width: 200px">Fecha de creación</th>
+                <th style="width: 200px">Fecha de modificación</th>
+                <th style="width: 150px">Acciones</th>
             </tr>
         </ng-template>
         <ng-template #body let-model>
