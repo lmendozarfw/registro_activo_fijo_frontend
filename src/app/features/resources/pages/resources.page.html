@@ -60,13 +60,13 @@
                         optionValue="value" appendTo="body" class="w-full" />
                 </div>
                 <div class="flex flex-col gap-1.5">
-                    <app-form-label>Marca (filtro)</app-form-label>
+                    <app-form-label>Marca</app-form-label>
                     <p-select formControlName="brandId" [options]="brandStore.brands()" optionLabel="name"
                         optionValue="id" placeholder="Todas" [showClear]="true" appendTo="body" class="w-full" />
                 </div>
                 <div class="flex flex-col gap-1.5">
                     <app-form-label required>Modelo</app-form-label>
-                    <p-select formControlName="modelId" [options]="filteredModels()" optionLabel="name"
+                    <p-select formControlName="modelId" [options]="modelStore.models()" optionLabel="name"
                         optionValue="id" placeholder="Selecciona un modelo" appendTo="body" class="w-full"
                         [invalid]="form.controls.modelId.invalid && form.controls.modelId.touched" />
                 </div>
@@ -92,7 +92,7 @@
             <div class="grid grid-cols-3 gap-4">
                 <div class="flex flex-col gap-1.5">
                     <app-form-label required>Precio</app-form-label>
-                    <p-inputNumber formControlName="price" class="w-full" mode="decimal" />
+                    <p-inputnumber formControlName="price" class="w-full"  mode="currency" currency="USD" locale="en-US" />
                 </div>
                 <div class="flex flex-col gap-1.5">
                     <app-form-label required>Estado</app-form-label>

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, computed } from "@angular/core";
+import { Component, OnInit, inject, computed, OnDestroy } from "@angular/core";
 import { CurrencyPipe } from '@angular/common';
 import { Pencil, Plus } from '@primeicons/angular';
 import { TableModule } from 'primeng/table';
@@ -19,6 +19,7 @@ import { ModelStore } from "../../configuration/stores/model.store";
 import { CreateResourceCommand } from "../models/resource.model";
 import { RESOURCE_TYPE_LABELS, ResourceTypeEnum, RESOURCE_TYPE_OPTIONS } from "../models/resource-type.model";
 import { STATUS_RESOURCE_LABELS, STATUS_RESOURCE_OPTIONS, StatusResourceEnum } from "../models/status-resource.model";
+import { Subscription } from "rxjs";
 
 @Component({
     selector: "app-resources-page",
@@ -27,7 +28,7 @@ import { STATUS_RESOURCE_LABELS, STATUS_RESOURCE_OPTIONS, StatusResourceEnum } f
     imports: [TableModule, ButtonModule, InputText, InputNumberModule, TextareaModule, SelectModule, TagModule, TooltipModule,
         ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent, Pencil, Plus, CurrencyPipe]
 })
-export class ResourcesPage implements OnInit {
+export class ResourcesPage implements OnInit, OnDestroy {
     protected readonly store = inject(ResourceStore);
     protected readonly brandStore = inject(BrandStore);
     protected readonly modelStore = inject(ModelStore);
@@ -47,7 +48,7 @@ export class ResourcesPage implements OnInit {
 
     form = new FormGroup({
         brandId: new FormControl('', { nonNullable: true }),
-        modelId: new FormControl('', { nonNullable: true, validators: Validators.required }),
+        modelId: new FormControl({value: '', disabled: true}, { nonNullable: true, validators: Validators.required }),
         type: new FormControl<ResourceTypeEnum>(ResourceTypeEnum.OTHER, { nonNullable: true, validators: Validators.required }),
         assetCode: new FormControl('', { nonNullable: true, validators: Validators.required }),
         name: new FormControl('', { nonNullable: true, validators: Validators.required }),
@@ -57,10 +58,20 @@ export class ResourcesPage implements OnInit {
         observations: new FormControl(''),
     });
 
+    brandControlSubscription?: Subscription;
     ngOnInit(): void {
         this.store.loadAll();
         this.brandStore.load();
         this.modelStore.load();
+        this.formSubscribers();
+    }
+
+    formSubscribers() {
+        this.brandControlSubscription = this.form.get("brandId")?.valueChanges.subscribe(async (value) => {
+            if (!value) return;
+            await this.modelStore.loadByBrand(value);
+            this.form.get("modelId")?.enable();
+        });
     }
 
     openCreate(): void {
@@ -118,5 +129,9 @@ export class ResourcesPage implements OnInit {
         return isNaN(date.getTime()) ? '—' : date.toLocaleString('es-ES', {
             day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
         });
+    }
+
+    ngOnDestroy(): void {
+        this.brandControlSubscription?.unsubscribe();
     }
 }
