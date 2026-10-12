@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, computed, OnDestroy } from "@angular/core";
 import { CurrencyPipe } from '@angular/common';
-import { Pencil, Plus } from '@primeicons/angular';
+import { Plus } from '@primeicons/angular';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
@@ -26,7 +26,7 @@ import { Subscription } from "rxjs";
     templateUrl: "./resources.page.html",
     styles: [],
     imports: [TableModule, ButtonModule, InputText, InputNumberModule, TextareaModule, SelectModule, TagModule, TooltipModule,
-        ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent, Pencil, Plus, CurrencyPipe]
+        ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent, Plus, CurrencyPipe]
 })
 export class ResourcesPage implements OnInit, OnDestroy {
     protected readonly store = inject(ResourceStore);

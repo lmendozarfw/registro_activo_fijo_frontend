@@ -36,12 +36,12 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/credentials/pages/my-credentials.page').then(p => p.MyCredentialsPage),
             },
             {
-                path: 'assets',
-                loadComponent: () => import('./features/resources/pages/resources.page').then(p => p.ResourcesPage),
+                path: 'assignments',
+                loadComponent: () => import('./features/assignments/pages/assignments.page').then(p => p.AssignmentsPage),
             },
             {
-                path: 'phones',
-                loadComponent: () => import('./features/resources/pages/phones.page').then(p => p.PhonesPage),
+                path: 'assets',
+                loadComponent: () => import('./features/resources/pages/resources.page').then(p => p.ResourcesPage),
             },
         ]
     },

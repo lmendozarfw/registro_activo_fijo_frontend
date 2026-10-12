@@ -3,11 +3,12 @@ import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
 import { firstValueFrom } from "rxjs";
 import { ToastService } from "../../../core/services/toast.service";
 import { resolveErrorMessage } from "../../../core/utils/error.utils";
-import { Employee, EmployeeRequest } from "../models/employee.model";
+import { Employee, EmployeeItem, EmployeeRequest } from "../models/employee.model";
 import { EmployeeService } from "../services/employee.service";
 
 type EmployeeState = {
     employees: Employee[];
+    employeesItem: EmployeeItem[],
     loading: boolean;
     saving: boolean;
     error: string | null;
@@ -17,6 +18,7 @@ export const EmployeeStore = signalStore(
     { providedIn: 'root' },
     withState<EmployeeState>({
         employees: [],
+        employeesItem: [],
         loading: false,
         saving: false,
         error: null,
@@ -33,6 +35,19 @@ export const EmployeeStore = signalStore(
                 try {
                     const employees = await firstValueFrom(service.getAll());
                     patchState(store, { employees, loading: false });
+                } catch (error) {
+                    const message = resolveErrorMessage(error, 'No se pudieron cargar los empleados');
+                    patchState(store, { loading: false, error: message });
+                    toast.error(message);
+                }
+            },
+
+            async loadAvailablToAssignments(): Promise<void> {
+                patchState(store, { loading: true, error: null });
+
+                try {
+                    const employees = await firstValueFrom(service.getAvailableToAssignments());
+                    patchState(store, { employeesItem: employees, loading: false });
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudieron cargar los empleados');
                     patchState(store, { loading: false, error: message });

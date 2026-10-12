@@ -19,7 +19,7 @@ import { ModelStore } from "../../configuration/stores/model.store";
 import { CreateMobileResourceCommand } from "../models/resource.model";
 import { RESOURCE_TYPE_LABELS, ResourceTypeEnum } from "../models/resource-type.model";
 import { STATUS_RESOURCE_LABELS, StatusResourceEnum } from "../models/status-resource.model";
-import { Pencil, Plus, Trash } from '@primeicons/angular';
+import { Plus, Trash } from '@primeicons/angular';
 import { DatePickerModule } from 'primeng/datepicker';
 import { LineDto, CreateLineCommand } from "../models/line.model";
 
@@ -28,7 +28,7 @@ import { LineDto, CreateLineCommand } from "../models/line.model";
     templateUrl: "./phones.page.html",
     styles: [],
     imports: [TableModule, ButtonModule, InputText, InputNumberModule, TextareaModule, SelectModule, TagModule, TooltipModule,
-        TabsModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent, Pencil, Plus, Trash, DatePickerModule]
+        TabsModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent, Plus, Trash, DatePickerModule]
 })
 export class PhonesPage implements OnInit {
     protected readonly store = inject(ResourceStore);
