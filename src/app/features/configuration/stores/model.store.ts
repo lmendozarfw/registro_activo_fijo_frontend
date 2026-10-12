@@ -40,6 +40,19 @@ export const ModelStore = signalStore(
                 }
             },
 
+            async loadOnlyMobiles(): Promise<void> {
+                patchState(store, { loading: true, error: null });
+
+                try {
+                    const models = await firstValueFrom(service.getOnlyMobiles());
+                    patchState(store, { models, loading: false });
+                } catch (error) {
+                    const message = resolveErrorMessage(error, 'No se pudieron cargar los modelos');
+                    patchState(store, { loading: false, error: message });
+                    toast.error(message);
+                }
+            },
+
             async create(data: ModelRequest): Promise<boolean> {
                 patchState(store, { saving: true, error: null });
 

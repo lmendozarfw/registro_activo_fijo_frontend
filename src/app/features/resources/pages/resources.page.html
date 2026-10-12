@@ -1,6 +1,6 @@
 <div>
     <div class="mb-4 flex items-start justify-between gap-4">
-        <p class="text-sm text-slate-600 max-w-[80%]">Gestiona los recursos de activo fijo. Para registrar celulares
+        <p class="text-sm text-slate-600 max-w-[70%]">Gestiona los recursos de activo fijo. Para registrar celulares
             utiliza la pantalla de Celulares.</p>
         <button pButton type="button" (click)="openCreate()">
             <span class="flex items-center gap-2">
@@ -12,7 +12,7 @@
 
     @if (store.resources().length > 0) {
     <p-table [value]="store.resources()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '1650px' }">
+        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '1700px' }">
         <ng-template #header>
             <tr>
                 <th style="width: 200px">Código de activo</th>
@@ -20,7 +20,7 @@
                 <th style="width: 200px">Marca</th>
                 <th style="width: 200px">Modelo</th>
                 <th style="width: 200px">Tipo</th>
-                <th style="width: 150px">Número de serie</th>
+                <th style="width: 200px">Número de serie</th>
                 <th style="width: 150px">Precio</th>
                 <th style="width: 150px">Estado</th>
                 <th style="width: 200px">Fecha de registro</th>

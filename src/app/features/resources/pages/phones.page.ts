@@ -70,7 +70,7 @@ export class PhonesPage implements OnInit {
         this.store.loadMobile();
         this.lineStore.load();
         this.brandStore.load();
-        this.modelStore.load();
+        this.modelStore.loadOnlyMobiles();
     }
 
     openCreateMobile(): void {

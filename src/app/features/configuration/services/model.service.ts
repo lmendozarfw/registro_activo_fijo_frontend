@@ -12,6 +12,14 @@ export class ModelService {
         return this.api.getAll<Model>(this.endpoint);
     }
 
+    getOnlyMobiles(): Observable<Model[]> {
+        return this.api.getAll<Model>(`${this.endpoint}/mobiles`);
+    }
+
+    getByBrandId(brandId: string): Observable<Model[]> {
+        return this.api.getAll<Model>(`${this.endpoint}/by-brand/${brandId}`);
+    }
+
     getById(id: string): Observable<Model> {
         return this.api.getById<Model>(this.endpoint, id);
     }
