@@ -12,7 +12,7 @@ import { EmptyStateComponent } from "../../../shared/components/empty-state/empt
 import { AssignmentStore } from "../stores/assignment.store";
 import { EmployeeStore } from "../../employees/stores/employee.store";
 import { ResourceStore } from "../../resources/stores/resource.store";
-import { CreateAssignmentCommand } from "../models/assignment.model";
+import { AssignmentDto, CreateAssignmentCommand, ReturnAssignmentCommand } from "../models/assignment.model";
 import { ChevronDown, Pencil, Plus, Undo, ArrowRightArrowLeft } from '@primeicons/angular';
 import { AuthStore } from "../../../features/auth/stores/auth.store";
 import { TooltipModule } from "primeng/tooltip";
@@ -45,6 +45,7 @@ export class AssignmentsPage implements OnInit {
     });
 
     dialogReturnVisible = false;
+    selectedAssignment: AssignmentDto | null = null;
     formReturn = new FormGroup({
         observation: new FormControl('', [])
     });
@@ -65,8 +66,8 @@ export class AssignmentsPage implements OnInit {
         this.dialogVisible = true;
     }
 
-    openReturn(): void {
-        console.log('hola mundo');
+    openReturn(assignment: AssignmentDto): void {
+        this.selectedAssignment = assignment;
         this.formReturn.reset({
             observation: ''
         });
@@ -95,7 +96,22 @@ export class AssignmentsPage implements OnInit {
     }
 
     async returnResource(): Promise<void> {
+        if (!this.selectedAssignment) {
+            return;
+        }
 
+        const payload: ReturnAssignmentCommand = {
+            assignmentId: this.selectedAssignment.id,
+            returnDate: new Date().toISOString(),
+            observation: this.formReturn.controls.observation.value?.trim() || null,
+            actorUserId: this.auth.user()?.id || null,
+        };
+
+        const success = await this.store.returnResource(payload);
+        if (success) {
+            this.dialogReturnVisible = false;
+            this.selectedAssignment = null;
+        }
     }
 
     protected formatDate(value?: string | null): string {

@@ -40,7 +40,7 @@
                 <td>
                     <div class="flex gap-1">
                         <button pButton type="button" severity="danger" text pTooltip="Devolver" aria-label="Devolver"
-                            (click)="openReturn()">
+                            [disabled]="!a.isActive" (click)="openReturn(a)">
                             <svg data-p-icon="undo" [size]="16"></svg>
                         </button>
                         <button pButton type="button" severity="warn" text pTooltip="Renovar" aria-label="Renovar">
@@ -127,7 +127,7 @@
         </div>
         <form [formGroup]="formReturn" class="flex flex-col gap-4" (ngSubmit)="returnResource()">
             <div class="flex flex-col gap-1.5">
-                <app-form-label required>Observaciones</app-form-label>
+                <app-form-label>Observaciones</app-form-label>
                 <textarea pTextarea formControlName="observation" class="w-full" rows="3" placeholder="Observación opcional..."></textarea>
             </div>
         </form>

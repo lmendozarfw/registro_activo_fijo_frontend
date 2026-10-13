@@ -30,3 +30,10 @@ export interface CreateAssignmentCommand {
     observation?: string | null;
     actorUserId?: string | null;
 }
+
+export interface ReturnAssignmentCommand {
+    assignmentId: string;
+    returnDate: string;
+    observation?: string | null;
+    actorUserId?: string | null;
+}
