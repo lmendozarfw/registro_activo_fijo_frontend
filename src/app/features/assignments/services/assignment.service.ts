@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { ApiService } from "../../../core/services/api.service";
-import { AssignmentDto, CreateAssignmentCommand, ReturnAssignmentCommand } from "../models/assignment.model";
+import { AssignmentDto, CreateAssignmentCommand, RenewMobileAssignmentCommand, ReturnAssignmentCommand } from "../models/assignment.model";
 
 @Injectable({ providedIn: 'root' })
 export class AssignmentService {
@@ -18,5 +18,9 @@ export class AssignmentService {
 
     returnResource(data: ReturnAssignmentCommand): Observable<string> {
         return this.api.post<ReturnAssignmentCommand, string>(`${this.endpoint}/${data.assignmentId}/return`, data);
+    }
+
+    renewMobile(data: RenewMobileAssignmentCommand): Observable<string> {
+        return this.api.post<RenewMobileAssignmentCommand, string>(`${this.endpoint}/${data.assignmentId}/renew`, data);
     }
 }

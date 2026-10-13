@@ -11,6 +11,7 @@ type ResourceState = {
     resources: ResourceDto[];
     availableResourceGroups: ResourceGroupItemDto[];
     mobileResources: MobileResourceDto[];
+    unassignedMobileResources: MobileResourceDto[];
     loading: boolean;
     saving: boolean;
     error: string | null;
@@ -22,6 +23,7 @@ export const ResourceStore = signalStore(
         resources: [],
         availableResourceGroups: [],
         mobileResources: [],
+        unassignedMobileResources: [],
         loading: false,
         saving: false,
         error: null,
@@ -63,6 +65,17 @@ export const ResourceStore = signalStore(
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudieron cargar los celulares');
                     patchState(store, { loading: false, error: message });
+                    toast.error(message);
+                }
+            },
+            async loadUnassignedMobile(): Promise<void> {
+                patchState(store, { error: null });
+                try {
+                    const unassignedMobileResources = await firstValueFrom(mobileResourceService.getUnassigned());
+                    patchState(store, { unassignedMobileResources });
+                } catch (error) {
+                    const message = resolveErrorMessage(error, 'No se pudieron cargar los celulares disponibles');
+                    patchState(store, { error: message });
                     toast.error(message);
                 }
             },

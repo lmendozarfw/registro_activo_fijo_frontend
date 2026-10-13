@@ -43,7 +43,8 @@
                             [disabled]="!a.isActive" (click)="openReturn(a)">
                             <svg data-p-icon="undo" [size]="16"></svg>
                         </button>
-                        <button pButton type="button" severity="warn" text pTooltip="Renovar" aria-label="Renovar">
+                        <button pButton type="button" severity="warn" text pTooltip="Renovar" aria-label="Renovar"
+                            [disabled]="!a.isActive || a.type !== 'MOBILE'" (click)="openRenew(a)">
                             <svg data-p-icon="arrow-right-arrow-left" [size]="16"></svg>
                         </button>
                     </div>
@@ -128,13 +129,143 @@
         <form [formGroup]="formReturn" class="flex flex-col gap-4" (ngSubmit)="returnResource()">
             <div class="flex flex-col gap-1.5">
                 <app-form-label>Observaciones</app-form-label>
-                <textarea pTextarea formControlName="observation" class="w-full" rows="3" placeholder="Observación opcional..."></textarea>
+                <textarea pTextarea formControlName="observation" class="w-full" rows="3"
+                    placeholder="Observación opcional..."></textarea>
             </div>
         </form>
 
         <div dialog-footer class="flex justify-end gap-2">
             <button pButton type="button" severity="secondary" (click)="dialogReturnVisible = false">Cancelar</button>
             <button pButton type="button" [loading]="store.saving()" (click)="returnResource()">Guardar</button>
+        </div>
+    </app-form-dialog>
+
+    <app-form-dialog [(visible)]="dialogRenewVisible" [header]="'Renovar asignación'" width="54rem">
+        @if (selectedAssignment) {
+        <div class="grid grid-cols-2 gap-4 rounded-md border border-slate-200 bg-slate-50 p-3">
+            <div class="flex flex-col">
+                <span class="text-xs uppercase text-slate-500">Empleado</span>
+                <span class="text-sm font-medium">{{ selectedAssignment.employeeName }}</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-xs uppercase text-slate-500">Recurso actual</span>
+                <span class="text-sm font-medium">{{ selectedAssignment.assetCode }} · {{
+                    selectedAssignment.resourceName
+                    }}</span>
+                <span class="text-xs text-slate-500">{{ selectedAssignment.brandName }} / {{
+                    selectedAssignment.modelName
+                    }}</span>
+            </div>
+        </div>
+        }
+
+        <form [formGroup]="renewForm" class="flex flex-col gap-4" (ngSubmit)="renew()">
+            <div class="flex flex-col gap-1.5">
+                <app-form-label required>Tipo de renovación</app-form-label>
+                <p-selectbutton formControlName="option" [options]="renewOptions" optionLabel="label"
+                    optionValue="value" [allowEmpty]="false" />
+                <span class="text-xs text-slate-500">Selecciona un celular existente disponible o registra uno
+                    nuevo.</span>
+            </div>
+
+            @if (renewForm.controls.option.value === renewDeviceOption.ExistingDevice) {
+            <div class="flex flex-col gap-1.5">
+                <app-form-label required>Celular disponible</app-form-label>
+                <p-select formControlName="existingMobileResourceId" [options]="availableMobileItems()" optionLabel="name"
+                    optionValue="id" placeholder="Selecciona un celular" appendTo="body" class="w-full"
+                    [invalid]="renewForm.controls.existingMobileResourceId.invalid && renewForm.controls.existingMobileResourceId.touched">
+                    <ng-template #selectedItem let-selectedOption>
+                        <div class="flex items-center gap-2">
+                            <span>{{ selectedOption.name }}</span>
+                            @if (selectedOption.brandName || selectedOption.modelName) {
+                            <span class="text-xs text-surface-500">{{ selectedOption.brandName }} /
+                                {{ selectedOption.modelName }}</span>
+                            }
+                        </div>
+                    </ng-template>
+                    <ng-template #item let-member>
+                        <div class="w-full flex items-center gap-3 py-1">
+                            <span
+                                class="inline-block rounded-md bg-slate-200 px-2 py-1 font-mono text-xs flex-1 max-w-max">{{member.assetCode
+                                }}</span>
+                            <div class="flex-auto flex flex-col">
+                                <span class="font-medium">{{ member.name }}</span>
+                                @if (member.brandName || member.modelName) {
+                                <span class="text-xs text-surface-500">{{ member.brandName }} / {{ member.modelName}} / {{ member.activeLinePhoneNumber ? member.activeLinePhoneNumber : 'Sin línea' }}</span>
+                                }
+                            </div>
+                        </div>
+                    </ng-template>
+                </p-select>
+                <span class="text-xs text-slate-500">Solo se muestran celulares disponibles.</span>
+            </div>
+            }
+
+            @if (renewForm.controls.option.value === renewDeviceOption.NewDevice) {
+            <div class="rounded-md bg-slate-50 p-3 flex flex-col gap-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col gap-1.5">
+                        <app-form-label required>Modelo (Celulares)</app-form-label>
+                        <p-select formControlName="modelId" [options]="mobileModels()" optionLabel="name"
+                            optionValue="id" placeholder="Selecciona un modelo" appendTo="body" class="w-full"
+                            [invalid]="renewForm.controls.modelId.invalid && renewForm.controls.modelId.touched" />
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <app-form-label required>Código de activo</app-form-label>
+                        <input pInputText formControlName="assetCode" class="w-full"
+                            [invalid]="renewForm.controls.assetCode.invalid && renewForm.controls.assetCode.touched" />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col gap-1.5">
+                        <app-form-label required>Nombre</app-form-label>
+                        <input pInputText formControlName="name" class="w-full"
+                            [invalid]="renewForm.controls.name.invalid && renewForm.controls.name.touched" />
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <app-form-label>Número de serie</app-form-label>
+                        <input pInputText formControlName="serialNumber" class="w-full" />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col gap-1.5">
+                        <app-form-label required>Precio</app-form-label>
+                        <p-inputnumber formControlName="price" class="w-full" mode="currency" currency="USD"
+                            locale="en-US" />
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <app-form-label required>IMEI</app-form-label>
+                        <input pInputText formControlName="imei" class="w-full"
+                            [invalid]="renewForm.controls.imei.invalid && renewForm.controls.imei.touched" />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col gap-1.5">
+                        <app-form-label>IMEI 2</app-form-label>
+                        <input pInputText formControlName="imei2" class="w-full" />
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-1.5">
+                    <app-form-label>Observaciones del celular</app-form-label>
+                    <textarea pTextarea formControlName="deviceObservations" rows="2" class="w-full"></textarea>
+                </div>
+            </div>
+            }
+
+            <div class="flex flex-col gap-1.5">
+                <app-form-label>Observación</app-form-label>
+                <textarea pTextarea formControlName="observation" rows="2" class="w-full"
+                    placeholder="Observación opcional..."></textarea>
+            </div>
+        </form>
+
+        <div dialog-footer class="flex justify-end gap-2">
+            <button pButton type="button" severity="secondary" (click)="dialogRenewVisible = false">Cancelar</button>
+            <button pButton type="button" [loading]="store.saving()" (click)="renew()">Guardar</button>
         </div>
     </app-form-dialog>
 </div>

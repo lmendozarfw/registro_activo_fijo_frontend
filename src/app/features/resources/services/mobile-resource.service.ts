@@ -12,6 +12,10 @@ export class MobileResourceService {
         return this.api.getAll<MobileResourceDto>(this.endPoint);
     }
 
+    getUnassigned(): Observable<MobileResourceDto[]> {
+        return this.api.getAll<MobileResourceDto>(`${this.endPoint}/unassigned`);
+    }
+
     create(data: CreateMobileResourceCommand): Observable<MobileResourceDto> {
         return this.api.create<CreateMobileResourceCommand, MobileResourceDto>(this.endPoint, data);
     }

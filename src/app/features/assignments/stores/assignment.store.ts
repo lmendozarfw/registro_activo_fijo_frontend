@@ -3,7 +3,7 @@ import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
 import { firstValueFrom } from "rxjs";
 import { ToastService } from "../../../core/services/toast.service";
 import { resolveErrorMessage } from "../../../core/utils/error.utils";
-import { AssignmentDto, CreateAssignmentCommand, ReturnAssignmentCommand } from "../models/assignment.model";
+import { AssignmentDto, CreateAssignmentCommand, RenewMobileAssignmentCommand, ReturnAssignmentCommand } from "../models/assignment.model";
 import { AssignmentService } from "../services/assignment.service";
 
 type AssignmentState = {
@@ -63,6 +63,21 @@ export const AssignmentStore = signalStore(
                     return true;
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudo devolver el recurso');
+                    patchState(store, { saving: false, error: message });
+                    toast.error(message);
+                    return false;
+                }
+            },
+            async renew(data: RenewMobileAssignmentCommand): Promise<boolean> {
+                patchState(store, { saving: true, error: null });
+                try {
+                    await firstValueFrom(service.renewMobile(data));
+                    patchState(store, { saving: false });
+                    toast.success('Asignación renovada');
+                    await this.load();
+                    return true;
+                } catch (error) {
+                    const message = resolveErrorMessage(error, 'No se pudo renovar la asignación');
                     patchState(store, { saving: false, error: message });
                     toast.error(message);
                     return false;
