@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { MessageService } from 'primeng/api';
+import { provideEchartsCore } from 'ngx-echarts';
 import { authInterceptor } from './features/auth/interceptors/auth.interceptor';
 
 const AppTheme = {
@@ -33,6 +34,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
+    provideEchartsCore({ echarts: () => import('echarts') }),
     providePrimeNG({
             theme: {
                 preset: AppTheme,

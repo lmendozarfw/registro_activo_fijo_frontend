@@ -16,6 +16,10 @@ export const routes: Routes = [
         loadComponent: () => import('./shared/templates/main.template').then(t => t.MainTemplate),
         children: [
             {
+                path: 'kpis',
+                loadComponent: () => import('./features/kpis/pages/kpis.page').then(p => p.KpisPage),
+            },
+            {
                 path: 'settings',
                 loadComponent: () => import('./features/configuration/pages/configuration.page').then(p => p.ConfigurationPage),
             },

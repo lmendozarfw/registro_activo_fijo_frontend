@@ -1,0 +1,152 @@
+<div class="flex flex-col gap-4">
+    @if (store.loading() && !hasData()) {
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        @for (row of [1,2,3,4]; track row) {
+        <div class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4">
+            <p-skeleton shape="circle" size="2.75rem" />
+            <div class="flex flex-1 flex-col gap-2">
+                <p-skeleton width="6rem" height="0.75rem" />
+                <p-skeleton width="8rem" height="1.4rem" />
+            </div>
+        </div>
+        }
+    </div>
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        @for (row of [1,2]; track row) {
+        <div class="rounded-xl border border-slate-200 bg-white p-4">
+            <p-skeleton width="10rem" height="1rem" />
+            <div class="mt-4 flex flex-col gap-3">
+                @for (bar of [1,2,3,4]; track bar) {
+                <p-skeleton width="100%" height="0.5rem" />
+                }
+            </div>
+        </div>
+        }
+    </div>
+    } @else if (!hasData()) {
+    <div class="rounded-xl border border-slate-200 bg-white p-4">
+        <app-empty-state message="Sin información para los indicadores"
+            description="Cuando existan recursos, empleados y asignaciones registrados, los indicadores aparecerán aquí." />
+    </div>
+    } @else {
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        @for (stat of statCards(); track stat.label) {
+        <div class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4">
+            <span class="flex size-11 shrink-0 items-center justify-center rounded-lg" [class]="toneClass(stat.tone)">
+                <svg [pIcon]="stat.icon" [size]="22"></svg>
+            </span>
+            <div class="flex min-w-0 flex-col">
+                <span class="truncate text-xs font-medium text-slate-500">{{ stat.label }}</span>
+                <span class="text-2xl font-semibold leading-tight text-slate-800">{{ stat.value }}</span>
+                @if (stat.hint) {
+                <span class="truncate text-xs text-slate-400">{{ stat.hint }}</span>
+                }
+            </div>
+        </div>
+        }
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        @for (stat of miniStats(); track stat.label) {
+        <div class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3">
+            <span class="flex size-9 shrink-0 items-center justify-center rounded-lg" [class]="toneClass(stat.tone)">
+                <svg [pIcon]="stat.icon" [size]="18"></svg>
+            </span>
+            <div class="flex min-w-0 flex-col">
+                <span class="text-lg font-semibold leading-tight text-slate-800">{{ stat.value }}</span>
+                <span class="truncate text-xs text-slate-500">{{ stat.label }}</span>
+                @if (stat.hint) {
+                <span class="truncate text-[11px] text-slate-400">{{ stat.hint }}</span>
+                }
+            </div>
+        </div>
+        }
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <section class="rounded-xl border border-slate-200 bg-white p-4">
+            <div class="mb-4 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="flex size-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                        <svg [pIcon]="'chart-bar'" [size]="16"></svg>
+                    </span>
+                    <h2 class="text-sm font-semibold text-slate-800">Recursos por tipo</h2>
+                </div>
+                <span class="text-xs text-slate-400">{{ byType().length }} tipos</span>
+            </div>
+            @if (byType().length > 0) {
+            <div echarts [options]="byTypeChart()" [autoResize]="true" class="h-64 w-full"></div>
+            } @else {
+            <p class="text-sm text-slate-500">Sin recursos registrados.</p>
+            }
+        </section>
+
+        <section class="rounded-xl border border-slate-200 bg-white p-4">
+            <div class="mb-4 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="flex size-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+                        <svg [pIcon]="'chart-pie'" [size]="16"></svg>
+                    </span>
+                    <h2 class="text-sm font-semibold text-slate-800">Estado del inventario</h2>
+                </div>
+                <span class="text-xs text-slate-400">{{ totalAssets() }} activos</span>
+            </div>
+            <div class="flex flex-col items-center gap-6 sm:flex-row sm:justify-around">
+                <div class="relative size-40 shrink-0">
+                    <div echarts [options]="statusChart()" [autoResize]="true" class="h-full w-full"></div>
+                    <div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+                        <span class="text-2xl font-semibold text-slate-800">{{ totalAssets() }}</span>
+                        <span class="text-xs text-slate-500">activos</span>
+                    </div>
+                </div>
+                <div class="flex w-full flex-col gap-2 sm:max-w-[14rem]">
+                    @for (segment of donutSegments(); track segment.label) {
+                    <div class="flex items-center gap-2">
+                        <span class="size-2.5 shrink-0 rounded-full" [style.background]="segment.color"></span>
+                        <span class="flex-1 text-sm text-slate-600">{{ segment.label }}</span>
+                        <span class="text-sm font-medium text-slate-800">{{ segment.value }}</span>
+                        <span class="w-12 text-right text-xs text-slate-400">{{ segment.percent | number:'1.0-1'
+                            }}%</span>
+                    </div>
+                    }
+                    @if (donutSegments().length === 0) {
+                    <p class="text-sm text-slate-500">Sin datos de inventario.</p>
+                    }
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <section class="rounded-xl border border-slate-200 bg-white p-4">
+            <div class="mb-4 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="flex size-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                        <svg [pIcon]="'chart-line'" [size]="16"></svg>
+                    </span>
+                    <h2 class="text-sm font-semibold text-slate-800">Asignaciones por mes</h2>
+                </div>
+                <span class="text-xs text-slate-400">Últimos 6 meses</span>
+            </div>
+            <div echarts [options]="monthlyChart()" [autoResize]="true" class="h-56 w-full"></div>
+        </section>
+
+        <section class="rounded-xl border border-slate-200 bg-white p-4">
+            <div class="mb-4 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="flex size-8 items-center justify-center rounded-lg bg-sky-50 text-sky-600">
+                        <svg [pIcon]="'building'" [size]="16"></svg>
+                    </span>
+                    <h2 class="text-sm font-semibold text-slate-800">Activos por departamento</h2>
+                </div>
+                <span class="text-xs text-slate-400">Asignaciones activas</span>
+            </div>
+            @if (topDepartments().length > 0) {
+            <div echarts [options]="topDepartmentsChart()" [autoResize]="true" class="h-56 w-full"></div>
+            } @else {
+            <p class="text-sm text-slate-500">Sin asignaciones activas.</p>
+            }
+        </section>
+    </div>
+    }
+</div>

@@ -1,5 +1,4 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { CurrencyPipe } from '@angular/common';
 import { TabsModule } from 'primeng/tabs';
 import { TagModule } from 'primeng/tag';
 import { InputText } from 'primeng/inputtext';
@@ -17,8 +16,18 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
 @Component({
     selector: 'app-assignment-history-page',
     templateUrl: './assignment-history.page.html',
-    styles: [],
-    imports: [CurrencyPipe, TabsModule, TagModule, InputText, SkeletonModule, PIcon, EmptyStateComponent],
+    styles: [`
+        .p-tabs {
+            border-radius: 12px;
+        }
+        .p-tablist {
+            border-radius: 12px 12px 0 0;
+        }
+        .p-tabpanels {
+            border-radius: 0 0 12px 12px;
+        }
+        `],
+    imports: [TabsModule, TagModule, InputText, SkeletonModule, PIcon, EmptyStateComponent],
 })
 export class AssignmentHistoryPage implements OnInit {
     protected readonly store = inject(AssignmentHistoryStore);
