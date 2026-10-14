@@ -51,7 +51,7 @@ export class MenuService {
         {
           key: 'assignments-active',
           label: 'Activas',
-          icon: 'list-check',
+          icon: 'check-circle',
           route: '/app/assignments/active',
           allowedRoles: [],
         },

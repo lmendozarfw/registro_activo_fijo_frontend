@@ -38,6 +38,17 @@ export const AssignmentStore = signalStore(
                     toast.error(message);
                 }
             },
+            async loadActives(): Promise<void> {
+                patchState(store, { loading: true, error: null });
+                try {
+                    const assignments = await firstValueFrom(service.getActive());
+                    patchState(store, { assignments, loading: false });
+                } catch (error) {
+                    const message = resolveErrorMessage(error, 'No se pudieron cargar las asignaciones activas');
+                    patchState(store, { loading: false, error: message });
+                    toast.error(message);
+                }
+            },
             async create(data: CreateAssignmentCommand): Promise<boolean> {
                 patchState(store, { saving: true, error: null });
                 try {

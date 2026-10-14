@@ -81,7 +81,7 @@ export class AssignmentsPage implements OnInit {
     });
 
     ngOnInit(): void {
-        this.store.load();
+        this.store.loadActives();
         this.employeeStore.loadAvailablToAssignments();
         this.resourceStore.loadAvailableToAssign();
         this.modelStore.loadOnlyMobiles();

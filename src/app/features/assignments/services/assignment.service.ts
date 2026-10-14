@@ -12,6 +12,10 @@ export class AssignmentService {
         return this.api.getAll<AssignmentDto>(this.endpoint);
     }
 
+    getActive(): Observable<AssignmentDto[]> {
+        return this.api.getAll<AssignmentDto>(`${this.endpoint}/active`);
+    }
+
     getHistory(): Observable<AssignmentHistoryGroupDto[]> {
         return this.api.getAll<AssignmentHistoryGroupDto>(`${this.endpoint}/history`);
     }
