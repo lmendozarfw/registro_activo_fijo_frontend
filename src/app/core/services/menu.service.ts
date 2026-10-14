@@ -11,6 +11,7 @@ export interface MenuItem {
   visible?: boolean;
   disabled?: boolean;
   allowedRoles?: string | string[] | null | undefined;
+  children?: MenuItem[];
 }
 
 @Injectable({
@@ -45,8 +46,23 @@ export class MenuService {
       key: 'assignments',
       label: 'Asignaciones',
       icon: 'list-check',
-      route: '/app/assignments',
       allowedRoles: [],
+      children: [
+        {
+          key: 'assignments-active',
+          label: 'Activas',
+          icon: 'list-check',
+          route: '/app/assignments/active',
+          allowedRoles: [],
+        },
+        {
+          key: 'assignments-history',
+          label: 'Historial',
+          icon: 'history',
+          route: '/app/assignments/history',
+          allowedRoles: [],
+        },
+      ],
     },
     {
       key: 'assets',
@@ -100,17 +116,31 @@ export class MenuService {
     { initialValue: this.router.url },
   );
 
+  private readonly openGroups = signal<Record<string, boolean>>({});
+
   readonly items = computed<MenuItem[]>(() =>
     this.allItems().filter((item) => item.visible !== false),
   );
 
   isActive(item: MenuItem): boolean {
+    if (item.children?.length) {
+      return item.children.some((child) => this.isActive(child));
+    }
+
     if (!item.route) return false;
 
     const url = this.currentUrl();
     const route = item.route.endsWith('/') ? item.route.slice(0, -1) : item.route;
 
     return url === route || url.startsWith(`${route}/`);
+  }
+
+  isGroupOpen(key: string, active: boolean): boolean {
+    return this.openGroups()[key] ?? active;
+  }
+
+  setGroupOpen(key: string, open: boolean): void {
+    this.openGroups.update((groups) => ({ ...groups, [key]: open }));
   }
 
   setItems(items: MenuItem[]): void {

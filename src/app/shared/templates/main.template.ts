@@ -2,7 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { AvatarModule } from 'primeng/avatar';
 import { SidebarModule } from 'primeng/sidebar';
 import { ButtonModule } from 'primeng/button';
-import { ChevronDown, Sidebar } from '@primeicons/angular';
+import { ChevronDown, ChevronRight, Sidebar } from '@primeicons/angular';
 import { PIcon } from '@primeicons/angular/p-icon';
 import { MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';
@@ -40,12 +40,37 @@ import { AuthStore } from '../../features/auth/stores/auth.store';
                                     <p-sidebar-group-content>
                                         <p-sidebar-menu>
                                             @for (item of menuService.items(); track item.key) {
-                                                <p-sidebar-menu-item>
-                                                    <a pSidebarMenuButton [routerLink]="item.route" [isActive]="menuService.isActive(item)" (click)="closeNav()">
-                                                        <svg [pIcon]="item.icon || ''"></svg>
-                                                        <span>{{ item.label }}</span>
-                                                    </a>
-                                                </p-sidebar-menu-item>
+                                                @if (item.children?.length) {
+                                                    <p-sidebar-menu-item [collapsible]="true"
+                                                        [open]="menuService.isGroupOpen(item.key, menuService.isActive(item))"
+                                                        (openChange)="menuService.setGroupOpen(item.key, $event)">
+                                                        <button type="button" pSidebarMenuButton [isActive]="menuService.isActive(item)">
+                                                            <svg [pIcon]="item.icon || ''"></svg>
+                                                            <span>{{ item.label }}</span>
+                                                            <svg data-p-icon="chevron-right" class="ml-auto transition-transform duration-200"
+                                                                [class.rotate-90]="menuService.isGroupOpen(item.key, menuService.isActive(item))"></svg>
+                                                        </button>
+                                                        <p-sidebar-menu-sub>
+                                                            @for (child of item.children; track child.key) {
+                                                                <p-sidebar-menu-sub-item>
+                                                                    <a pSidebarMenuSubButton [routerLink]="child.route" [isActive]="menuService.isActive(child)" (click)="closeNav()">
+                                                                        @if (child.icon) {
+                                                                            <svg [pIcon]="child.icon"></svg>
+                                                                        }
+                                                                        <span>{{ child.label }}</span>
+                                                                    </a>
+                                                                </p-sidebar-menu-sub-item>
+                                                            }
+                                                        </p-sidebar-menu-sub>
+                                                    </p-sidebar-menu-item>
+                                                } @else {
+                                                    <p-sidebar-menu-item>
+                                                        <a pSidebarMenuButton [routerLink]="item.route" [isActive]="menuService.isActive(item)" (click)="closeNav()">
+                                                            <svg [pIcon]="item.icon || ''"></svg>
+                                                            <span>{{ item.label }}</span>
+                                                        </a>
+                                                    </p-sidebar-menu-item>
+                                                }
                                             }
                                         </p-sidebar-menu>
                                     </p-sidebar-group-content>
@@ -87,7 +112,7 @@ import { AuthStore } from '../../features/auth/stores/auth.store';
         `
     ],
     standalone: true,
-    imports: [AvatarModule, SidebarModule, ButtonModule, PIcon, Sidebar, ChevronDown, Menu, MenuModule,
+    imports: [AvatarModule, SidebarModule, ButtonModule, PIcon, Sidebar, ChevronDown, ChevronRight, Menu, MenuModule,
         RouterOutlet, RouterLink, HeaderTitleComponent],
 })
 export class MainTemplate {

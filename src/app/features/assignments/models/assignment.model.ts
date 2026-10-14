@@ -1,3 +1,5 @@
+import { ResourceTypeEnum } from "../../resources/models/resource-type.model";
+
 export interface AssignmentDto {
     id: string;
     resourceId: string;
@@ -62,4 +64,38 @@ export interface RenewMobileAssignmentCommand {
     actorUserId: string;
     renewalDate?: string | null;
     observation?: string | null;
+}
+
+export interface AssignmentHistoryGroupDto {
+    resourceType: ResourceTypeEnum;
+    resources: ResourceAssignmentHistoryDto[];
+}
+
+export interface ResourceAssignmentHistoryDto {
+    resourceId: string;
+    assetCode: string;
+    resourceName: string;
+    type: ResourceTypeEnum;
+    brandName: string;
+    modelName: string;
+    serialNumber?: string | null;
+    price: number;
+    status: string;
+    imei?: string | null;
+    imei2?: string | null;
+    phoneNumber?: string;
+    assignments: AssignmentHistoryEntryDto[];
+}
+
+export interface AssignmentHistoryEntryDto {
+    assignmentId: string;
+    employeeId: string;
+    employeeNumber: string;
+    employeeName: string;
+    departmentName?: string | null;
+    jobName?: string | null;
+    assignmentDate: string;
+    renewalDate?: string | null;
+    returnDate?: string | null;
+    isActive: boolean;
 }

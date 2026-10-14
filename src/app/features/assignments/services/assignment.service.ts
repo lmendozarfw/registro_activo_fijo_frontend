@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { ApiService } from "../../../core/services/api.service";
-import { AssignmentDto, CreateAssignmentCommand, RenewMobileAssignmentCommand, ReturnAssignmentCommand } from "../models/assignment.model";
+import { AssignmentDto, AssignmentHistoryGroupDto, CreateAssignmentCommand, RenewMobileAssignmentCommand, ReturnAssignmentCommand } from "../models/assignment.model";
 
 @Injectable({ providedIn: 'root' })
 export class AssignmentService {
@@ -10,6 +10,10 @@ export class AssignmentService {
 
     getAll(): Observable<AssignmentDto[]> {
         return this.api.getAll<AssignmentDto>(this.endpoint);
+    }
+
+    getHistory(): Observable<AssignmentHistoryGroupDto[]> {
+        return this.api.getAll<AssignmentHistoryGroupDto>(`${this.endpoint}/history`);
     }
 
     create(data: CreateAssignmentCommand): Observable<AssignmentDto> {

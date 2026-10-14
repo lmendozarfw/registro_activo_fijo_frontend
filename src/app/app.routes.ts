@@ -45,7 +45,21 @@ export const routes: Routes = [
             },
             {
                 path: 'assignments',
-                loadComponent: () => import('./features/assignments/pages/assignments.page').then(p => p.AssignmentsPage),
+                children: [
+                    {
+                        path: '',
+                        pathMatch: 'full',
+                        redirectTo: 'active',
+                    },
+                    {
+                        path: 'active',
+                        loadComponent: () => import('./features/assignments/pages/assignments.page').then(p => p.AssignmentsPage),
+                    },
+                    {
+                        path: 'history',
+                        loadComponent: () => import('./features/assignments/pages/assignment-history.page').then(p => p.AssignmentHistoryPage),
+                    },
+                ],
             },
             {
                 path: 'assets',
