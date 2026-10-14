@@ -49,7 +49,6 @@ export class PhonesPage implements OnInit {
     form = new FormGroup({
         modelId: new FormControl('', { nonNullable: true, validators: Validators.required }),
         assetCode: new FormControl('', { nonNullable: true, validators: Validators.required }),
-        name: new FormControl('', { nonNullable: true, validators: Validators.required }),
         serialNumber: new FormControl(''),
         price: new FormControl<number>(0, { nonNullable: true, validators: [Validators.required, Validators.min(0)] }),
         imei: new FormControl('', { nonNullable: true, validators: Validators.required }),
@@ -77,7 +76,6 @@ export class PhonesPage implements OnInit {
         this.form.reset({
             modelId: '',
             assetCode: '',
-            name: '',
             serialNumber: '',
             price: 0,
             imei: '',
@@ -96,7 +94,6 @@ export class PhonesPage implements OnInit {
 
         const payload: CreateMobileResourceCommand = {
             assetCode: this.form.controls.assetCode.value.trim(),
-            name: this.form.controls.name.value.trim(),
             serialNumber: this.form.controls.serialNumber.value?.trim() || null,
             modelId: this.form.controls.modelId.value,
             type: ResourceTypeEnum.MOBILE,

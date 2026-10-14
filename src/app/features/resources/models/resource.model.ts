@@ -61,7 +61,6 @@ export interface MobileResourceDto {
 
 export interface CreateMobileResourceCommand {
     assetCode: string;
-    name: string;
     serialNumber?: string | null;
     modelId: string;
     type: ResourceTypeEnum;

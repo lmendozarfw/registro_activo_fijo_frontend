@@ -54,7 +54,7 @@
 
                 <app-form-dialog [(visible)]="dialogVisible" [header]="'Nuevo celular'" width="56rem">
                     <form [formGroup]="form" class="flex flex-col gap-4" (ngSubmit)="saveMobile()">
-                        <div class="grid grid-cols-3 gap-4">
+                        <div class="grid grid-cols-2 gap-4">
                             <div class="flex flex-col gap-1.5">
                                 <app-form-label required>Modelo (Celulares)</app-form-label>
                                 <p-select formControlName="modelId" [options]="mobileModels()" optionLabel="name"
@@ -66,14 +66,9 @@
                                 <input pInputText formControlName="assetCode" class="w-full"
                                     [invalid]="form.controls.assetCode.invalid && form.controls.assetCode.touched" />
                             </div>
-                            <div class="flex flex-col gap-1.5">
-                                <app-form-label required>Nombre</app-form-label>
-                                <input pInputText formControlName="name" class="w-full"
-                                    [invalid]="form.controls.name.invalid && form.controls.name.touched" />
-                            </div>
                         </div>
 
-                        <div class="grid grid-cols-3 gap-4">
+                        <div class="grid grid-cols-2 gap-4">
                             <div class="flex flex-col gap-1.5">
                                 <app-form-label>Número de serie</app-form-label>
                                 <input pInputText formControlName="serialNumber" class="w-full" />
@@ -84,7 +79,7 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-3 gap-4">
+                        <div class="grid grid-cols-2 gap-4">
                             <div class="flex flex-col gap-1.5">
                                 <app-form-label required>IMEI</app-form-label>
                                 <input pInputText formControlName="imei" class="w-full"
