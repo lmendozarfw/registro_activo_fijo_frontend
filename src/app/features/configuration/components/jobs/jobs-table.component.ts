@@ -7,7 +7,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormDialogComponent } from "../../../../shared/components/form-dialog/form-dialog.component";
 import { FormLabelComponent } from "../../../../shared/components/form-label/form-label.component";
 import { JobStore } from "../../stores/job.store";
-import { Job } from "../../models/job.model";
+import { Job, JobRequest } from "../../models/job.model";
 import { EmptyStateComponent } from "../../../../shared/components/empty-state/empty-state.component";
 import { Pencil, Plus, Trash } from '@primeicons/angular';
 
@@ -32,7 +32,7 @@ export class JobsTableComponent implements OnInit {
     });
 
     ngOnInit(): void {
-        this.store.load();
+        this.store.loadActive();
     }
 
     openCreate(): void {
@@ -55,7 +55,7 @@ export class JobsTableComponent implements OnInit {
             return;
         }
 
-        const payload = { name: this.form.controls.name.value.trim() };
+        const payload: JobRequest = { name: this.form.controls.name.value.trim() };
 
         const success = this.editingJob
             ? await this.store.update(this.editingJob.id, payload)

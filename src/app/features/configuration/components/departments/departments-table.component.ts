@@ -7,7 +7,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormDialogComponent } from "../../../../shared/components/form-dialog/form-dialog.component";
 import { FormLabelComponent } from "../../../../shared/components/form-label/form-label.component";
 import { DepartmentStore } from "../../stores/department.store";
-import { Department } from "../../models/department.model";
+import { Department, DepartmentRequest } from "../../models/department.model";
 import { EmptyStateComponent } from "../../../../shared/components/empty-state/empty-state.component";
 import { Pencil, Plus, Trash } from '@primeicons/angular';
 
@@ -32,7 +32,7 @@ export class DepartmentsTableComponent implements OnInit {
     });
 
     ngOnInit(): void {
-        this.store.load();
+        this.store.loadActive();
     }
 
     openCreate(): void {
@@ -55,7 +55,7 @@ export class DepartmentsTableComponent implements OnInit {
             return;
         }
 
-        const payload = { name: this.form.controls.name.value.trim() };
+        const payload: DepartmentRequest = { name: this.form.controls.name.value.trim() };
 
         const success = this.editingDepartment
             ? await this.store.update(this.editingDepartment.id, payload)

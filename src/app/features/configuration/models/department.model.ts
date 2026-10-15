@@ -9,3 +9,7 @@ export interface Department {
 export interface DepartmentRequest {
     name: string;
 }
+
+export interface DepartmentUpdateRequest {
+    name: string;
+}

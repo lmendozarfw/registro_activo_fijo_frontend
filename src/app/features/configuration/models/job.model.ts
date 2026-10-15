@@ -8,3 +8,7 @@ export interface Job {
 export interface JobRequest {
     name: string;
 }
+
+export interface JobUpdateRequest {
+    name: string;
+}

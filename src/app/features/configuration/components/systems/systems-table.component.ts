@@ -8,7 +8,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormDialogComponent } from "../../../../shared/components/form-dialog/form-dialog.component";
 import { FormLabelComponent } from "../../../../shared/components/form-label/form-label.component";
 import { SystemStore } from "../../stores/system.store";
-import { System } from "../../models/system.model";
+import { System, SystemRequest } from "../../models/system.model";
 import { EmptyStateComponent } from "../../../../shared/components/empty-state/empty-state.component";
 import { Pencil, Plus, Refresh, Trash } from '@primeicons/angular';
 
@@ -38,7 +38,7 @@ export class SystemsTableComponent implements OnInit {
     });
 
     ngOnInit(): void {
-        this.store.load();
+        this.store.loadActive();
 
         this.form.controls.name.valueChanges.subscribe(() => this.syncAutoCode());
         this.form.controls.code.valueChanges.subscribe((value) => {
@@ -84,7 +84,7 @@ export class SystemsTableComponent implements OnInit {
         }
 
         const { name, code, description } = this.form.getRawValue();
-        const payload = {
+        const payload: SystemRequest = {
             name: name.trim(),
             code: code.trim().toUpperCase(),
             description: description.trim() || null,
