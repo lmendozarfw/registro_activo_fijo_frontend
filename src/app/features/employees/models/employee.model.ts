@@ -28,3 +28,14 @@ export interface EmployeeRequest {
     email?: string | null;
     phoneNumber?: string | null;
 }
+
+export interface EmployeeUpdateRequest {
+    employeeNumber: string;
+    firstName: string;
+    paternalSurname: string;
+    maternalSurname: string;
+    jobId: string;
+    departmentId: string;
+    email?: string | null;
+    phoneNumber?: string | null;
+}

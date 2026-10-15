@@ -10,7 +10,7 @@ import { FormLabelComponent } from "../../../shared/components/form-label/form-l
 import { EmptyStateComponent } from "../../../shared/components/empty-state/empty-state.component";
 import { PageHeaderService } from "../../../core/services/page-header.service";
 import { EmployeeStore } from "../stores/employee.store";
-import { Employee } from "../models/employee.model";
+import { Employee, EmployeeRequest } from "../models/employee.model";
 import { JobStore } from "../../configuration/stores/job.store";
 import { DepartmentStore } from "../../configuration/stores/department.store";
 import { Pencil, Plus, Trash } from '@primeicons/angular';
@@ -47,9 +47,9 @@ export class EmployeesPage implements OnInit {
 
     ngOnInit(): void {
         this.pageHeader.setTitle('Empleados');
-        this.store.load();
-        this.jobStore.load();
-        this.departmentStore.load();
+        this.store.loadActive();
+        this.jobStore.loadActive();
+        this.departmentStore.loadActive();
     }
 
     protected fullName(employee: Employee): string {
@@ -95,7 +95,7 @@ export class EmployeesPage implements OnInit {
         }
 
         const value = this.form.getRawValue();
-        const payload = {
+        const payload: EmployeeRequest = {
             employeeNumber: value.employeeNumber.trim(),
             firstName: value.firstName.trim(),
             paternalSurname: value.paternalSurname.trim(),
