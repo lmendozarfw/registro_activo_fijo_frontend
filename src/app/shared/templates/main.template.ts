@@ -2,7 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { AvatarModule } from 'primeng/avatar';
 import { SidebarModule } from 'primeng/sidebar';
 import { ButtonModule } from 'primeng/button';
-import { ChevronDown, ChevronRight, Sidebar } from '@primeicons/angular';
+import { ChevronDown, ChevronRight, NoteSticky, Sidebar } from '@primeicons/angular';
 import { PIcon } from '@primeicons/angular/p-icon';
 import { MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';
@@ -11,6 +11,9 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { HeaderTitleComponent } from '../components/header-title/header-title.component';
 import { MenuService } from '../../core/services/menu.service';
 import { AuthStore } from '../../features/auth/stores/auth.store';
+import { NotesStore } from '../../features/notes/stores/note.store';
+import { NotesBoardStore } from '../../features/notes/stores/notes-board.store';
+import { NotesBoardComponent } from '../../features/notes/components/notes-board/notes-board.component';
 
 @Component({
     selector: 'main-template',
@@ -96,15 +99,34 @@ import { AuthStore } from '../../features/auth/stores/auth.store';
                             <svg data-p-icon="sidebar"></svg>
                         </button>
                         <app-header-title />
-                        <span class="ml-auto text-xs text-slate-900 rounded-md bg-slate-100 px-2 py-1"> <span class="text-xs text-slate-600">Empleado</span> {{ '#5366' }}</span>
+                        <div class="ml-auto flex items-center gap-2">
+                            <button
+                                type="button"
+                                class="relative cursor-pointer flex items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-50"
+                                (click)="notesBoard.togglePanel()"
+                                aria-label="Notas"
+                            >
+                                <svg data-p-icon="note-sticky" [size]="15"></svg>
+                                <span>Notas</span>
+                                @if (notesStore.totalCount() > 0) {
+                                    <span class="min-w-5 rounded-full bg-emerald-600 px-1.5 text-[10px] font-semibold text-white">
+                                        {{ notesStore.totalCount() }}
+                                    </span>
+                                }
+                            </button>
+                            <span class="h-7.5 flex items-center text-xs text-slate-900 rounded-md bg-slate-100 px-2 py-1">
+                              {{ '#5366' }}
+                            </span>
+                        </div>
                     </header>
                     <div class="flex-1 min-h-0 overflow-y-auto overflow-x-auto p-4 flex flex-col">
                         <router-outlet />
-                    </div>
-                </p-sidebar-main>
-            </p-sidebar-layout>
-        </div>
-    `,
+                     </div>
+                 </p-sidebar-main>
+             </p-sidebar-layout>
+             <app-notes-board />
+         </div>
+     `,
     styles: [
         `
         .p-sidebar-layout {
@@ -112,8 +134,22 @@ import { AuthStore } from '../../features/auth/stores/auth.store';
         `
     ],
     standalone: true,
-    imports: [AvatarModule, SidebarModule, ButtonModule, PIcon, Sidebar, ChevronDown, ChevronRight, Menu, MenuModule,
-        RouterOutlet, RouterLink, HeaderTitleComponent],
+    imports: [
+        AvatarModule,
+        SidebarModule,
+        ButtonModule,
+        PIcon,
+        Sidebar,
+        ChevronDown,
+        ChevronRight,
+        NoteSticky,
+        Menu,
+        MenuModule,
+        RouterOutlet,
+        RouterLink,
+        HeaderTitleComponent,
+        NotesBoardComponent,
+    ],
 })
 export class MainTemplate {
     isMobile = signal(false);
@@ -130,6 +166,8 @@ export class MainTemplate {
     protected menuService = inject(MenuService);
     private readonly authStore = inject(AuthStore);
     private readonly router = inject(Router);
+    protected readonly notesStore = inject(NotesStore);
+    protected readonly notesBoard = inject(NotesBoardStore);
 
     constructor() {
         if (typeof window === 'undefined') return;

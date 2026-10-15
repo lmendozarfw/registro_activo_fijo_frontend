@@ -3,7 +3,7 @@
         <p class="text-sm text-slate-600 max-w-[80%]">Gestiona las asignaciones de recursos a empleados.</p>
         <button pButton type="button" (click)="openCreate()">
             <span class="flex items-center gap-2">
-                <svg data-p-icon="plus" [size]="16"></svg>
+                <svg data-p-icon="plus" class="text-base"></svg>
                 Nueva asignación
             </span>
         </button>
@@ -41,11 +41,11 @@
                     <div class="flex gap-1">
                         <button pButton type="button" severity="danger" text pTooltip="Devolver" aria-label="Devolver"
                             [disabled]="!a.isActive" (click)="openReturn(a)">
-                            <svg data-p-icon="undo" [size]="16"></svg>
+                            <svg data-p-icon="undo" class="text-base"></svg>
                         </button>
                         <button pButton type="button" severity="warn" text pTooltip="Renovar" aria-label="Renovar"
                             [disabled]="!a.isActive || a.type !== 'MOBILE'" (click)="openRenew(a)">
-                            <svg data-p-icon="arrow-right-arrow-left" [size]="16"></svg>
+                            <svg data-p-icon="arrow-right-arrow-left" class="text-base"></svg>
                         </button>
                     </div>
                 </td>

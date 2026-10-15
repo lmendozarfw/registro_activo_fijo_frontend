@@ -1,0 +1,254 @@
+<div
+    class="pointer-events-auto absolute flex w-[300px] flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl"
+    [style.left.px]="x()"
+    [style.top.px]="y()"
+    [style.z-index]="zIndex()"
+>
+    <div
+        class="flex cursor-move select-none items-center gap-1.5 px-2 py-1.5"
+        [class.bg-gradient-to-r]="true"
+        [class.from-amber-300]="isOwner()"
+        [class.to-amber-400]="isOwner()"
+        [class.from-sky-300]="!isOwner()"
+        [class.to-sky-400]="!isOwner()"
+        (pointerdown)="onHeaderPointerDown($event)"
+        (pointermove)="onHeaderPointerMove($event)"
+        (pointerup)="onHeaderPointerUp($event)"
+        (pointercancel)="onHeaderPointerUp($event)"
+    >
+        <svg data-p-icon="note-sticky" [size]="15" class="shrink-0 text-slate-700/80"></svg>
+        <span class="min-w-0 flex-1 truncate text-sm font-semibold text-slate-800" [title]="title()">
+            {{ title() }}
+        </span>
+
+        @if (isOwner()) {
+            <button
+                type="button"
+                class="rounded-md p-1 text-slate-700/80 transition hover:bg-black/10"
+                pTooltip="Ajustes"
+                tooltipPosition="top"
+                aria-label="Ajustes de la nota"
+                (click)="openSettings()"
+            >
+                <svg data-p-icon="pencil" [size]="14"></svg>
+            </button>
+        }
+
+        <button
+            type="button"
+            class="rounded-md p-1 text-slate-700/80 transition hover:bg-black/10"
+            [pTooltip]="collapsed() ? 'Expandir' : 'Contraer'"
+            tooltipPosition="top"
+            aria-label="Contraer nota"
+            (click)="toggleCollapse()"
+        >
+            @if (collapsed()) {
+                <svg data-p-icon="window-maximize" [size]="14"></svg>
+            } @else {
+                <svg data-p-icon="window-minimize" [size]="14"></svg>
+            }
+        </button>
+
+        <button
+            type="button"
+            class="rounded-md p-1 text-slate-700/80 transition hover:bg-black/10"
+            pTooltip="Cerrar"
+            tooltipPosition="top"
+            aria-label="Cerrar nota"
+            (click)="close()"
+        >
+            <svg data-p-icon="times" [size]="14"></svg>
+        </button>
+    </div>
+
+    @if (!collapsed()) {
+        <div class="flex min-h-0 flex-col">
+            @if (isOwner() || detail()?.isShared || detail()?.isArchived) {
+                <div class="flex flex-wrap items-center gap-1 px-3 pt-2">
+                    @if (isOwner()) {
+                        <span class="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-600">Tu nota</span>
+                    }
+                    @if (detail()?.isShared) {
+                        <span class="rounded bg-sky-50 px-1.5 py-0.5 text-[10px] font-medium text-sky-700">Compartida</span>
+                    }
+                    @if (detail()?.isShared && detail()?.canEdit) {
+                        <span class="rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700">Editable</span>
+                    }
+                    @if (detail()?.isArchived) {
+                        <span class="rounded bg-amber-50 px-1.5 py-0.5 text-[10px] font-medium text-amber-700">Archivada</span>
+                    }
+                </div>
+            }
+
+            @if (confirmDelete()) {
+                <div class="m-2 rounded-lg border border-red-200 bg-red-50 p-3">
+                    <p class="text-xs text-red-700">¿Eliminar esta nota de forma permanente?</p>
+                    <div class="mt-2 flex justify-end gap-2">
+                        <button pButton type="button" size="small" severity="secondary" text (click)="confirmDelete.set(false)">
+                            Cancelar
+                        </button>
+                        <button pButton type="button" size="small" severity="danger" [disabled]="store.removing()" (click)="confirmRemove()">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            } @else if (settingsOpen()) {
+                <div class="flex flex-col gap-3 p-3">
+                    <label class="flex flex-col gap-1">
+                        <span class="text-xs font-medium text-slate-600">Título</span>
+                        <input
+                            pInputText
+                            type="text"
+                            class="w-full text-sm"
+                            placeholder="Sin título"
+                            [value]="settingsTitle()"
+                            [attr.maxlength]="titleMax"
+                            (input)="onSettingsTitle($event)"
+                        />
+                    </label>
+
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-xs text-slate-600">Compartir con otros usuarios</span>
+                        <button
+                            type="button"
+                            role="switch"
+                            aria-label="Compartir nota"
+                            [attr.aria-checked]="settingsShared()"
+                            class="relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors"
+                            [class.bg-emerald-500]="settingsShared()"
+                            [class.bg-slate-300]="!settingsShared()"
+                            (click)="settingsShared.set(!settingsShared())"
+                        >
+                            <span
+                                class="inline-block size-4 transform rounded-full bg-white shadow transition-transform"
+                                [class.translate-x-4]="settingsShared()"
+                                [class.translate-x-0.5]="!settingsShared()"
+                            ></span>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-xs text-slate-600">Permitir edición</span>
+                        <button
+                            type="button"
+                            role="switch"
+                            aria-label="Permitir edición"
+                            [attr.aria-checked]="settingsCanEdit()"
+                            class="relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors"
+                            [class.bg-emerald-500]="settingsCanEdit()"
+                            [class.bg-slate-300]="!settingsCanEdit()"
+                            (click)="settingsCanEdit.set(!settingsCanEdit())"
+                        >
+                            <span
+                                class="inline-block size-4 transform rounded-full bg-white shadow transition-transform"
+                                [class.translate-x-4]="settingsCanEdit()"
+                                [class.translate-x-0.5]="!settingsCanEdit()"
+                            ></span>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-xs text-slate-600">Archivar</span>
+                        <button
+                            type="button"
+                            role="switch"
+                            aria-label="Archivar nota"
+                            [attr.aria-checked]="settingsArchived()"
+                            class="relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors"
+                            [class.bg-amber-500]="settingsArchived()"
+                            [class.bg-slate-300]="!settingsArchived()"
+                            (click)="settingsArchived.set(!settingsArchived())"
+                        >
+                            <span
+                                class="inline-block size-4 transform rounded-full bg-white shadow transition-transform"
+                                [class.translate-x-4]="settingsArchived()"
+                                [class.translate-x-0.5]="!settingsArchived()"
+                            ></span>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center justify-between gap-2 pt-1">
+                        <button
+                            pButton
+                            type="button"
+                            size="small"
+                            severity="danger"
+                            text
+                            (click)="confirmDelete.set(true); settingsOpen.set(false)"
+                        >
+                            <svg data-p-icon="trash" [size]="13"></svg>
+                            <span>Eliminar</span>
+                        </button>
+                        <div class="flex gap-2">
+                            <button pButton type="button" size="small" severity="secondary" text (click)="closeSettings()">
+                                Cancelar
+                            </button>
+                            <button pButton type="button" size="small" [disabled]="store.saving()" (click)="saveSettings()">
+                                <svg data-p-icon="save" [size]="13"></svg>
+                                <span>Guardar</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            } @else {
+                @if (loading()) {
+                    <div class="flex items-center justify-center gap-2 py-8 text-xs text-slate-400">
+                        <svg data-p-icon="spinner" [spin]="true" [size]="16"></svg>
+                        Cargando...
+                    </div>
+                } @else {
+                    <div class="flex max-h-72 flex-col gap-2 overflow-y-auto px-3 py-2">
+                        @for (text of texts(); track text.id) {
+                            <div class="rounded-lg bg-slate-50 px-2.5 py-2">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="truncate text-xs font-medium text-slate-600">{{ text.authorUsername }}</span>
+                                    <span class="shrink-0 text-[10px] text-slate-400">{{ formatDate(text.createdAt) }}</span>
+                                </div>
+                                <p class="mt-1 whitespace-pre-wrap break-words text-sm text-slate-700">{{ text.content }}</p>
+                            </div>
+                        } @empty {
+                            <p class="py-2 text-center text-xs text-slate-400">Esta nota aún no tiene textos.</p>
+                        }
+                    </div>
+                }
+
+                @if (canAddText()) {
+                    <div class="border-t border-slate-100 p-2">
+                        <textarea
+                            pTextarea
+                            rows="2"
+                            class="w-full resize-none text-sm"
+                            placeholder="Escribe un fragmento..."
+                            [value]="draft()"
+                            [attr.maxlength]="contentMax"
+                            (input)="onDraftInput($event)"
+                        ></textarea>
+                        <div class="mt-1.5 flex items-center justify-between gap-2">
+                            <span
+                                class="text-[10px]"
+                                [class.text-red-500]="draft().length >= contentMax"
+                                [class.text-slate-400]="draft().length < contentMax"
+                            >
+                                {{ draft().length }}/{{ contentMax }}
+                            </span>
+                            <button pButton type="button" size="small" [disabled]="!canSubmitText()" (click)="submitText()">
+                                <svg data-p-icon="plus" [size]="13"></svg>
+                                <span>Agregar</span>
+                            </button>
+                        </div>
+                    </div>
+                } @else if (detail()?.isArchived) {
+                    <p class="flex items-center gap-1.5 border-t border-slate-100 px-3 py-2 text-xs text-amber-600">
+                        <svg data-p-icon="lock" [size]="13"></svg>
+                        Nota archivada: no se pueden agregar textos.
+                    </p>
+                } @else if (isReadOnly()) {
+                    <p class="flex items-center gap-1.5 border-t border-slate-100 px-3 py-2 text-xs text-slate-500">
+                        <svg data-p-icon="lock" [size]="13"></svg>
+                        Solo lectura.
+                    </p>
+                }
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,186 @@
+@if (board.panelOpen()) {
+    <div class="fixed inset-0 z-[110] bg-black/20" (click)="close()"></div>
+
+    <aside class="fixed inset-y-0 right-0 z-[120] flex w-[22rem] max-w-[92vw] flex-col border-l border-slate-200 bg-white shadow-2xl">
+        <div class="flex items-center gap-2 border-b border-slate-200 px-4 py-3">
+            <svg data-p-icon="note-sticky" [size]="18" class="text-emerald-600"></svg>
+            <span class="text-sm font-semibold text-slate-800">Notas</span>
+            <span class="rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-600">{{ store.totalCount() }}</span>
+            <button
+                type="button"
+                class="ml-auto rounded-md p-1 text-slate-500 transition hover:bg-slate-100"
+                aria-label="Cerrar panel"
+                (click)="close()"
+            >
+                <svg data-p-icon="times" [size]="16"></svg>
+            </button>
+        </div>
+
+        <div class="flex min-h-0 flex-1 flex-col">
+            <div class="border-b border-slate-100 p-3">
+                @if (!composerOpen()) {
+                    <button pButton type="button" class="w-full" (click)="composerOpen.set(true)">
+                        <svg data-p-icon="plus" [size]="15"></svg>
+                        <span>Nueva nota</span>
+                    </button>
+                } @else {
+                    <div class="flex flex-col gap-3">
+                        <input
+                            pInputText
+                            type="text"
+                            class="w-full text-sm"
+                            placeholder="Título (opcional)"
+                            [value]="draftTitle()"
+                            [attr.maxlength]="titleMax"
+                            (input)="onDraftTitle($event)"
+                        />
+                        <textarea
+                            pTextarea
+                            rows="3"
+                            class="w-full resize-none text-sm"
+                            placeholder="Texto inicial..."
+                            [value]="draftContent()"
+                            [attr.maxlength]="contentMax"
+                            (input)="onDraftContent($event)"
+                        ></textarea>
+                        <span
+                            class="-mt-2 text-right text-[10px]"
+                            [class.text-red-500]="draftContent().length >= contentMax"
+                            [class.text-slate-400]="draftContent().length < contentMax"
+                        >
+                            {{ draftContent().length }}/{{ contentMax }}
+                        </span>
+
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-xs text-slate-600">Compartir con otros usuarios</span>
+                            <button
+                                type="button"
+                                role="switch"
+                                aria-label="Compartir nota"
+                                [attr.aria-checked]="draftShared()"
+                                class="relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors"
+                                [class.bg-emerald-500]="draftShared()"
+                                [class.bg-slate-300]="!draftShared()"
+                                (click)="toggleShared()"
+                            >
+                                <span
+                                    class="inline-block size-4 transform rounded-full bg-white shadow transition-transform"
+                                    [class.translate-x-4]="draftShared()"
+                                    [class.translate-x-0.5]="!draftShared()"
+                                ></span>
+                            </button>
+                        </div>
+
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-xs text-slate-600" [class.text-slate-300]="!draftShared()">Permitir edición</span>
+                            <button
+                                type="button"
+                                role="switch"
+                                aria-label="Permitir edición"
+                                [attr.aria-checked]="draftCanEdit()"
+                                [disabled]="!draftShared()"
+                                class="relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors disabled:opacity-40"
+                                [class.bg-emerald-500]="draftCanEdit()"
+                                [class.bg-slate-300]="!draftCanEdit()"
+                                (click)="draftCanEdit.set(!draftCanEdit())"
+                            >
+                                <span
+                                    class="inline-block size-4 transform rounded-full bg-white shadow transition-transform"
+                                    [class.translate-x-4]="draftCanEdit()"
+                                    [class.translate-x-0.5]="!draftCanEdit()"
+                                ></span>
+                            </button>
+                        </div>
+
+                        <div class="flex justify-end gap-2 pt-1">
+                            <button pButton type="button" size="small" severity="secondary" text (click)="cancelComposer()">
+                                Cancelar
+                            </button>
+                            <button pButton type="button" size="small" [disabled]="!canCreate()" (click)="create()">
+                                @if (store.creating()) {
+                                    <svg data-p-icon="spinner" [spin]="true" [size]="14"></svg>
+                                } @else {
+                                    <svg data-p-icon="plus" [size]="14"></svg>
+                                }
+                                <span>Crear</span>
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="flex gap-1 px-3 pt-3">
+                <button
+                    type="button"
+                    class="flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition"
+                    [class.bg-emerald-50]="tab() === 'mine'"
+                    [class.text-emerald-700]="tab() === 'mine'"
+                    [class.text-slate-500]="tab() !== 'mine'"
+                    (click)="tab.set('mine')"
+                >
+                    Mis notas ({{ store.myNotes().length }})
+                </button>
+                <button
+                    type="button"
+                    class="flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition"
+                    [class.bg-emerald-50]="tab() === 'shared'"
+                    [class.text-emerald-700]="tab() === 'shared'"
+                    [class.text-slate-500]="tab() !== 'shared'"
+                    (click)="tab.set('shared')"
+                >
+                    Compartidas ({{ store.sharedNotes().length }})
+                </button>
+            </div>
+
+            <div class="min-h-0 flex-1 overflow-y-auto p-3">
+                @if (currentLoading()) {
+                    <div class="flex items-center justify-center gap-2 py-10 text-xs text-slate-400">
+                        <svg data-p-icon="spinner" [spin]="true" [size]="16"></svg>
+                        Cargando notas...
+                    </div>
+                } @else if (currentNotes().length > 0) {
+                    @for (note of currentNotes(); track note.id) {
+                        <button
+                            type="button"
+                            class="mb-2 flex w-full flex-col gap-1.5 rounded-lg border border-slate-200 p-3 text-left transition hover:border-emerald-300 hover:bg-emerald-50/40"
+                            (click)="openNote(note.id)"
+                        >
+                            <div class="flex items-start justify-between gap-2">
+                                <span class="truncate text-sm font-medium text-slate-800">{{ title(note) }}</span>
+                                @if (board.isOpen(note.id)) {
+                                    <span class="shrink-0 rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700">
+                                        Abierta
+                                    </span>
+                                }
+                            </div>
+                            <div class="flex items-center gap-1.5 text-xs text-slate-500">
+                                <svg data-p-icon="user" [size]="12"></svg>
+                                <span class="truncate">{{ note.ownerUsername }}</span>
+                            </div>
+                            @if (note.isArchived || note.isShared) {
+                                <div class="flex flex-wrap gap-1">
+                                    @if (note.isArchived) {
+                                        <span class="rounded bg-amber-50 px-1.5 py-0.5 text-[10px] font-medium text-amber-700">Archivada</span>
+                                    }
+                                    @if (note.isShared) {
+                                        <span class="rounded bg-sky-50 px-1.5 py-0.5 text-[10px] font-medium text-sky-700">Compartida</span>
+                                    }
+                                    @if (note.isShared && note.canEdit) {
+                                        <span class="rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700">Editable</span>
+                                    }
+                                </div>
+                            }
+                        </button>
+                    }
+                } @else {
+                    <div class="flex flex-col items-center justify-center gap-2 py-12 text-center text-slate-400">
+                        <svg data-p-icon="inbox" [size]="28"></svg>
+                        <p class="text-xs">
+                            {{ tab() === 'mine' ? 'Aún no tienes notas creadas.' : 'No hay notas compartidas contigo.' }}
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+    </aside>
+}

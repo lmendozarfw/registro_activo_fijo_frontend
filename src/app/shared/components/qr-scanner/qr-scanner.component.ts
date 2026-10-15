@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output, signal } from '@angular/core';
-import { ExclamationTriangle, Refresh, Qrcode } from '@primeicons/angular';
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 
 let instances = 0;
@@ -34,7 +33,6 @@ let instances = 0;
       }
     </div>
   `,
-  imports: [ExclamationTriangle, Refresh, Qrcode],
 })
 export class QrScannerComponent implements AfterViewInit, OnDestroy {
   @Input() size = 300;

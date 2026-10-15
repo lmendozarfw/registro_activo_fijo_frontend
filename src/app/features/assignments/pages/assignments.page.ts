@@ -17,8 +17,7 @@ import { EmployeeStore } from "../../employees/stores/employee.store";
 import { ResourceStore } from "../../resources/stores/resource.store";
 import { ModelStore } from "../../configuration/stores/model.store";
 import { AssignmentDto, CreateAssignmentCommand, NewMobileDeviceDto, RenewDeviceOption, RenewMobileAssignmentCommand, ReturnAssignmentCommand } from "../models/assignment.model";
-import { ChevronDown, Pencil, Plus, Undo, ArrowRightArrowLeft } from '@primeicons/angular';
-import { AuthStore } from "../../../features/auth/stores/auth.store";
+import { AuthStore } from '../../auth/stores/auth.store';
 import { TooltipModule } from "primeng/tooltip";
 
 @Component({
@@ -26,8 +25,7 @@ import { TooltipModule } from "primeng/tooltip";
     templateUrl: "./assignments.page.html",
     styles: [],
     imports: [TableModule, ButtonModule, SelectModule, DatePickerModule, TextareaModule, TagModule, TooltipModule, InputText,
-        InputNumberModule, SelectButtonModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent,
-        Plus, Pencil, Undo, ArrowRightArrowLeft]
+        InputNumberModule, SelectButtonModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent]
 })
 export class AssignmentsPage implements OnInit {
     protected readonly store = inject(AssignmentStore);
