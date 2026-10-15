@@ -16,7 +16,7 @@
         (pointerup)="onHeaderPointerUp($event)"
         (pointercancel)="onHeaderPointerUp($event)"
     >
-        <svg data-p-icon="note-sticky" [size]="15" class="shrink-0 text-slate-700/80"></svg>
+        <svg [pIcon]="'note-sticky'" [size]="15" class="shrink-0 text-slate-700/80"></svg>
         <span class="min-w-0 flex-1 truncate text-sm font-semibold text-slate-800" [title]="title()">
             {{ title() }}
         </span>
@@ -30,7 +30,7 @@
                 aria-label="Ajustes de la nota"
                 (click)="openSettings()"
             >
-                <svg data-p-icon="pencil" [size]="14"></svg>
+                <svg [pIcon]="'pencil'" [size]="14"></svg>
             </button>
         }
 
@@ -43,9 +43,9 @@
             (click)="toggleCollapse()"
         >
             @if (collapsed()) {
-                <svg data-p-icon="window-maximize" [size]="14"></svg>
+                <svg [pIcon]="'window-maximize'" [size]="14"></svg>
             } @else {
-                <svg data-p-icon="window-minimize" [size]="14"></svg>
+                <svg [pIcon]="'window-minimize'" [size]="14"></svg>
             }
         </button>
 
@@ -57,7 +57,7 @@
             aria-label="Cerrar nota"
             (click)="close()"
         >
-            <svg data-p-icon="times" [size]="14"></svg>
+            <svg [pIcon]="'times'" [size]="14"></svg>
         </button>
     </div>
 
@@ -176,7 +176,7 @@
                             text
                             (click)="confirmDelete.set(true); settingsOpen.set(false)"
                         >
-                            <svg data-p-icon="trash" [size]="13"></svg>
+                            <svg [pIcon]="'trash'" [size]="13"></svg>
                             <span>Eliminar</span>
                         </button>
                         <div class="flex gap-2">
@@ -184,7 +184,7 @@
                                 Cancelar
                             </button>
                             <button pButton type="button" size="small" [disabled]="store.saving()" (click)="saveSettings()">
-                                <svg data-p-icon="save" [size]="13"></svg>
+                                <svg [pIcon]="'save'" [size]="13"></svg>
                                 <span>Guardar</span>
                             </button>
                         </div>
@@ -193,7 +193,7 @@
             } @else {
                 @if (loading()) {
                     <div class="flex items-center justify-center gap-2 py-8 text-xs text-slate-400">
-                        <svg data-p-icon="spinner" [spin]="true" [size]="16"></svg>
+                        <svg [pIcon]="'spinner'" [spin]="true" [size]="16"></svg>
                         Cargando...
                     </div>
                 } @else {
@@ -232,19 +232,19 @@
                                 {{ draft().length }}/{{ contentMax }}
                             </span>
                             <button pButton type="button" size="small" [disabled]="!canSubmitText()" (click)="submitText()">
-                                <svg data-p-icon="plus" [size]="13"></svg>
+                                <svg [pIcon]="'plus'" [size]="13"></svg>
                                 <span>Agregar</span>
                             </button>
                         </div>
                     </div>
                 } @else if (detail()?.isArchived) {
                     <p class="flex items-center gap-1.5 border-t border-slate-100 px-3 py-2 text-xs text-amber-600">
-                        <svg data-p-icon="lock" [size]="13"></svg>
+                        <svg [pIcon]="'lock'" [size]="13"></svg>
                         Nota archivada: no se pueden agregar textos.
                     </p>
                 } @else if (isReadOnly()) {
                     <p class="flex items-center gap-1.5 border-t border-slate-100 px-3 py-2 text-xs text-slate-500">
-                        <svg data-p-icon="lock" [size]="13"></svg>
+                        <svg [pIcon]="'lock'" [size]="13"></svg>
                         Solo lectura.
                     </p>
                 }

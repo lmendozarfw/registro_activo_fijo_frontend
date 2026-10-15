@@ -3,7 +3,7 @@
 
     <aside class="fixed inset-y-0 right-0 z-[120] flex w-[22rem] max-w-[92vw] flex-col border-l border-slate-200 bg-white shadow-2xl">
         <div class="flex items-center gap-2 border-b border-slate-200 px-4 py-3">
-            <svg data-p-icon="note-sticky" [size]="18" class="text-emerald-600"></svg>
+            <svg [pIcon]="'note-sticky'" [size]="18" class="text-emerald-600"></svg>
             <span class="text-sm font-semibold text-slate-800">Notas</span>
             <span class="rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-600">{{ store.totalCount() }}</span>
             <button
@@ -12,7 +12,7 @@
                 aria-label="Cerrar panel"
                 (click)="close()"
             >
-                <svg data-p-icon="times" [size]="16"></svg>
+                <svg [pIcon]="'times'" [size]="16"></svg>
             </button>
         </div>
 
@@ -20,7 +20,7 @@
             <div class="border-b border-slate-100 p-3">
                 @if (!composerOpen()) {
                     <button pButton type="button" class="w-full" (click)="composerOpen.set(true)">
-                        <svg data-p-icon="plus" [size]="15"></svg>
+                        <svg [pIcon]="'plus'" [size]="15"></svg>
                         <span>Nueva nota</span>
                     </button>
                 } @else {
@@ -98,9 +98,9 @@
                             </button>
                             <button pButton type="button" size="small" [disabled]="!canCreate()" (click)="create()">
                                 @if (store.creating()) {
-                                    <svg data-p-icon="spinner" [spin]="true" [size]="14"></svg>
+                                    <svg [pIcon]="'spinner'" [spin]="true" [size]="14"></svg>
                                 } @else {
-                                    <svg data-p-icon="plus" [size]="14"></svg>
+                                    <svg [pIcon]="'plus'" [size]="14"></svg>
                                 }
                                 <span>Crear</span>
                             </button>
@@ -135,7 +135,7 @@
             <div class="min-h-0 flex-1 overflow-y-auto p-3">
                 @if (currentLoading()) {
                     <div class="flex items-center justify-center gap-2 py-10 text-xs text-slate-400">
-                        <svg data-p-icon="spinner" [spin]="true" [size]="16"></svg>
+                        <svg [pIcon]="'spinner'" [spin]="true" [size]="16"></svg>
                         Cargando notas...
                     </div>
                 } @else if (currentNotes().length > 0) {
@@ -154,7 +154,7 @@
                                 }
                             </div>
                             <div class="flex items-center gap-1.5 text-xs text-slate-500">
-                                <svg data-p-icon="user" [size]="12"></svg>
+                                <svg [pIcon]="'user'" [size]="12"></svg>
                                 <span class="truncate">{{ note.ownerUsername }}</span>
                             </div>
                             @if (note.isArchived || note.isShared) {
@@ -174,7 +174,7 @@
                     }
                 } @else {
                     <div class="flex flex-col items-center justify-center gap-2 py-12 text-center text-slate-400">
-                        <svg data-p-icon="inbox" [size]="28"></svg>
+                        <svg [pIcon]="'inbox'" [size]="28"></svg>
                         <p class="text-xs">
                             {{ tab() === 'mine' ? 'Aún no tienes notas creadas.' : 'No hay notas compartidas contigo.' }}
                         </p>

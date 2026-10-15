@@ -12,18 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { Textarea } from 'primeng/textarea';
 import { TooltipModule } from 'primeng/tooltip';
-import {
-    Lock,
-    NoteSticky,
-    Pencil,
-    Plus,
-    Save,
-    Spinner,
-    Times,
-    Trash,
-    WindowMaximize,
-    WindowMinimize,
-} from '@primeicons/angular';
+import { PIcon } from '@primeicons/angular/p-icon';
 import { AuthStore } from '../../../auth/stores/auth.store';
 import { NOTE_CONTENT_MAX, NOTE_TITLE_MAX, noteTitle } from '../../models/note.model';
 import { NotesBoardStore } from '../../stores/notes-board.store';
@@ -33,22 +22,7 @@ import { NotesStore } from '../../stores/note.store';
     selector: 'app-sticky-note',
     templateUrl: './sticky-note.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        ButtonModule,
-        InputText,
-        Textarea,
-        TooltipModule,
-        NoteSticky,
-        Pencil,
-        WindowMaximize,
-        WindowMinimize,
-        Times,
-        Trash,
-        Save,
-        Spinner,
-        Plus,
-        Lock,
-    ],
+    imports: [ButtonModule, InputText, Textarea, TooltipModule, PIcon],
 })
 export class StickyNoteComponent implements OnInit {
     readonly noteId = input.required<string>();

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } 
 import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { Textarea } from 'primeng/textarea';
-import { Inbox, NoteSticky, Plus, Spinner, Times, User } from '@primeicons/angular';
+import { PIcon } from '@primeicons/angular/p-icon';
 import { NOTE_CONTENT_MAX, NOTE_TITLE_MAX, noteTitle } from '../../models/note.model';
 import { NotesBoardStore } from '../../stores/notes-board.store';
 import { NotesStore } from '../../stores/note.store';
@@ -13,7 +13,7 @@ type NotesTab = 'mine' | 'shared';
     selector: 'app-notes-panel',
     templateUrl: './notes-panel.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ButtonModule, InputText, Textarea, NoteSticky, Plus, Times, Spinner, Inbox, User],
+    imports: [ButtonModule, InputText, Textarea, PIcon],
 })
 export class NotesPanelComponent implements OnInit {
     protected readonly board = inject(NotesBoardStore);
