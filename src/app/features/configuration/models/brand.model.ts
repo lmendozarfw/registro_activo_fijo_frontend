@@ -8,3 +8,7 @@ export interface Brand {
 export interface BrandRequest {
     name: string;
 }
+
+export interface BrandUpdateRequest {
+    name: string;
+}

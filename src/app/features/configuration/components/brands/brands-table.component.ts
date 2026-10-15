@@ -37,7 +37,7 @@ export class BrandsTableComponent implements OnInit {
     });
 
     ngOnInit(): void {
-        this.store.load();
+        this.store.loadActive();
     }
 
     openCreate(): void {

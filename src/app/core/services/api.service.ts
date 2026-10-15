@@ -69,7 +69,7 @@ export class ApiService {
     return this.http.put<TResponse>(`${environment.apiUrl}/${endpoint}`, data);
   }
 
-  patch<TResponse>(endpoint: string, data: unknown = {}): Observable<TResponse> {
+  patch<TRequest, TResponse>(endpoint: string, data: TRequest): Observable<TResponse> {
     return this.http.patch<TResponse>(`${environment.apiUrl}/${endpoint}`, data);
   }
 

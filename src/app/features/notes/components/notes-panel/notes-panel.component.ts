@@ -6,14 +6,21 @@ import { PIcon } from '@primeicons/angular/p-icon';
 import { NOTE_CONTENT_MAX, NOTE_TITLE_MAX, noteTitle } from '../../models/note.model';
 import { NotesBoardStore } from '../../stores/notes-board.store';
 import { NotesStore } from '../../stores/note.store';
+import { ToggleButtonModule } from 'primeng/togglebutton';
+import {form, FormField, maxLength, required} from '@angular/forms/signals';
 
 type NotesTab = 'mine' | 'shared';
-
+interface NoteDataForm {
+    title: string;
+    content: string;
+    shared: boolean;
+    canEdit: boolean;
+}
 @Component({
     selector: 'app-notes-panel',
     templateUrl: './notes-panel.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ButtonModule, InputText, Textarea, PIcon],
+    imports: [ButtonModule, InputText, Textarea, PIcon, ToggleButtonModule, FormField],
 })
 export class NotesPanelComponent implements OnInit {
     protected readonly board = inject(NotesBoardStore);
@@ -24,6 +31,20 @@ export class NotesPanelComponent implements OnInit {
 
     protected readonly tab = signal<NotesTab>('mine');
     protected readonly composerOpen = signal(false);
+
+    noteModel = signal<NoteDataForm>({
+        title: '',
+        content: '',
+        shared: false,
+        canEdit: false
+    });
+    noteForm = form(this.noteModel, (schemaPath) => {
+        required(schemaPath.title, {message: 'Título es requerido'});
+        required(schemaPath.content, {message: 'El contenido es requerido'});
+        maxLength(schemaPath.title, NOTE_TITLE_MAX, {message: `Debe tener máximo ${NOTE_TITLE_MAX} caracteres`});
+        maxLength(schemaPath.content, NOTE_CONTENT_MAX, {message: `Debe tener máximo ${NOTE_CONTENT_MAX} caracteres`})
+    });
+
     protected readonly draftTitle = signal('');
     protected readonly draftContent = signal('');
     protected readonly draftShared = signal(false);
