@@ -112,7 +112,7 @@ export const BrandStore = signalStore(
                     await firstValueFrom(service.softRemove(id));
                     patchState(store, { saving: false });
                     toast.success('Marca eliminada');
-                    await this.load();
+                    await this.loadActive();
                     return true;
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudo eliminar la marca');

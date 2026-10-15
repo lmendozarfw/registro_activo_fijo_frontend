@@ -41,8 +41,8 @@ export class ModelsTableComponent implements OnInit {
     });
 
     ngOnInit(): void {
-        this.store.load();
-        this.brandStore.load();
+        this.store.loadActive();
+        this.brandStore.loadActive();
     }
 
     openCreate(): void {

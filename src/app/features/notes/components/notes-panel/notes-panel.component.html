@@ -40,7 +40,7 @@
                 </div>
 
                 <div class="flex items-center justify-between gap-2">
-                    <span class="text-xs text-slate-600" [class.text-slate-300]="!draftShared()">Permitir edición</span>
+                    <span class="text-xs text-slate-600" [class.text-slate-300]="!noteModel().shared">Permitir edición</span>
                     <p-togglebutton [formField]="noteForm.canEdit" onLabel="Sí" offLabel="No" />
                 </div>
 

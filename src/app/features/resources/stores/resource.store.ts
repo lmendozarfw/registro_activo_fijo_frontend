@@ -6,6 +6,7 @@ import { resolveErrorMessage } from "../../../core/utils/error.utils";
 import { ResourceDto, ResourceGroupItemDto, CreateResourceCommand, MobileResourceDto, CreateMobileResourceCommand } from "../models/resource.model";
 import { ResourceService } from "../services/resource.service";
 import { MobileResourceService } from "../services/mobile-resource.service";
+import { LoaderService } from "../../../core/services/loader.service";
 
 type ResourceState = {
     resources: ResourceDto[];
@@ -34,9 +35,11 @@ export const ResourceStore = signalStore(
             resourceService = inject(ResourceService),
             mobileResourceService = inject(MobileResourceService),
             toast = inject(ToastService),
+            loader = inject(LoaderService)
         ) => ({
             async loadAll(): Promise<void> {
                 patchState(store, { loading: true, error: null });
+                loader.show();
                 try {
                     const resources = await firstValueFrom(resourceService.getAll());
                     patchState(store, { resources, loading: false });
@@ -44,10 +47,13 @@ export const ResourceStore = signalStore(
                     const message = resolveErrorMessage(error, 'No se pudieron cargar los recursos');
                     patchState(store, { loading: false, error: message });
                     toast.error(message);
+                } finally {
+                    loader.hide();
                 }
             },
             async loadAvailableToAssign(): Promise<void> {
                 patchState(store, { loading: true, error: null });
+                loader.show();
                 try {
                     const resources = await firstValueFrom(resourceService.getAvailableToAssign());
                     patchState(store, { availableResourceGroups: resources, loading: false });
@@ -55,10 +61,13 @@ export const ResourceStore = signalStore(
                     const message = resolveErrorMessage(error, 'No se pudieron cargar los recursos');
                     patchState(store, { loading: false, error: message });
                     toast.error(message);
+                } finally {
+                    loader.hide();
                 }
             },
             async loadMobile(): Promise<void> {
                 patchState(store, { loading: true, error: null });
+                loader.show();
                 try {
                     const mobileResources = await firstValueFrom(mobileResourceService.getAll());
                     patchState(store, { mobileResources, loading: false });
@@ -66,10 +75,13 @@ export const ResourceStore = signalStore(
                     const message = resolveErrorMessage(error, 'No se pudieron cargar los celulares');
                     patchState(store, { loading: false, error: message });
                     toast.error(message);
+                } finally {
+                    loader.hide();
                 }
             },
             async loadUnassignedMobile(): Promise<void> {
                 patchState(store, { error: null });
+                loader.show();
                 try {
                     const unassignedMobileResources = await firstValueFrom(mobileResourceService.getUnassigned());
                     patchState(store, { unassignedMobileResources });
@@ -77,10 +89,13 @@ export const ResourceStore = signalStore(
                     const message = resolveErrorMessage(error, 'No se pudieron cargar los celulares disponibles');
                     patchState(store, { error: message });
                     toast.error(message);
+                } finally {
+                    loader.hide();
                 }
             },
             async create(data: CreateResourceCommand): Promise<boolean> {
                 patchState(store, { saving: true, error: null });
+                loader.show();
                 try {
                     await firstValueFrom(resourceService.create(data));
                     patchState(store, { saving: false });
@@ -92,10 +107,13 @@ export const ResourceStore = signalStore(
                     patchState(store, { saving: false, error: message });
                     toast.error(message);
                     return false;
+                } finally {
+                    loader.hide();
                 }
             },
             async createMobile(data: CreateMobileResourceCommand): Promise<boolean> {
                 patchState(store, { saving: true, error: null });
+                loader.show();
                 try {
                     await firstValueFrom(mobileResourceService.create(data));
                     patchState(store, { saving: false });
@@ -107,6 +125,8 @@ export const ResourceStore = signalStore(
                     patchState(store, { saving: false, error: message });
                     toast.error(message);
                     return false;
+                } finally {
+                    loader.hide();
                 }
             },
         }),

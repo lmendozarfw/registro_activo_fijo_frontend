@@ -86,7 +86,14 @@ import { NotesBoardComponent } from '../../features/notes/components/notes-board
                                             <span>Luis Angel Mendoza Lucio</span>
                                             <svg data-p-icon="chevron-down" class="ml-auto"></svg>
                                         </button>
-                                        <p-menu #userMenu [model]="userItems" [popup]="true" appendTo="body" />
+                                        <p-menu #userMenu [model]="userItems" [popup]="true" appendTo="body">
+                                            <ng-template #item let-item>
+                                                <a class="flex items-center gap-2">
+                                                    <svg [pIcon]="item.icon || ''" [size]="14" class="ml-2"></svg>
+                                                    <span>{{ item.label }}</span>
+                                                </a>
+                                            </ng-template>
+                                        </p-menu>
                                     </p-sidebar-menu-item>
                                 </p-sidebar-menu>
                             </p-sidebar-footer>
@@ -148,7 +155,7 @@ import { NotesBoardComponent } from '../../features/notes/components/notes-board
         RouterOutlet,
         RouterLink,
         HeaderTitleComponent,
-        NotesBoardComponent,
+        NotesBoardComponent
     ],
 })
 export class MainTemplate {
@@ -158,8 +165,8 @@ export class MainTemplate {
 
     userItems: MenuItem[] = [
         {
-            label: 'Menú',
-            items: [{ label: 'Cerrar sesión', icon: 'pi pi-sign-out', command: () => this.logout() }]
+            label: 'Opciones',
+            items: [{ label: 'Cerrar sesión', icon: 'sign-out', command: () => this.logout() }]
         }
     ];
 

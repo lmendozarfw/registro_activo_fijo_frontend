@@ -125,6 +125,6 @@ export class LoginPage {
       this.resumeScanner();
       return;
     }
-    await this.router.navigate(['app']);
+    await this.router.navigate(['app', 'kpis']);
   }
 }

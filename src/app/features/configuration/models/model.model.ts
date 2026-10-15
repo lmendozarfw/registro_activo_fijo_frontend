@@ -15,3 +15,9 @@ export interface ModelRequest {
     name: string;
     type: ResourceTypeEnum;
 }
+
+export interface ModelUpdateRequest {
+    brandId: string;
+    name: string;
+    type: ResourceTypeEnum;
+}

@@ -26,7 +26,17 @@ import { LineDto, CreateLineCommand } from "../models/line.model";
 @Component({
     selector: "app-phones-page",
     templateUrl: "./phones.page.html",
-    styles: [],
+    styles: [`
+        .p-tabs {
+            border-radius: 12px;
+        }
+        .p-tablist {
+            border-radius: 12px 12px 0 0;
+        }
+        .p-tabpanels {
+            border-radius: 0 0 12px 12px;
+        }
+        `],
     imports: [TableModule, ButtonModule, InputText, InputNumberModule, TextareaModule, SelectModule, TagModule, TooltipModule,
         TabsModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent, Plus, Trash, DatePickerModule]
 })

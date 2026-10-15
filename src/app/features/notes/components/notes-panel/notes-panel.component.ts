@@ -45,11 +45,6 @@ export class NotesPanelComponent implements OnInit {
         maxLength(schemaPath.content, NOTE_CONTENT_MAX, {message: `Debe tener máximo ${NOTE_CONTENT_MAX} caracteres`})
     });
 
-    protected readonly draftTitle = signal('');
-    protected readonly draftContent = signal('');
-    protected readonly draftShared = signal(false);
-    protected readonly draftCanEdit = signal(false);
-
     protected readonly currentNotes = computed(() =>
         this.tab() === 'mine' ? this.store.myNotes() : this.store.sharedNotes(),
     );
@@ -58,9 +53,9 @@ export class NotesPanelComponent implements OnInit {
     );
     protected readonly canCreate = computed(
         () =>
-            this.draftContent().trim().length > 0 &&
-            this.draftContent().length <= this.contentMax &&
-            this.draftTitle().length <= this.titleMax &&
+            this.noteModel().content.trim().length > 0 &&
+            this.noteModel().content.length <= this.contentMax &&
+            this.noteModel().title.length <= this.titleMax &&
             !this.store.creating(),
     );
 
@@ -80,36 +75,20 @@ export class NotesPanelComponent implements OnInit {
         return noteTitle(note);
     }
 
-    protected toggleShared(): void {
-        const next = !this.draftShared();
-        this.draftShared.set(next);
-        if (!next) this.draftCanEdit.set(false);
-    }
-
-    protected onDraftTitle(event: Event): void {
-        this.draftTitle.set((event.target as HTMLInputElement).value);
-    }
-
-    protected onDraftContent(event: Event): void {
-        this.draftContent.set((event.target as HTMLTextAreaElement).value);
-    }
-
     protected cancelComposer(): void {
         this.composerOpen.set(false);
-        this.draftTitle.set('');
-        this.draftContent.set('');
-        this.draftShared.set(false);
-        this.draftCanEdit.set(false);
+        this.noteModel.set({ title: '', content: '', shared: false, canEdit: false });
     }
 
     protected async create(): Promise<void> {
         if (!this.canCreate()) return;
-        const title = this.draftTitle().trim();
+        const { title: rawTitle, content, shared, canEdit } = this.noteModel();
+        const title = rawTitle.trim();
         const id = await this.store.create({
             title: title.length > 0 ? title : null,
-            isShared: this.draftShared(),
-            canEdit: this.draftShared() && this.draftCanEdit(),
-            content: this.draftContent().trim(),
+            isShared: shared,
+            canEdit: shared && canEdit,
+            content: content.trim(),
         });
         if (!id) return;
 
