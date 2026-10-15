@@ -7,6 +7,7 @@ import { PermissionsGroupByModuleDto } from "../models/permission.model";
 import { ITemplate, TemplateRequest } from "../models/template.model";
 import { PermissionService } from "../services/permission.service";
 import { TemplateService } from "../services/template.service";
+import { LoaderService } from "../../../core/services/loader.service";
 
 type TemplateState = {
     templates: ITemplate[];
@@ -33,10 +34,11 @@ export const TemplateStore = signalStore(
             service = inject(TemplateService),
             permissionService = inject(PermissionService),
             toast = inject(ToastService),
+            loader = inject(LoaderService)
         ) => ({
             async load(): Promise<void> {
                 patchState(store, { loading: true, error: null });
-
+                loader.show();
                 try {
                     const templates = await firstValueFrom(service.getAll());
                     patchState(store, { templates, loading: false });
@@ -44,6 +46,23 @@ export const TemplateStore = signalStore(
                     const message = resolveErrorMessage(error, 'No se pudieron cargar las plantillas');
                     patchState(store, { loading: false, error: message });
                     toast.error(message);
+                } finally {
+                    loader.hide();
+                }
+            },
+
+            async loadActive(): Promise<void> {
+                patchState(store, { loading: true, error: null });
+                loader.show();
+                try {
+                    const templates = await firstValueFrom(service.getActive());
+                    patchState(store, { templates, loading: false });
+                } catch (error) {
+                    const message = resolveErrorMessage(error, 'No se pudieron cargar las plantillas activas');
+                    patchState(store, { loading: false, error: message });
+                    toast.error(message);
+                } finally {
+                    loader.hide();
                 }
             },
 
@@ -64,7 +83,7 @@ export const TemplateStore = signalStore(
 
             async create(data: TemplateRequest): Promise<boolean> {
                 patchState(store, { saving: true, error: null });
-
+                loader.show();
                 try {
                     await firstValueFrom(service.create(data));
                     patchState(store, { saving: false });
@@ -76,40 +95,47 @@ export const TemplateStore = signalStore(
                     patchState(store, { saving: false, error: message });
                     toast.error(message);
                     return false;
+                } finally {
+                    loader.hide();
                 }
             },
 
             async update(id: string, data: TemplateRequest): Promise<boolean> {
                 patchState(store, { saving: true, error: null });
-
+                loader.show();
                 try {
-                    await firstValueFrom(service.update(id, data));
+                    const updatedTemplate = await firstValueFrom(service.update(id, data));
                     patchState(store, { saving: false });
                     toast.success('Plantilla actualizada');
-                    await this.load();
+                    const templates = store.templates().map(t => (t.id === id ? { ...t, ...updatedTemplate } : t));
+                    patchState(store, { templates });
                     return true;
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudo actualizar la plantilla');
                     patchState(store, { saving: false, error: message });
                     toast.error(message);
                     return false;
+                } finally {
+                    loader.hide();
                 }
             },
 
             async remove(id: string): Promise<boolean> {
                 patchState(store, { saving: true, error: null });
-
+                loader.show();
                 try {
-                    await firstValueFrom(service.remove(id));
+                    await firstValueFrom(service.softRemove(id));
                     patchState(store, { saving: false });
                     toast.success('Plantilla eliminada');
-                    await this.load();
+                    await this.loadActive();
                     return true;
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudo eliminar la plantilla');
                     patchState(store, { saving: false, error: message });
                     toast.error(message);
                     return false;
+                } finally {
+                    loader.hide();
                 }
             },
         }),

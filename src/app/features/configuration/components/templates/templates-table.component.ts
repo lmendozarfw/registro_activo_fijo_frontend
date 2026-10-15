@@ -53,7 +53,7 @@ export class TemplatesTableComponent implements OnInit {
     protected readonly someSelected = computed(() => this.selectedCount() > 0);
 
     ngOnInit(): void {
-        this.store.load();
+        this.store.loadActive();
     }
 
     openCreate(): void {
@@ -113,6 +113,16 @@ export class TemplatesTableComponent implements OnInit {
             this.templateToDelete = null;
             this.deleteDialogVisible = false;
         }
+    }
+
+    protected formatDate(value?: string | null): string {
+        if (!value) return '—';
+
+        const date = new Date(value);
+
+        return isNaN(date.getTime()) ? '—' : date.toLocaleString('es-ES', {
+            day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
+        });
     }
 
     isPermissionSelected(permissionId: string): boolean {

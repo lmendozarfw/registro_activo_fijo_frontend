@@ -12,12 +12,14 @@
 
     @if (store.templates().length > 0) {
     <p-table [value]="store.templates()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-        [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '1000px' }">
+        [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '1200px' }">
         <ng-template #header>
             <tr>
-                <th class="width: 250px">Nombre</th>
+                <th style="width: 250px">Nombre</th>
                 <th>Descripción</th>
                 <th style="width: 150px">Permisos</th>
+                <th style="width: 200px">Fecha de creación</th>
+                <th style="width: 200px">Fecha de modificación</th>
                 <th style="width: 150px">Acciones</th>
             </tr>
         </ng-template>
@@ -30,6 +32,8 @@
                         {{ template.permissions.length }}
                     </span>
                 </td>
+                <td>{{ formatDate(template.createdAt) }}</td>
+                <td>{{ formatDate(template.updatedAt) }}</td>
                 <td>
                     <div class="flex gap-1">
                         <button pButton type="button" severity="secondary" text pTooltip="Editar" aria-label="Editar"
