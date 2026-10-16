@@ -37,7 +37,6 @@ export interface ResourceGroupItemDto {
 
 export interface CreateResourceCommand {
     assetCode: string;
-    name: string;
     serialNumber?: string | null;
     modelId: string;
     type: ResourceTypeEnum;

@@ -51,7 +51,6 @@ export class ResourcesPage implements OnInit, OnDestroy {
         modelId: new FormControl({value: '', disabled: true}, { nonNullable: true, validators: Validators.required }),
         type: new FormControl<ResourceTypeEnum>(ResourceTypeEnum.OTHER, { nonNullable: true, validators: Validators.required }),
         assetCode: new FormControl('', { nonNullable: true, validators: Validators.required }),
-        name: new FormControl('', { nonNullable: true, validators: Validators.required }),
         serialNumber: new FormControl(''),
         price: new FormControl<number>(0, { nonNullable: true, validators: [Validators.required, Validators.min(0)] }),
         status: new FormControl<StatusResourceEnum>(StatusResourceEnum.AVAILABLE, { nonNullable: true, validators: Validators.required }),
@@ -81,7 +80,6 @@ export class ResourcesPage implements OnInit, OnDestroy {
             modelId: '',
             type: ResourceTypeEnum.OTHER,
             assetCode: '',
-            name: '',
             serialNumber: '',
             price: 0,
             status: StatusResourceEnum.AVAILABLE,
@@ -98,7 +96,6 @@ export class ResourcesPage implements OnInit, OnDestroy {
 
         const payload: CreateResourceCommand = {
             assetCode: this.form.controls.assetCode.value.trim(),
-            name: this.form.controls.name.value.trim(),
             serialNumber: this.form.controls.serialNumber.value?.trim() || null,
             modelId: this.form.controls.modelId.value,
             type: this.form.controls.type.value,

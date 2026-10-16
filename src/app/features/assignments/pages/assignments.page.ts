@@ -148,6 +148,7 @@ export class AssignmentsPage implements OnInit {
     };
 
     const success = await this.store.returnResource(payload);
+    this.resourceStore.loadAvailableToAssign();
     if (success) {
       this.dialogReturnVisible = false;
       this.selectedAssignment = null;
@@ -253,6 +254,7 @@ export class AssignmentsPage implements OnInit {
     };
 
     const success = await this.store.renew(payload);
+    this.resourceStore.loadAvailableToAssign();
     if (success) {
       this.dialogRenewVisible = false;
       this.selectedAssignment = null;
