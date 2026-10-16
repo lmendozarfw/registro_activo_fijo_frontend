@@ -8,6 +8,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormDialogComponent } from "../../../shared/components/form-dialog/form-dialog.component";
 import { FormLabelComponent } from "../../../shared/components/form-label/form-label.component";
 import { EmptyStateComponent } from "../../../shared/components/empty-state/empty-state.component";
+import { SearchInputComponent } from "../../../shared/components/search-input/search-input.component";
 import { PageHeaderService } from "../../../core/services/page-header.service";
 import { EmployeeStore } from "../stores/employee.store";
 import { Employee, EmployeeRequest } from "../models/employee.model";
@@ -19,8 +20,8 @@ import { Pencil, Plus, Trash } from '@primeicons/angular';
     selector: 'app-employees-page',
     templateUrl: './employees.page.html',
     styles: [],
-    imports: [TableModule, ButtonModule, InputText, SelectModule, TooltipModule, ReactiveFormsModule,
-        FormDialogComponent, FormLabelComponent, EmptyStateComponent, Pencil, Plus, Trash],
+        imports: [TableModule, ButtonModule, InputText, SelectModule, TooltipModule, ReactiveFormsModule,
+        FormDialogComponent, FormLabelComponent, EmptyStateComponent, SearchInputComponent, Pencil, Plus, Trash],
 })
 export class EmployeesPage implements OnInit {
     protected readonly store = inject(EmployeeStore);
@@ -54,6 +55,10 @@ export class EmployeesPage implements OnInit {
 
     protected fullName(employee: Employee): string {
         return `${employee.firstName} ${employee.paternalSurname} ${employee.maternalSurname}`;
+    }
+
+    protected onSearch(value: string): void {
+        console.log('Búsqueda de empleados:', value);
     }
 
     openCreate(): void {

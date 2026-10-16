@@ -13,7 +13,9 @@ export interface ResourceDto {
     price: number;
     observations?: string | null;
     status: StatusResourceEnum;
+    active?: boolean;
     createdAt?: string;
+    updatedAt?: string | null;
 }
 
 export interface ResourceItemDto {
@@ -56,7 +58,14 @@ export interface MobileResourceDto {
     status: StatusResourceEnum;
     activeLinePhoneNumber?: string | null;
     activeLineOperator?: string | null;
+    modelId?: string;
+    serialNumber?: string | null;
+    price?: number;
+    observations?: string | null;
+    lineId?: string | null;
+    active?: boolean;
     createdAt?: string;
+    updatedAt?: string | null;
 }
 
 export interface CreateMobileResourceCommand {
@@ -64,6 +73,17 @@ export interface CreateMobileResourceCommand {
     serialNumber?: string | null;
     modelId: string;
     type: ResourceTypeEnum;
+    price: number;
+    observations?: string | null;
+    imei: string;
+    imei2?: string | null;
+    lineId?: string | null;
+}
+
+export interface UpdateMobileResourceCommand {
+    assetCode: string;
+    serialNumber?: string | null;
+    modelId: string;
     price: number;
     observations?: string | null;
     imei: string;

@@ -16,12 +16,12 @@ import { ResourceStore } from "../stores/resource.store";
 import { LineStore } from "../stores/line.store";
 import { BrandStore } from "../../configuration/stores/brand.store";
 import { ModelStore } from "../../configuration/stores/model.store";
-import { CreateMobileResourceCommand } from "../models/resource.model";
+import { CreateMobileResourceCommand, MobileResourceDto, UpdateMobileResourceCommand } from "../models/resource.model";
 import { RESOURCE_TYPE_LABELS, ResourceTypeEnum } from "../models/resource-type.model";
 import { STATUS_RESOURCE_LABELS, StatusResourceEnum } from "../models/status-resource.model";
-import { Plus, Trash } from '@primeicons/angular';
+import { Pencil, Plus, Trash } from '@primeicons/angular';
 import { DatePickerModule } from 'primeng/datepicker';
-import { LineDto, CreateLineCommand } from "../models/line.model";
+import { LineDto, UpdateLineCommand } from "../models/line.model";
 
 @Component({
     selector: "app-phones-page",
@@ -38,7 +38,7 @@ import { LineDto, CreateLineCommand } from "../models/line.model";
         }
         `],
     imports: [TableModule, ButtonModule, InputText, InputNumberModule, TextareaModule, SelectModule, TagModule, TooltipModule,
-        TabsModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent, Plus, Trash, DatePickerModule]
+        TabsModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent, Pencil, Plus, Trash, DatePickerModule]
 })
 export class PhonesPage implements OnInit {
     protected readonly store = inject(ResourceStore);
@@ -52,7 +52,13 @@ export class PhonesPage implements OnInit {
 
     activeTab = 'mobiles';
     dialogVisible = false;
+    dialogTitle = 'Nuevo celular';
+    deleteDialogVisible = false;
+    editingMobile: MobileResourceDto | null = null;
+    mobileToDelete: MobileResourceDto | null = null;
     lineDialogVisible = false;
+    lineDialogTitle = 'Nueva línea';
+    editingLine: LineDto | null = null;
     deleteLineDialogVisible = false;
     lineToDelete: LineDto | null = null;
 
@@ -76,13 +82,27 @@ export class PhonesPage implements OnInit {
     });
 
     ngOnInit(): void {
-        this.store.loadMobile();
-        this.lineStore.load();
         this.brandStore.load();
         this.modelStore.loadOnlyMobiles();
+        this.loadTabData(this.activeTab);
+    }
+
+    onTabChange(tab: string | number | undefined): void {
+        this.activeTab = String(tab);
+        this.loadTabData(this.activeTab);
+    }
+
+    private loadTabData(tab: string): void {
+        if (tab === 'mobiles') {
+            this.store.loadActiveMobile();
+        } else if (tab === 'lines') {
+            this.lineStore.loadActive();
+        }
     }
 
     openCreateMobile(): void {
+        this.editingMobile = null;
+        this.dialogTitle = 'Nuevo celular';
         this.form.reset({
             modelId: '',
             assetCode: '',
@@ -96,9 +116,44 @@ export class PhonesPage implements OnInit {
         this.dialogVisible = true;
     }
 
+    openEditMobile(mobile: MobileResourceDto): void {
+        this.editingMobile = mobile;
+        this.dialogTitle = 'Editar celular';
+        this.form.reset({
+            modelId: mobile.modelId ?? '',
+            assetCode: mobile.assetCode,
+            serialNumber: mobile.serialNumber ?? '',
+            price: mobile.price ?? 0,
+            imei: mobile.imei,
+            imei2: mobile.imei2 ?? '',
+            lineId: mobile.lineId ?? null,
+            observations: mobile.observations ?? '',
+        });
+        this.dialogVisible = true;
+    }
+
     async saveMobile(): Promise<void> {
         if (this.form.invalid) {
             this.form.markAllAsTouched();
+            return;
+        }
+
+        if (this.editingMobile) {
+            const payload: UpdateMobileResourceCommand = {
+                assetCode: this.form.controls.assetCode.value.trim(),
+                serialNumber: this.form.controls.serialNumber.value?.trim() || null,
+                modelId: this.form.controls.modelId.value,
+                price: Number(this.form.controls.price.value) || 0,
+                observations: this.form.controls.observations.value?.trim() || null,
+                imei: this.form.controls.imei.value.trim(),
+                imei2: this.form.controls.imei2.value?.trim() || null,
+                lineId: this.form.controls.lineId.value,
+            };
+
+            const success = await this.store.updateMobile(this.editingMobile.id, payload);
+            if (success) {
+                this.dialogVisible = false;
+            }
             return;
         }
 
@@ -120,8 +175,39 @@ export class PhonesPage implements OnInit {
         }
     }
 
+    openDeleteMobile(mobile: MobileResourceDto): void {
+        this.mobileToDelete = mobile;
+        this.deleteDialogVisible = true;
+    }
+
+    async confirmDeleteMobile(): Promise<void> {
+        if (!this.mobileToDelete) return;
+
+        const success = await this.store.removeMobile(this.mobileToDelete.id);
+
+        if (success) {
+            this.mobileToDelete = null;
+            this.deleteDialogVisible = false;
+        }
+    }
+
     openCreateLine(): void {
+        this.editingLine = null;
+        this.lineDialogTitle = 'Nueva línea';
         this.lineForm.reset({ phoneNumber: '', operator: '', plan: '', activationDate: null, observations: '' });
+        this.lineDialogVisible = true;
+    }
+
+    openEditLine(line: LineDto): void {
+        this.editingLine = line;
+        this.lineDialogTitle = 'Editar línea';
+        this.lineForm.reset({
+            phoneNumber: line.phoneNumber,
+            operator: line.operator,
+            plan: line.plan ?? '',
+            activationDate: line.activationDate ? new Date(line.activationDate) : null,
+            observations: line.observations ?? '',
+        });
         this.lineDialogVisible = true;
     }
 
@@ -131,13 +217,21 @@ export class PhonesPage implements OnInit {
             return;
         }
 
-        const payload: CreateLineCommand = {
+        const payload: UpdateLineCommand = {
             phoneNumber: this.lineForm.controls.phoneNumber.value.trim(),
             operator: this.lineForm.controls.operator.value.trim(),
             plan: this.lineForm.controls.plan.value?.trim() || null,
             activationDate: this.lineForm.controls.activationDate.value?.toISOString() ?? new Date().toISOString(),
             observations: this.lineForm.controls.observations.value?.trim() || null,
         };
+
+        if (this.editingLine) {
+            const success = await this.lineStore.update(this.editingLine.id, payload);
+            if (success) {
+                this.lineDialogVisible = false;
+            }
+            return;
+        }
 
         const line = await this.lineStore.create(payload);
         if (line) {

@@ -14,6 +14,9 @@ export interface LineDto {
     cancellationDate?: string | null;
     observations?: string | null;
     status?: string | StatusLineEnum;
+    active?: boolean;
+    createdAt?: string;
+    updatedAt?: string | null;
 }
 
 export interface CreateLineCommand {

@@ -10,6 +10,10 @@
         </button>
     </div>
 
+    <div class="mb-4 max-w-md">
+        <app-search-input placeholder="Buscar empleados..." (searched)="onSearch($event)" />
+    </div>
+
     @if (store.employees().length > 0) {
     <p-table [value]="store.employees()" [loading]="store.loading()" [paginator]="true" [rows]="10"
         [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '2050px' }">

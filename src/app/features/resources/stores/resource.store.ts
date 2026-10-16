@@ -3,7 +3,7 @@ import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
 import { firstValueFrom } from "rxjs";
 import { ToastService } from "../../../core/services/toast.service";
 import { resolveErrorMessage } from "../../../core/utils/error.utils";
-import { ResourceDto, ResourceGroupItemDto, CreateResourceCommand, MobileResourceDto, CreateMobileResourceCommand } from "../models/resource.model";
+import { ResourceDto, ResourceGroupItemDto, CreateResourceCommand, MobileResourceDto, CreateMobileResourceCommand, UpdateMobileResourceCommand } from "../models/resource.model";
 import { ResourceService } from "../services/resource.service";
 import { MobileResourceService } from "../services/mobile-resource.service";
 import { LoaderService } from "../../../core/services/loader.service";
@@ -79,6 +79,20 @@ export const ResourceStore = signalStore(
                     loader.hide();
                 }
             },
+            async loadActiveMobile(): Promise<void> {
+                patchState(store, { loading: true, error: null });
+                loader.show();
+                try {
+                    const mobileResources = await firstValueFrom(mobileResourceService.getActive());
+                    patchState(store, { mobileResources, loading: false });
+                } catch (error) {
+                    const message = resolveErrorMessage(error, 'No se pudieron cargar los celulares activos');
+                    patchState(store, { loading: false, error: message });
+                    toast.error(message);
+                } finally {
+                    loader.hide();
+                }
+            },
             async loadUnassignedMobile(): Promise<void> {
                 patchState(store, { error: null });
                 loader.show();
@@ -118,10 +132,53 @@ export const ResourceStore = signalStore(
                     await firstValueFrom(mobileResourceService.create(data));
                     patchState(store, { saving: false });
                     toast.success('Celular registrado');
-                    await this.loadMobile();
+                    await this.loadActiveMobile();
                     return true;
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudo registrar el celular');
+                    patchState(store, { saving: false, error: message });
+                    toast.error(message);
+                    return false;
+                } finally {
+                    loader.hide();
+                }
+            },
+            async updateMobile(id: string, data: UpdateMobileResourceCommand): Promise<boolean> {
+                patchState(store, { saving: true, error: null });
+                loader.show();
+                try {
+                    const updatedMobile = await firstValueFrom(mobileResourceService.update(id, data));
+                    patchState(store, { saving: false });
+                    toast.success('Celular actualizado');
+                    const index = store.mobileResources().findIndex(m => m.id === id);
+                    if (index !== -1) {
+                        const mobileResources = [...store.mobileResources()];
+                        mobileResources[index] = updatedMobile;
+                        patchState(store, { mobileResources });
+                    } else {
+                        await this.loadActiveMobile();
+                    }
+                    return true;
+                } catch (error) {
+                    const message = resolveErrorMessage(error, 'No se pudo actualizar el celular');
+                    patchState(store, { saving: false, error: message });
+                    toast.error(message);
+                    return false;
+                } finally {
+                    loader.hide();
+                }
+            },
+            async removeMobile(id: string): Promise<boolean> {
+                patchState(store, { saving: true, error: null });
+                loader.show();
+                try {
+                    await firstValueFrom(mobileResourceService.inactive(id));
+                    patchState(store, { saving: false });
+                    toast.success('Celular eliminado');
+                    await this.loadActiveMobile();
+                    return true;
+                } catch (error) {
+                    const message = resolveErrorMessage(error, 'No se pudo eliminar el celular');
                     patchState(store, { saving: false, error: message });
                     toast.error(message);
                     return false;
