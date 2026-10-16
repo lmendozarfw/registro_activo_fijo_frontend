@@ -3,12 +3,13 @@ import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
 import { firstValueFrom } from "rxjs";
 import { ToastService } from "../../../core/services/toast.service";
 import { resolveErrorMessage } from "../../../core/utils/error.utils";
-import { LineDto, CreateLineCommand, UpdateLineCommand } from "../models/line.model";
+import { LineDto, CreateLineCommand, UpdateLineCommand, LineItemDto } from "../models/line.model";
 import { LineService } from "../models/line.service";
 import { LoaderService } from "../../../core/services/loader.service";
 
 type LineState = {
     lines: LineDto[];
+    available: LineItemDto[]; 
     loading: boolean;
     saving: boolean;
     error: string | null;
@@ -18,6 +19,7 @@ export const LineStore = signalStore(
     { providedIn: 'root' },
     withState<LineState>({
         lines: [],
+        available: [],
         loading: false,
         saving: false,
         error: null,
@@ -51,6 +53,20 @@ export const LineStore = signalStore(
                     patchState(store, { lines, loading: false });
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudieron cargar las líneas activas');
+                    patchState(store, { loading: false, error: message });
+                    toast.error(message);
+                } finally {
+                    loader.hide();
+                }
+            },
+            async loadAvailable(): Promise<void> {
+                patchState(store, { loading: true, error: null });
+                loader.show();
+                try {
+                    const lines = await firstValueFrom(service.getAvailable());
+                    patchState(store, { available: lines, loading: false });
+                } catch (error) {
+                    const message = resolveErrorMessage(error, 'No se pudieron cargar las líneas disponibles');
                     patchState(store, { loading: false, error: message });
                     toast.error(message);
                 } finally {

@@ -95,6 +95,7 @@ export class PhonesPage implements OnInit {
     private loadTabData(tab: string): void {
         if (tab === 'mobiles') {
             this.store.loadActiveMobile();
+            this.lineStore.loadAvailable();
         } else if (tab === 'lines') {
             this.lineStore.loadActive();
         }

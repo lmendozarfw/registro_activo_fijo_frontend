@@ -16,6 +16,10 @@ export class LineService {
         return this.api.getAll<LineDto>(`${this.endpoint}/active`);
     }
 
+    getAvailable(): Observable<LineDto[]> {
+        return this.api.getAll<LineDto>(`${this.endpoint}/available`);
+    }
+
     create(data: CreateLineCommand): Observable<LineDto> {
         return this.api.create<CreateLineCommand, LineDto>(this.endpoint, data);
     }

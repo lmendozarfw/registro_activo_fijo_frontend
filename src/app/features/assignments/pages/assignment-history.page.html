@@ -76,7 +76,7 @@
                 @if (resources().length > 0) {
                 <div class="flex flex-col gap-3">
                     @for (resource of resources(); track resource.resourceId) {
-                    <article class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                    <article class="overflow-hidden rounded-xl border border-slate-200 bg-white">
                         <button type="button"
                             class="flex w-full items-center gap-3 p-4 text-left transition-colors hover:bg-slate-50"
                             (click)="toggle(resource.resourceId)">
@@ -114,7 +114,7 @@
                                     <span>IMEI 2: {{ resource.imei2 }}</span>
                                     }
                                     @if (resource.phoneNumber) {
-                                    <span>Número celular: 479 146 4981</span>
+                                    <span>Número celular: {{ resource.phoneNumber }}</span>
                                     }
                                 </div>
                             </div>

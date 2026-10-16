@@ -55,7 +55,7 @@ export const AssignmentStore = signalStore(
                     await firstValueFrom(service.create(data));
                     patchState(store, { saving: false });
                     toast.success('Asignación creada');
-                    await this.load();
+                    await this.loadActives();
                     return true;
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudo crear la asignación');
@@ -70,7 +70,7 @@ export const AssignmentStore = signalStore(
                     await firstValueFrom(service.returnResource(data));
                     patchState(store, { saving: false });
                     toast.success('Recurso devuelto');
-                    await this.load();
+                    await this.loadActives();
                     return true;
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudo devolver el recurso');
@@ -85,7 +85,7 @@ export const AssignmentStore = signalStore(
                     await firstValueFrom(service.renewMobile(data));
                     patchState(store, { saving: false });
                     toast.success('Asignación renovada');
-                    await this.load();
+                    await this.loadActives();
                     return true;
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudo renovar la asignación');

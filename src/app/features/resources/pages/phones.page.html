@@ -112,7 +112,7 @@
                                 <button pButton type="button" text size="small" (click)="openCreateLine()">Nueva
                                     línea</button>
                             </div>
-                            <p-select formControlName="lineId" [options]="lineStore.lines()" optionLabel="phoneNumber"
+                            <p-select formControlName="lineId" [options]="lineStore.available()" optionLabel="phoneNumber"
                                 optionValue="id" placeholder="Selecciona una línea (opcional)" appendTo="body"
                                 class="w-full" />
                         </div>

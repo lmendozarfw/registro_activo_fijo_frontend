@@ -19,6 +19,12 @@ export interface LineDto {
     updatedAt?: string | null;
 }
 
+export interface LineItemDto {
+    id: string;
+    phoneNumber: string;
+    operator: string;
+}
+
 export interface CreateLineCommand {
     phoneNumber: string;
     operator: string;
