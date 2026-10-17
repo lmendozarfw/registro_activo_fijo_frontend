@@ -7,6 +7,7 @@ export interface Credential {
     systemName?: string | null;
     canView: boolean;
     note?: string | null;
+    active?: boolean;
     createdAt?: string;
     updatedAt?: string | null;
 }
@@ -26,18 +27,18 @@ export interface CreateSupportRequest {
 }
 
 export enum AuditEventType {
-    CREATED = 0,
-    UPDATED = 1,
-    VIEWED = 2,
-    DELETED = 3,
-    RESET_REQUESTED = 4,
+    CREATED = "CREATED",
+    UPDATED = "UPDATED",
+    VIEWED = "VIEWED",
+    DELETED = "DELETED",
+    RESET_REQUESTED = "RESET_REQUESTED",
 }
 
 export interface CredentialAuditEvent {
-    id: string;
-    actorUsername: string;
-    actorEmployeeFullName?: string | null;
-    note?: string | null;
-    type: number;
-    createdAt: string;
+  id: string;
+  actorUsername: string;
+  actorEmployeeFullName?: string | null;
+  note?: string | null;
+  type: AuditEventType;
+  createdAt: string;
 }

@@ -1,7 +1,6 @@
 import { Component, OnInit, computed, inject } from "@angular/core";
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
-import { InputText } from 'primeng/inputtext';
 import { InputPassword } from 'primeng/inputpassword';
 import { TextareaModule } from 'primeng/textarea';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
@@ -18,17 +17,16 @@ import { CredentialStore } from "../stores/credential.store";
 import { AuditEventType, Credential, CredentialAuditEvent, CredentialRequest } from "../models/credential.model";
 import { EmployeeStore } from "../../employees/stores/employee.store";
 import { SystemStore } from "../../configuration/stores/system.store";
-import { Copy, Eye, History, Pencil, Plus, Spinner, Trash } from '@primeicons/angular';
-
+import { PIcon } from '@primeicons/angular/p-icon';
 type TagSeverity = 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast';
 
 @Component({
     selector: 'app-credentials-page',
     templateUrl: './credentials.page.html',
     styles: [],
-    imports: [TableModule, ButtonModule, InputText, InputPassword, TextareaModule, ToggleSwitchModule,
+    imports: [TableModule, ButtonModule, InputPassword, TextareaModule, ToggleSwitchModule,
         SelectModule, TooltipModule, TagModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent,
-        EmptyStateComponent, Copy, Eye, History, Pencil, Plus, Spinner, Trash],
+        EmptyStateComponent, PIcon],
 })
 export class CredentialsPage implements OnInit {
     protected readonly store = inject(CredentialStore);
@@ -64,7 +62,7 @@ export class CredentialsPage implements OnInit {
 
     ngOnInit(): void {
         this.pageHeader.setTitle('Credenciales');
-        this.store.load();
+        this.store.loadActive();
     }
 
     openCreate(): void {
@@ -97,13 +95,26 @@ export class CredentialsPage implements OnInit {
     }
 
     async save(): Promise<void> {
+        if (this.editingCredential) {
+            if (!this.form.controls.password.value || this.form.controls.password.value.trim() === '') {
+                this.form.controls.password.clearValidators();
+                this.form.controls.password.updateValueAndValidity();
+            } else {
+                this.form.controls.password.setValidators(Validators.required);
+                this.form.controls.password.updateValueAndValidity();
+            }
+        } else {
+            this.form.controls.password.setValidators(Validators.required);
+            this.form.controls.password.updateValueAndValidity();
+        }
+
         if (this.form.invalid) {
             this.form.markAllAsTouched();
             return;
         }
 
         const value = this.form.getRawValue();
-        const password = value.password.trim();
+        const password = value.password?.trim() ?? '';
         const payload: CredentialRequest = {
             canView: value.canView,
             note: value.note.trim() || null,
@@ -129,6 +140,9 @@ export class CredentialsPage implements OnInit {
     }
 
     openPassword(credential: Credential): void {
+        if (credential.canView === false) {
+            return;
+        }
         this.passwordDialogVisible = true;
         this.store.revealPassword(credential.employeeId, credential.systemId);
     }

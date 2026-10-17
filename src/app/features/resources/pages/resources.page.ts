@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, computed, OnDestroy } from "@angular/core";
 import { CurrencyPipe } from '@angular/common';
-import { Plus } from '@primeicons/angular';
+import { Router } from '@angular/router';
+import { PIcon } from '@primeicons/angular/p-icon';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
@@ -16,119 +17,154 @@ import { EmptyStateComponent } from "../../../shared/components/empty-state/empt
 import { ResourceStore } from "../stores/resource.store";
 import { BrandStore } from "../../configuration/stores/brand.store";
 import { ModelStore } from "../../configuration/stores/model.store";
-import { CreateResourceCommand } from "../models/resource.model";
+import { CreateResourceCommand, ResourceDto } from "../models/resource.model";
 import { RESOURCE_TYPE_LABELS, ResourceTypeEnum, RESOURCE_TYPE_OPTIONS } from "../models/resource-type.model";
-import { STATUS_RESOURCE_LABELS, STATUS_RESOURCE_OPTIONS, StatusResourceEnum } from "../models/status-resource.model";
+import { STATUS_RESOURCE_LABELS, StatusResourceEnum } from "../models/status-resource.model";
 import { Subscription } from "rxjs";
+import { PageHeaderService } from '../../../core/services/page-header.service';
 
 @Component({
-    selector: "app-resources-page",
-    templateUrl: "./resources.page.html",
-    styles: [],
-    imports: [TableModule, ButtonModule, InputText, InputNumberModule, TextareaModule, SelectModule, TagModule, TooltipModule,
-        ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent, Plus, CurrencyPipe]
+  selector: 'app-resources-page',
+  templateUrl: './resources.page.html',
+  styles: [],
+  imports: [
+    TableModule,
+    ButtonModule,
+    InputText,
+    InputNumberModule,
+    TextareaModule,
+    SelectModule,
+    TagModule,
+    TooltipModule,
+    ReactiveFormsModule,
+    FormDialogComponent,
+    FormLabelComponent,
+    EmptyStateComponent,
+    PIcon,
+    CurrencyPipe,
+  ],
 })
 export class ResourcesPage implements OnInit, OnDestroy {
-    protected readonly store = inject(ResourceStore);
-    protected readonly brandStore = inject(BrandStore);
-    protected readonly modelStore = inject(ModelStore);
-    protected readonly resourceTypeLabels = RESOURCE_TYPE_LABELS;
-    protected readonly resourceTypeOptions = RESOURCE_TYPE_OPTIONS;
-    protected readonly statusOptions = STATUS_RESOURCE_OPTIONS;
+  private readonly router = inject(Router);
+  protected readonly store = inject(ResourceStore);
+  protected readonly brandStore = inject(BrandStore);
+  protected readonly modelStore = inject(ModelStore);
+  protected readonly resourceTypeLabels = RESOURCE_TYPE_LABELS;
+  protected readonly resourceTypeOptions = RESOURCE_TYPE_OPTIONS;
+  private readonly pageHeader = inject(PageHeaderService);
 
-    protected readonly filteredModels = computed(() => {
-        const brandId = this.form.controls.brandId.value;
-        const type = this.form.controls.type.value;
-        const models = this.modelStore.models();
-        return models.filter(m => (!brandId || m.brandId === brandId) && (!type || m.type === type));
+  protected readonly filteredModels = computed(() => {
+    const brandId = this.form.controls.brandId.value;
+    const type = this.form.controls.type.value;
+    const models = this.modelStore.models();
+    return models.filter((m) => (!brandId || m.brandId === brandId) && (!type || m.type === type));
+  });
+
+  dialogVisible = false;
+  dialogTitle = 'Nuevo recurso';
+
+  form = new FormGroup({
+    brandId: new FormControl('', { nonNullable: true }),
+    modelId: new FormControl(
+      { value: '', disabled: true },
+      { nonNullable: true, validators: Validators.required },
+    ),
+    type: new FormControl<ResourceTypeEnum>(ResourceTypeEnum.OTHER, {
+      nonNullable: true,
+      validators: Validators.required,
+    }),
+    serialNumber: new FormControl(''),
+    price: new FormControl<number>(0, {
+      nonNullable: true,
+      validators: [Validators.required, Validators.min(0)],
+    }),
+    observations: new FormControl(''),
+  });
+
+  brandControlSubscription?: Subscription;
+  ngOnInit(): void {
+    this.pageHeader.setTitle('Activo fijo');
+    this.store.loadAll();
+    this.brandStore.load();
+    this.modelStore.load();
+    this.formSubscribers();
+  }
+
+  formSubscribers() {
+    this.brandControlSubscription = this.form
+      .get('brandId')
+      ?.valueChanges.subscribe(async (value) => {
+        if (!value) return;
+        await this.modelStore.loadByBrand(value);
+        this.form.get('modelId')?.enable();
+      });
+  }
+
+  openCreate(): void {
+    this.dialogTitle = 'Nuevo recurso';
+    this.form.reset({
+      brandId: '',
+      modelId: '',
+      type: ResourceTypeEnum.OTHER,
+      serialNumber: '',
+      price: 0,
+      observations: '',
     });
+    this.form.controls.modelId.disable();
+    this.dialogVisible = true;
+  }
 
-    dialogVisible = false;
-    dialogTitle = 'Nuevo recurso';
+  async save(): Promise<void> {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
-    form = new FormGroup({
-        brandId: new FormControl('', { nonNullable: true }),
-        modelId: new FormControl({value: '', disabled: true}, { nonNullable: true, validators: Validators.required }),
-        type: new FormControl<ResourceTypeEnum>(ResourceTypeEnum.OTHER, { nonNullable: true, validators: Validators.required }),
-        assetCode: new FormControl('', { nonNullable: true, validators: Validators.required }),
-        serialNumber: new FormControl(''),
-        price: new FormControl<number>(0, { nonNullable: true, validators: [Validators.required, Validators.min(0)] }),
-        status: new FormControl<StatusResourceEnum>(StatusResourceEnum.AVAILABLE, { nonNullable: true, validators: Validators.required }),
-        observations: new FormControl(''),
+    const payload: CreateResourceCommand = {
+      serialNumber: this.form.controls.serialNumber.value?.trim() || null,
+      modelId: this.form.controls.modelId.value,
+      type: this.form.controls.type.value,
+      price: Number(this.form.controls.price.value) || 0,
+      observations: this.form.controls.observations.value?.trim() || null,
+    };
+
+    const success = await this.store.create(payload);
+    if (success) {
+      this.dialogVisible = false;
+    }
+  }
+
+  protected openMaintenances(resource: ResourceDto): void {
+    this.router.navigate(['/app/assets', resource.id, 'maintenances'], {
+      queryParams: { name: resource.name, code: resource.assetCode },
     });
+  }
 
-    brandControlSubscription?: Subscription;
-    ngOnInit(): void {
-        this.store.loadAll();
-        this.brandStore.load();
-        this.modelStore.load();
-        this.formSubscribers();
-    }
+  protected getTypeLabel(type: ResourceTypeEnum | string): string {
+    const key = type as ResourceTypeEnum;
+    return RESOURCE_TYPE_LABELS[key] || String(type);
+  }
 
-    formSubscribers() {
-        this.brandControlSubscription = this.form.get("brandId")?.valueChanges.subscribe(async (value) => {
-            if (!value) return;
-            await this.modelStore.loadByBrand(value);
-            this.form.get("modelId")?.enable();
+  protected getStatusLabel(status: StatusResourceEnum | string): string {
+    const key = status as StatusResourceEnum;
+    return STATUS_RESOURCE_LABELS[key] || String(status);
+  }
+
+  protected formatDate(value?: string | null): string {
+    if (!value) return '—';
+    const date = new Date(value);
+    return isNaN(date.getTime())
+      ? '—'
+      : date.toLocaleString('es-ES', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
         });
-    }
+  }
 
-    openCreate(): void {
-        this.dialogTitle = 'Nuevo recurso';
-        this.form.reset({
-            brandId: '',
-            modelId: '',
-            type: ResourceTypeEnum.OTHER,
-            assetCode: '',
-            serialNumber: '',
-            price: 0,
-            status: StatusResourceEnum.AVAILABLE,
-            observations: '',
-        });
-        this.dialogVisible = true;
-    }
-
-    async save(): Promise<void> {
-        if (this.form.invalid) {
-            this.form.markAllAsTouched();
-            return;
-        }
-
-        const payload: CreateResourceCommand = {
-            assetCode: this.form.controls.assetCode.value.trim(),
-            serialNumber: this.form.controls.serialNumber.value?.trim() || null,
-            modelId: this.form.controls.modelId.value,
-            type: this.form.controls.type.value,
-            price: Number(this.form.controls.price.value) || 0,
-            observations: this.form.controls.observations.value?.trim() || null,
-            status: this.form.controls.status.value,
-        };
-
-        const success = await this.store.create(payload);
-        if (success) {
-            this.dialogVisible = false;
-        }
-    }
-
-    protected getTypeLabel(type: ResourceTypeEnum | string): string {
-        const key = type as ResourceTypeEnum;
-        return RESOURCE_TYPE_LABELS[key] || String(type);
-    }
-
-    protected getStatusLabel(status: StatusResourceEnum | string): string {
-        const key = status as StatusResourceEnum;
-        return STATUS_RESOURCE_LABELS[key] || String(status);
-    }
-
-    protected formatDate(value?: string | null): string {
-        if (!value) return '—';
-        const date = new Date(value);
-        return isNaN(date.getTime()) ? '—' : date.toLocaleString('es-ES', {
-            day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
-        });
-    }
-
-    ngOnDestroy(): void {
-        this.brandControlSubscription?.unsubscribe();
-    }
+  ngOnDestroy(): void {
+    this.brandControlSubscription?.unsubscribe();
+  }
 }

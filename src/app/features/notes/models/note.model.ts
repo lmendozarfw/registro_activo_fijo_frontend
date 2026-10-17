@@ -65,3 +65,9 @@ export function noteTitle(note: Pick<NoteListItem, 'title'> | Pick<NoteDetail, '
     const title = note.title?.trim();
     return title && title.length > 0 ? title : 'Sin título';
 }
+
+export function noteTitleFromContent(content: string, max = 40): string | null {
+    const firstLine = content.replace(/\s+/g, ' ').trim();
+    if (firstLine.length === 0) return null;
+    return firstLine.slice(0, Math.min(max, NOTE_TITLE_MAX));
+}

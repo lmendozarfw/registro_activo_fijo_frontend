@@ -1,0 +1,287 @@
+<div>
+  <div class="mb-4 flex flex-col gap-2">
+    <div class="flex items-center justify-between gap-4">
+      <div>
+        <h2 class="text-lg font-semibold text-slate-800">Mantenimiento del recurso</h2>
+        <p class="text-sm text-slate-600">
+          @if (resourceCode()) {
+          <span class="mr-2 inline-block rounded-md bg-slate-100 px-2 py-0.5 font-mono text-xs">{{ resourceCode() }}</span>
+          }
+          {{ resourceName() || resourceId() }}
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button pButton type="button" severity="secondary" (click)="goBack()">
+          <span class="flex items-center gap-2">
+            <svg [pIcon]="'arrow-left'" [size]="16"></svg>
+            Regresar
+          </span>
+        </button>
+        <button pButton type="button" (click)="openCreatePlan()">
+          <span class="flex items-center gap-2">
+            <svg [pIcon]="'plus'" [size]="16"></svg>
+            Nuevo plan
+          </span>
+        </button>
+        <button pButton type="button" severity="success" (click)="openCreateOrder()">
+          <span class="flex items-center gap-2">
+            <svg [pIcon]="'wrench'" [size]="16"></svg>
+            Registrar orden
+          </span>
+        </button>
+        <button pButton type="button" severity="warn" (click)="markForMaintenance()">
+          <span class="flex items-center gap-2">
+            <svg [pIcon]="'exclamation-triangle'" [size]="16"></svg>
+            Marcar para mantenimiento
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-4 rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+    <div class="mb-3 flex items-center justify-between">
+      <h3 class="text-sm font-semibold text-slate-800">Planes de mantenimiento (activos)</h3>
+    </div>
+    @if (planStore.loading()) {
+      <div class="flex items-center justify-center py-6">
+        <svg [pIcon]="'spinner'" [spin]="true" [size]="20"></svg>
+      </div>
+    } @else if (activePlans().length > 0) {
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-200 text-sm">
+          <thead>
+            <tr class="text-left text-xs uppercase tracking-wide text-slate-500">
+              <th class="px-3 py-2">Nombre</th>
+              <th class="px-3 py-2">Tipo</th>
+              <th class="px-3 py-2">Frecuencia</th>
+              <th class="px-3 py-2">Inicio</th>
+              <th class="px-3 py-2">Próximo mantenimiento</th>
+              <th class="px-3 py-2">Indicador</th>
+              <th class="px-3 py-2">Estado</th>
+              <th class="px-3 py-2 text-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            @for (plan of activePlans(); track plan.id) {
+              <tr>
+                <td class="px-3 py-2 font-medium text-slate-800">{{ plan.name }}</td>
+                <td class="px-3 py-2">{{ maintenanceTypeLabel(plan.maintenanceType) }}</td>
+                <td class="px-3 py-2">{{ plan.frequencyValue }} {{ frequencyUnitLabel(plan.frequencyUnit) }}</td>
+                <td class="px-3 py-2">{{ formatDate(plan.startDate) }}</td>
+                <td class="px-3 py-2">{{ formatDate(plan.nextMaintenanceDate) }}</td>
+                <td class="px-3 py-2">
+                  <span class="inline-block rounded-full px-2 py-0.5 text-xs font-medium"
+                    [class.bg-emerald-50]="getIndicator(plan).color === 'emerald'"
+                    [class.text-emerald-700]="getIndicator(plan).color === 'emerald'"
+                    [class.bg-yellow-50]="getIndicator(plan).color === 'yellow'"
+                    [class.text-yellow-700]="getIndicator(plan).color === 'yellow'"
+                    [class.bg-red-50]="getIndicator(plan).color === 'red'"
+                    [class.text-red-700]="getIndicator(plan).color === 'red'"
+                    [class.bg-slate-100]="getIndicator(plan).color === 'slate'"
+                    [class.text-slate-600]="getIndicator(plan).color === 'slate'">
+                    {{ getIndicator(plan).label }}
+                  </span>
+                </td>
+                <td class="px-3 py-2">
+                  <span class="inline-block rounded-md bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">Activo</span>
+                </td>
+                <td class="px-3 py-2 text-right">
+                  <div class="flex justify-end gap-1">
+                    <button pButton type="button" severity="secondary" text pTooltip="Ver órdenes de este plan" (click)="loadOrdersByPlan(plan.id)">
+                      <svg [pIcon]="'list'" [size]="16"></svg>
+                    </button>
+                    <button pButton type="button" severity="secondary" text pTooltip="Editar" (click)="openEditPlan(plan)">
+                      <svg [pIcon]="'pencil'" [size]="16"></svg>
+                    </button>
+                    <button pButton type="button" severity="danger" text pTooltip="Desactivar" (click)="deletePlan(plan)">
+                      <svg [pIcon]="'trash'" [size]="16"></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <app-empty-state message="No hay planes activos" description="Agrega un plan de mantenimiento para este recurso." />
+    }
+  </div>
+
+  <div class="grid gap-4 lg:grid-cols-2">
+    <div class="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+      <div class="mb-3 flex items-center justify-between">
+        <h3 class="text-sm font-semibold text-slate-800">Órdenes de mantenimiento (historial)</h3>
+        <span class="text-xs text-slate-500">{{ orderStore.orders().length }} registros</span>
+      </div>
+      @if (orderStore.loading()) {
+        <div class="flex items-center justify-center py-6">
+          <svg [pIcon]="'spinner'" [spin]="true" [size]="20"></svg>
+        </div>
+      } @else if (orderStore.orders().length > 0) {
+        <p-table [value]="orderStore.orders()" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5, 10]" [tableStyle]="{ 'min-width': '100%' }">
+          <ng-template #header>
+            <tr>
+              <th>Tipo</th>
+              <th>Motivo</th>
+              <th>Estado</th>
+              <th>Responsable</th>
+              <th>Inicio</th>
+              <th>Fin</th>
+              <th>Costo</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-order>
+            <tr>
+              <td>{{ maintenanceTypeLabel(order.maintenanceType) }}</td>
+              <td class="max-w-[12rem] truncate" [title]="order.reason">{{ order.reason }}</td>
+              <td>
+                <p-tag [value]="orderStatusLabel(order.status)" [severity]="orderStatusSeverity(order.status)" />
+              </td>
+              <td>{{ order.responsibleEmployeeFullName || order.responsibleEmployeeId || '—' }}</td>
+              <td>{{ formatDate(order.startDate) }}</td>
+              <td>{{ formatDate(order.endDate) }}</td>
+              <td>{{ order.maintenanceCost | currency:'MXN':'symbol':'1.2-2' }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      } @else {
+        <app-empty-state message="No hay órdenes de mantenimiento" description="Registra una orden para este recurso." />
+      }
+    </div>
+
+    <div class="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+      <div class="mb-3 flex items-center justify-between">
+        <h3 class="text-sm font-semibold text-slate-800">Órdenes por plan seleccionado</h3>
+        @if (selectedPlanId()) {
+          <span class="text-xs text-slate-500">Plan: {{ selectedPlanId() }}</span>
+        }
+      </div>
+      @if (selectedPlanId()) {
+        @if (ordersBySelectedPlan().length > 0) {
+          <p-table [value]="ordersBySelectedPlan()" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5, 10]">
+            <ng-template #header>
+              <tr>
+                <th>Motivo</th>
+                <th>Estado</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Costo</th>
+              </tr>
+            </ng-template>
+            <ng-template #body let-order>
+              <tr>
+                <td class="max-w-[10rem] truncate">{{ order.reason }}</td>
+                <td>
+                  <p-tag [value]="orderStatusLabel(order.status)" [severity]="orderStatusSeverity(order.status)" />
+                </td>
+                <td>{{ formatDate(order.startDate) }}</td>
+                <td>{{ formatDate(order.endDate) }}</td>
+                <td>{{ order.maintenanceCost | currency:'MXN':'symbol':'1.2-2' }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        } @else {
+          <app-empty-state message="Este plan no tiene órdenes registradas" description="Marca el recurso para mantenimiento o registra una orden asociada." />
+        }
+      } @else {
+        <app-empty-state message="Selecciona un plan" description="Haz clic en 'Ver órdenes de este plan' para ver su historial." />
+      }
+    </div>
+  </div>
+
+  <app-form-dialog [(visible)]="planDialogVisible" [header]="planDialogTitle" width="44rem">
+    <form [formGroup]="planForm" class="flex flex-col gap-4">
+      <div class="flex flex-col gap-1.5">
+        <app-form-label required>Nombre</app-form-label>
+        <input pInputText formControlName="name" class="w-full" placeholder="Mantenimiento preventivo de software" />
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <app-form-label>Descripción</app-form-label>
+        <textarea pTextarea formControlName="description" rows="2" class="w-full"></textarea>
+      </div>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="flex flex-col gap-1.5">
+          <app-form-label required>Tipo de mantenimiento</app-form-label>
+          <p-select formControlName="maintenanceType" [options]="maintenanceTypeOptions" optionLabel="label" optionValue="value" appendTo="body" class="w-full" />
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <app-form-label required>Frecuencia (valor)</app-form-label>
+          <p-inputnumber formControlName="frequencyValue" [min]="1" class="w-full" />
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <app-form-label required>Unidad de frecuencia</app-form-label>
+          <p-select formControlName="frequencyUnit" [options]="frequencyUnitOptions" optionLabel="label" optionValue="value" appendTo="body" class="w-full" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="flex flex-col gap-1.5">
+          <app-form-label required>Fecha de inicio</app-form-label>
+          <p-datepicker formControlName="startDate" dateFormat="dd/mm/yy" [showIcon]="true" appendTo="body" class="w-full" />
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <app-form-label>Próxima fecha</app-form-label>
+          <p-datepicker formControlName="nextMaintenanceDate" dateFormat="dd/mm/yy" [showIcon]="true" appendTo="body" class="w-full" />
+        </div>
+      </div>
+    </form>
+    <div dialog-footer class="flex justify-end gap-2">
+      <button pButton type="button" severity="secondary" (click)="planDialogVisible = false">Cancelar</button>
+      <button pButton type="button" [loading]="planStore.saving()" (click)="savePlan()">Guardar</button>
+    </div>
+  </app-form-dialog>
+
+  <app-form-dialog [(visible)]="orderDialogVisible" header="Registrar orden de mantenimiento" width="44rem">
+    <form [formGroup]="orderForm" class="flex flex-col gap-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="flex flex-col gap-1.5">
+          <app-form-label required>Tipo de mantenimiento</app-form-label>
+          <p-select formControlName="maintenanceType" [options]="maintenanceTypeOptions" optionLabel="label" optionValue="value" appendTo="body" class="w-full" />
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <app-form-label>Plan de mantenimiento</app-form-label>
+          <p-select formControlName="maintenancePlanId" [options]="planOptions()" optionLabel="label" optionValue="value" placeholder="Sin plan" [showClear]="true" appendTo="body" class="w-full" />
+        </div>
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <app-form-label required>Motivo/Razón</app-form-label>
+        <textarea pTextarea formControlName="reason" rows="2" class="w-full" placeholder="Descripción de la tarea a realizar"></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="flex flex-col gap-1.5">
+          <app-form-label>Fecha de inicio</app-form-label>
+          <p-datepicker formControlName="startDate" dateFormat="dd/mm/yy" [showIcon]="true" appendTo="body" class="w-full" />
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <app-form-label>Fecha de finalización</app-form-label>
+          <p-datepicker formControlName="endDate" dateFormat="dd/mm/yy" [showIcon]="true" appendTo="body" class="w-full" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="flex flex-col gap-1.5">
+          <app-form-label>Responsable</app-form-label>
+          <p-select formControlName="responsibleEmployeeId" [options]="employeeOptions()" optionLabel="label" optionValue="value" placeholder="Seleccionar empleado" [showClear]="true" appendTo="body" class="w-full" />
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <app-form-label>Estado</app-form-label>
+          <p-select formControlName="status" [options]="orderStatusOptions" optionLabel="label" optionValue="value" appendTo="body" class="w-full" />
+        </div>
+      </div>
+      <div class="grid grid-cols-1 gap-4">
+        <div class="flex flex-col gap-1.5">
+          <app-form-label>Costo de mantenimiento</app-form-label>
+          <p-inputnumber formControlName="maintenanceCost" mode="currency" currency="MXN" locale="es-MX" [min]="0" class="w-full" />
+        </div>
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <app-form-label>Observaciones</app-form-label>
+        <textarea pTextarea formControlName="observations" rows="2" class="w-full"></textarea>
+      </div>
+    </form>
+    <div dialog-footer class="flex justify-end gap-2">
+      <button pButton type="button" severity="secondary" (click)="orderDialogVisible = false">Cancelar</button>
+      <button pButton type="button" [loading]="orderStore.saving()" (click)="saveOrder()">Guardar</button>
+    </div>
+  </app-form-dialog>
+</div>

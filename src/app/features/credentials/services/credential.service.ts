@@ -12,6 +12,10 @@ export class CredentialService {
         return this.api.getAll<Credential>(this.endpoint);
     }
 
+    getActive(): Observable<Credential[]> {
+        return this.api.getAll<Credential>(`${this.endpoint}/active`);
+    }
+
     getMy(): Observable<Credential[]> {
         return this.api.getAll<Credential>(`${this.endpoint}/My`);
     }
@@ -30,6 +34,10 @@ export class CredentialService {
 
     remove(id: string): Observable<void> {
         return this.api.delete<void>(this.endpoint, id);
+    }
+
+    softRemove(id: string): Observable<boolean> {
+        return this.api.patch(`${this.endpoint}/${id}/inactive`, void 0);
     }
 
     getPassword(employeeId: string, systemId: string): Observable<{ message: string }> {

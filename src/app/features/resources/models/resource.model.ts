@@ -36,13 +36,13 @@ export interface ResourceGroupItemDto {
 }
 
 export interface CreateResourceCommand {
-    assetCode: string;
+    assetCode?: string | null;
     serialNumber?: string | null;
     modelId: string;
     type: ResourceTypeEnum;
     price: number;
     observations?: string | null;
-    status: StatusResourceEnum;
+    status?: StatusResourceEnum | null;
 }
 
 export interface MobileResourceDto {

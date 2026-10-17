@@ -48,6 +48,19 @@ export const CredentialStore = signalStore(
                 }
             },
 
+            async loadActive(): Promise<void> {
+                patchState(store, { loading: true, error: null });
+
+                try {
+                    const credentials = await firstValueFrom(service.getActive());
+                    patchState(store, { credentials, loading: false });
+                } catch (error) {
+                    const message = resolveErrorMessage(error, 'No se pudieron cargar las credenciales');
+                    patchState(store, { loading: false, error: message });
+                    toast.error(message);
+                }
+            },
+
             async create(data: CredentialRequest): Promise<boolean> {
                 patchState(store, { saving: true, error: null });
 
@@ -89,7 +102,7 @@ export const CredentialStore = signalStore(
                     await firstValueFrom(service.remove(id));
                     patchState(store, { saving: false });
                     toast.success('Credencial eliminada');
-                    await this.load();
+                    await this.loadActive();
                     return true;
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudo eliminar la credencial');
@@ -122,6 +135,7 @@ export const CredentialStore = signalStore(
 
                 try {
                     const auditEvents = await firstValueFrom(service.getAuditEvents(credentialId));
+                    console.log(auditEvents);
                     patchState(store, { auditEvents, auditLoading: false });
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudieron cargar los movimientos');

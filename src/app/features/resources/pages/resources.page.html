@@ -4,7 +4,7 @@
             utiliza la pantalla de Celulares.</p>
         <button pButton type="button" (click)="openCreate()">
             <span class="flex items-center gap-2">
-                <svg data-p-icon="plus" [size]="16"></svg>
+                <svg [pIcon]="'plus'" [size]="16"></svg>
                 Nuevo recurso
             </span>
         </button>
@@ -24,6 +24,7 @@
                 <th style="width: 150px">Precio</th>
                 <th style="width: 150px">Estado</th>
                 <th style="width: 200px">Fecha de registro</th>
+                <th style="width: 160px">Acciones</th>
             </tr>
         </ng-template>
         <ng-template #body let-resource>
@@ -44,6 +45,12 @@
                     <p-tag [value]="getStatusLabel(resource.status)" />
                 </td>
                 <td>{{ formatDate(resource.createdAt) }}</td>
+                <td>
+                    <button pButton type="button" severity="secondary" text pTooltip="Mantenimiento"
+                        aria-label="Mantenimiento" (click)="openMaintenances(resource)">
+                        <svg [pIcon]="'wrench'" [size]="16"></svg>
+                    </button>
+                </td>
             </tr>
         </ng-template>
     </p-table>
@@ -53,12 +60,19 @@
 
     <app-form-dialog [(visible)]="dialogVisible" [header]="dialogTitle" width="48rem">
         <form [formGroup]="form" class="flex flex-col gap-4" (ngSubmit)="save()">
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-2 gap-4">
                 <div class="flex flex-col gap-1.5">
                     <app-form-label required>Tipo</app-form-label>
                     <p-select formControlName="type" [options]="resourceTypeOptions" optionLabel="label"
                         optionValue="value" appendTo="body" class="w-full" />
                 </div>
+                <div class="flex flex-col gap-1.5">
+                    <app-form-label required>Precio</app-form-label>
+                    <p-inputnumber formControlName="price" class="w-full"  mode="currency" currency="USD" locale="en-US" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
                 <div class="flex flex-col gap-1.5">
                     <app-form-label>Marca</app-form-label>
                     <p-select formControlName="brandId" [options]="brandStore.brands()" optionLabel="name"
@@ -72,33 +86,18 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-4">
-                <div class="flex flex-col gap-1.5">
-                    <app-form-label required>Código de activo</app-form-label>
-                    <input pInputText formControlName="assetCode" class="w-full"
-                        [invalid]="form.controls.assetCode.invalid && form.controls.assetCode.touched" />
-                </div>
-                <div class="flex flex-col gap-1.5">
-                    <app-form-label>Número de serie</app-form-label>
-                    <input pInputText formControlName="serialNumber" class="w-full" />
-                </div>
-            </div>
-
-            <div class="grid grid-cols-3 gap-4">
-                <div class="flex flex-col gap-1.5">
-                    <app-form-label required>Precio</app-form-label>
-                    <p-inputnumber formControlName="price" class="w-full"  mode="currency" currency="USD" locale="en-US" />
-                </div>
-                <div class="flex flex-col gap-1.5">
-                    <app-form-label required>Estado</app-form-label>
-                    <p-select formControlName="status" [options]="statusOptions" optionLabel="label"
-                        optionValue="value" appendTo="body" class="w-full" />
-                </div>
+            <div class="flex flex-col gap-1.5">
+                <app-form-label>Número de serie</app-form-label>
+                <input pInputText formControlName="serialNumber" class="w-full" />
             </div>
 
             <div class="flex flex-col gap-1.5">
                 <app-form-label>Observaciones</app-form-label>
                 <textarea pTextarea formControlName="observations" rows="3" class="w-full"></textarea>
+            </div>
+
+            <div class="rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-800">
+                Una vez registrado el activo, se generará e imprimirá la etiqueta del folio.
             </div>
         </form>
 
