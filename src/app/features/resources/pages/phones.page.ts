@@ -1,4 +1,5 @@
 import { Component, OnInit, inject, computed } from "@angular/core";
+import { CurrencyPipe } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
@@ -21,7 +22,7 @@ import { RESOURCE_TYPE_LABELS, ResourceTypeEnum } from "../models/resource-type.
 import { STATUS_RESOURCE_LABELS, StatusResourceEnum } from "../models/status-resource.model";
 import { Pencil, Plus, Trash } from '@primeicons/angular';
 import { DatePickerModule } from 'primeng/datepicker';
-import { LineDto, UpdateLineCommand } from "../models/line.model";
+import { LineDto, STATUS_LINE_LABELS, UpdateLineCommand } from "../models/line.model";
 
 @Component({
     selector: "app-phones-page",
@@ -38,7 +39,7 @@ import { LineDto, UpdateLineCommand } from "../models/line.model";
         }
         `],
     imports: [TableModule, ButtonModule, InputText, InputNumberModule, TextareaModule, SelectModule, TagModule, TooltipModule,
-        TabsModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent, Pencil, Plus, Trash, DatePickerModule]
+        TabsModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent, Pencil, Plus, Trash, DatePickerModule, CurrencyPipe]
 })
 export class PhonesPage implements OnInit {
     protected readonly store = inject(ResourceStore);
@@ -47,6 +48,7 @@ export class PhonesPage implements OnInit {
     protected readonly modelStore = inject(ModelStore);
     protected readonly resourceTypeLabels = RESOURCE_TYPE_LABELS;
     protected readonly statusLabels = STATUS_RESOURCE_LABELS;
+    protected readonly statusLineLabels = STATUS_LINE_LABELS;
 
     protected readonly mobileModels = computed(() => this.modelStore.models().filter(m => m.type === ResourceTypeEnum.MOBILE));
 
@@ -64,7 +66,6 @@ export class PhonesPage implements OnInit {
 
     form = new FormGroup({
         modelId: new FormControl('', { nonNullable: true, validators: Validators.required }),
-        assetCode: new FormControl('', { nonNullable: true, validators: Validators.required }),
         serialNumber: new FormControl(''),
         price: new FormControl<number>(0, { nonNullable: true, validators: [Validators.required, Validators.min(0)] }),
         imei: new FormControl('', { nonNullable: true, validators: Validators.required }),
@@ -106,7 +107,6 @@ export class PhonesPage implements OnInit {
         this.dialogTitle = 'Nuevo celular';
         this.form.reset({
             modelId: '',
-            assetCode: '',
             serialNumber: '',
             price: 0,
             imei: '',
@@ -122,7 +122,6 @@ export class PhonesPage implements OnInit {
         this.dialogTitle = 'Editar celular';
         this.form.reset({
             modelId: mobile.modelId ?? '',
-            assetCode: mobile.assetCode,
             serialNumber: mobile.serialNumber ?? '',
             price: mobile.price ?? 0,
             imei: mobile.imei,
@@ -141,7 +140,6 @@ export class PhonesPage implements OnInit {
 
         if (this.editingMobile) {
             const payload: UpdateMobileResourceCommand = {
-                assetCode: this.form.controls.assetCode.value.trim(),
                 serialNumber: this.form.controls.serialNumber.value?.trim() || null,
                 modelId: this.form.controls.modelId.value,
                 price: Number(this.form.controls.price.value) || 0,
@@ -159,7 +157,6 @@ export class PhonesPage implements OnInit {
         }
 
         const payload: CreateMobileResourceCommand = {
-            assetCode: this.form.controls.assetCode.value.trim(),
             serialNumber: this.form.controls.serialNumber.value?.trim() || null,
             modelId: this.form.controls.modelId.value,
             type: ResourceTypeEnum.MOBILE,

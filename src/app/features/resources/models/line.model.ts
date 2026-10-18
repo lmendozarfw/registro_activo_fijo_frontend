@@ -5,6 +5,13 @@ export enum StatusLineEnum {
     UNKNOWN = 'UNKNOWN',
 }
 
+export const STATUS_LINE_LABELS: Record<string, string> = {
+    [StatusLineEnum.ACTIVE]: 'Activa',
+    [StatusLineEnum.CANCELLED]: 'Cancelada',
+    [StatusLineEnum.SUSPENDED]: 'Suspendida',
+    [StatusLineEnum.UNKNOWN]: 'Desconocido',
+};
+
 export interface LineDto {
     id: string;
     phoneNumber: string;

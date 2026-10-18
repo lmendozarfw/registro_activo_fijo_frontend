@@ -68,7 +68,6 @@ export interface MobileResourceDto {
 }
 
 export interface CreateMobileResourceCommand {
-    assetCode: string;
     serialNumber?: string | null;
     modelId: string;
     type: ResourceTypeEnum;
@@ -80,7 +79,6 @@ export interface CreateMobileResourceCommand {
 }
 
 export interface UpdateMobileResourceCommand {
-    assetCode: string;
     serialNumber?: string | null;
     modelId: string;
     price: number;

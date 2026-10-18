@@ -18,19 +18,21 @@
 
                 @if (store.mobileResources().length > 0) {
                 <p-table [value]="store.mobileResources()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-                    [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '1950px' }">
+                    [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '2700px' }">
                     <ng-template #header>
                         <tr>
                             <th style="width: 200px">Código activo</th>
                             <th style="width: 300px">Nombre</th>
                             <th style="width: 200px">Marca</th>
-                            <th style="width: 200px">Modelo</th>
+                            <th style="width: 300px">Modelo</th>
                             <th style="width: 150px">IMEI</th>
                             <th style="width: 150px">IMEI 2</th>
                             <th style="width: 250px">Línea activa</th>
+                            <th style="width: 150px">Precio</th>
                             <th style="width: 150px">Estado</th>
+                            <th style="width: 250px">Observaciones</th>
                             <th style="width: 200px">Fecha de registro</th>
-                            <th style="width: 200px">Fecha de modificación</th>
+                            <th style="width: 250px">Fecha de modificación</th>
                             <th style="width: 150px">Acciones</th>
                         </tr>
                     </ng-template>
@@ -45,7 +47,9 @@
                             <td>{{ m.imei2 || '—' }}</td>
                             <td>{{ m.activeLinePhoneNumber || '—' }} {{ m.activeLineOperator ? '('+m.activeLineOperator+')'
                                 : '' }}</td>
+                            <td>{{ m.price != null ? (m.price | currency:'MXN':'symbol':'1.2-2') : '—' }}</td>
                             <td><p-tag [value]="getStatusLabel(m.status)" /></td>
+                            <td>{{ m.observations || '—' }}</td>
                             <td>{{ formatDate(m.createdAt) }}</td>
                             <td>{{ formatDate(m.updatedAt) }}</td>
                             <td>
@@ -68,44 +72,32 @@
                 }
 
                 <app-form-dialog [(visible)]="dialogVisible" [header]="dialogTitle" width="56rem">
-                    <form [formGroup]="form" class="flex flex-col gap-4" (ngSubmit)="saveMobile()">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="flex flex-col gap-1.5">
-                                <app-form-label required>Modelo (Celulares)</app-form-label>
-                                <p-select formControlName="modelId" [options]="mobileModels()" optionLabel="name"
-                                    optionValue="id" placeholder="Selecciona un modelo" appendTo="body" class="w-full"
-                                    [invalid]="form.controls.modelId.invalid && form.controls.modelId.touched" />
-                            </div>
-                            <div class="flex flex-col gap-1.5">
-                                <app-form-label required>Código de activo</app-form-label>
-                                <input pInputText formControlName="assetCode" class="w-full"
-                                    [invalid]="form.controls.assetCode.invalid && form.controls.assetCode.touched" />
-                            </div>
+                    <form [formGroup]="form" class="grid grid-cols-2 gap-4" (ngSubmit)="saveMobile()">
+                        <div class="flex flex-col gap-1.5">
+                            <app-form-label required>Modelo (Celulares)</app-form-label>
+                            <p-select formControlName="modelId" [options]="mobileModels()" optionLabel="name"
+                                optionValue="id" placeholder="Selecciona un modelo" appendTo="body" class="w-full"
+                                [invalid]="form.controls.modelId.invalid && form.controls.modelId.touched" />
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="flex flex-col gap-1.5">
-                                <app-form-label>Número de serie</app-form-label>
-                                <input pInputText formControlName="serialNumber" class="w-full" />
-                            </div>
-                            <div class="flex flex-col gap-1.5">
-                                <app-form-label required>Precio</app-form-label>
-                                <p-inputnumber formControlName="price" class="w-full" mode="currency" currency="USD" locale="en-US" />
-                            </div>
-                        </div>
+                      <div class="flex flex-col gap-1.5">
+                        <app-form-label>Número de serie</app-form-label>
+                        <input pInputText formControlName="serialNumber" class="w-full" />
+                      </div>
+                      <div class="flex flex-col gap-1.5">
+                        <app-form-label required>Precio</app-form-label>
+                        <p-inputnumber formControlName="price" class="w-full" mode="currency" currency="USD" locale="en-US" />
+                      </div>
 
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="flex flex-col gap-1.5">
-                                <app-form-label required>IMEI</app-form-label>
-                                <input pInputText formControlName="imei" class="w-full"
-                                    [invalid]="form.controls.imei.invalid && form.controls.imei.touched" />
-                            </div>
-                            <div class="flex flex-col gap-1.5">
-                                <app-form-label>IMEI 2</app-form-label>
-                                <input pInputText formControlName="imei2" class="w-full" />
-                            </div>
-                        </div>
-
+                      <div class="flex flex-col gap-1.5">
+                        <app-form-label required>IMEI</app-form-label>
+                        <input pInputText formControlName="imei" class="w-full"
+                               [invalid]="form.controls.imei.invalid && form.controls.imei.touched" />
+                      </div>
+                      <div class="flex flex-col gap-1.5">
+                        <app-form-label>IMEI 2</app-form-label>
+                        <input pInputText formControlName="imei2" class="w-full" />
+                      </div>
                         <div class="flex flex-col gap-1.5">
                             <div class="flex items-center justify-between">
                                 <app-form-label>Línea</app-form-label>
@@ -117,7 +109,7 @@
                                 class="w-full" />
                         </div>
 
-                        <div class="flex flex-col gap-1.5">
+                        <div class="flex flex-col col-span-2 gap-1.5">
                             <app-form-label>Observaciones</app-form-label>
                             <textarea pTextarea formControlName="observations" rows="3" class="w-full"></textarea>
                         </div>
@@ -165,7 +157,7 @@
                             <td>{{ formatDate(line.activationDate) }}</td>
                             <td>{{ formatDate(line.createdAt) }}</td>
                             <td>{{ formatDate(line.updatedAt) }}</td>
-                            <td>{{ line.status || '—' }}</td>
+                            <td>{{ statusLineLabels[line.status || ''] || '—' }}</td>
                             <td>
                                 <div class="flex items-center gap-1">
                                     <button pButton type="button" severity="secondary" text pTooltip="Editar"

@@ -22,6 +22,7 @@ import { RESOURCE_TYPE_LABELS, ResourceTypeEnum, RESOURCE_TYPE_OPTIONS } from ".
 import { STATUS_RESOURCE_LABELS, StatusResourceEnum } from "../models/status-resource.model";
 import { Subscription } from "rxjs";
 import { PageHeaderService } from '../../../core/services/page-header.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-resources-page',
@@ -50,8 +51,11 @@ export class ResourcesPage implements OnInit, OnDestroy {
   protected readonly brandStore = inject(BrandStore);
   protected readonly modelStore = inject(ModelStore);
   protected readonly resourceTypeLabels = RESOURCE_TYPE_LABELS;
-  protected readonly resourceTypeOptions = RESOURCE_TYPE_OPTIONS;
+  protected readonly resourceTypeOptions = RESOURCE_TYPE_OPTIONS.filter(
+    (option) => option.value !== ResourceTypeEnum.MOBILE,
+  );
   private readonly pageHeader = inject(PageHeaderService);
+  private readonly toast = inject(ToastService);
 
   protected readonly filteredModels = computed(() => {
     const brandId = this.form.controls.brandId.value;
@@ -117,6 +121,14 @@ export class ResourcesPage implements OnInit, OnDestroy {
   async save(): Promise<void> {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      return;
+    }
+
+    if (this.form.controls.type.value === ResourceTypeEnum.MOBILE) {
+      this.toast.warning(
+        'Tipo no permitido',
+        'Los celulares se registran en la pantalla de Celulares.',
+      );
       return;
     }
 
