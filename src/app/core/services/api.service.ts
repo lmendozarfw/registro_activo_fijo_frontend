@@ -53,6 +53,10 @@ export class ApiService {
     return this.http.post<TResponse>(`${environment.apiUrl}/${endpoint}`, data);
   }
 
+  upload<TResponse>(endpoint: string, formData: FormData): Observable<TResponse> {
+    return this.http.post<TResponse>(`${environment.apiUrl}/${endpoint}`, formData);
+  }
+
   post<TRequest, TResponse>(endpoint: string, data: Partial<TRequest>): Observable<TResponse> {
     return this.http.post<TResponse>(`${environment.apiUrl}/${endpoint}`, data);
   }

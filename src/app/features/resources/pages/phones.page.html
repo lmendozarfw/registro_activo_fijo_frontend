@@ -54,6 +54,12 @@
                             <td>{{ formatDate(m.updatedAt) }}</td>
                             <td>
                                 <div class="flex items-center gap-1">
+                                    @if (m.status === statusResourceEnum.ASSIGNED) {
+                                    <button pButton type="button" severity="info" text pTooltip="Carta de asignación"
+                                        aria-label="Carta de asignación" (click)="openLetter(m)">
+                                        <svg [pIcon]="'file-pdf'" [size]="16"></svg>
+                                    </button>
+                                    }
                                     <button pButton type="button" severity="secondary" text pTooltip="Editar"
                                         aria-label="Editar" (click)="openEditMobile(m)">
                                         <svg [pIcon]="'pencil'" [size]="16"></svg>

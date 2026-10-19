@@ -83,7 +83,7 @@ export class ResourcesPage implements OnInit, OnDestroy {
   brandControlSubscription?: Subscription;
   ngOnInit(): void {
     this.pageHeader.setTitle('Activo fijo');
-    this.store.loadAll();
+    this.store.loadActive();
     this.formSubscribers();
   }
 

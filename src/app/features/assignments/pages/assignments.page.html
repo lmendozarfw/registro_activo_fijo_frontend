@@ -39,6 +39,10 @@
                         [severity]="a.isActive ? 'success' : 'secondary'" /></td>
                 <td>
                     <div class="flex gap-1">
+                        <button pButton type="button" severity="info" text pTooltip="Carta de asignación"
+                            aria-label="Carta de asignación" [disabled]="a.type !== 'MOBILE'" (click)="openLetter(a)">
+                            <svg [pIcon]="'file-pdf'" [size]="16"></svg>
+                        </button>
                         <button pButton type="button" severity="danger" text pTooltip="Devolver" aria-label="Devolver"
                             [disabled]="!a.isActive" (click)="openReturn(a)">
                             <svg data-p-icon="undo"></svg>

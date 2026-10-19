@@ -5,26 +5,30 @@ import { ResourceDto, ResourceGroupItemDto, CreateResourceCommand, UpdateResourc
 
 @Injectable({ providedIn: 'root' })
 export class ResourceService {
-    private readonly api = inject(ApiService);
-    private readonly endpoint = 'Resources';
+  private readonly api = inject(ApiService);
+  private readonly endpoint = 'Resources';
 
-    getAll(): Observable<ResourceDto[]> {
-        return this.api.getAll<ResourceDto>(this.endpoint);
-    }
+  getAll(): Observable<ResourceDto[]> {
+    return this.api.getAll<ResourceDto>(this.endpoint);
+  }
 
-    create(data: CreateResourceCommand): Observable<ResourceDto> {
-        return this.api.create<CreateResourceCommand, ResourceDto>(this.endpoint, data);
-    }
+  getActive(): Observable<ResourceDto[]> {
+    return this.api.getAll<ResourceDto>(`${this.endpoint}/active`);
+  }
 
-    update(id: string, data: UpdateResourceCommand): Observable<ResourceDto> {
-        return this.api.patch<UpdateResourceCommand, ResourceDto>(`${this.endpoint}/${id}`, data);
-    }
+  create(data: CreateResourceCommand): Observable<ResourceDto> {
+    return this.api.create<CreateResourceCommand, ResourceDto>(this.endpoint, data);
+  }
 
-    softRemove(id: string): Observable<boolean> {
-        return this.api.patch<Record<string, never>, boolean>(`${this.endpoint}/${id}/inactive`, {});
-    }
+  update(id: string, data: UpdateResourceCommand): Observable<ResourceDto> {
+    return this.api.patch<UpdateResourceCommand, ResourceDto>(`${this.endpoint}/${id}`, data);
+  }
 
-    getAvailableToAssign(): Observable<ResourceGroupItemDto[]> {
-        return this.api.getAll<ResourceGroupItemDto>(`${this.endpoint}/available-to-assignments`);
-    }
+  softRemove(id: string): Observable<boolean> {
+    return this.api.patch<Record<string, never>, boolean>(`${this.endpoint}/${id}/inactive`, {});
+  }
+
+  getAvailableToAssign(): Observable<ResourceGroupItemDto[]> {
+    return this.api.getAll<ResourceGroupItemDto>(`${this.endpoint}/available-to-assignments`);
+  }
 }

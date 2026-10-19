@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, computed } from "@angular/core";
 import { CurrencyPipe } from '@angular/common';
+import { Router } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
@@ -20,9 +21,12 @@ import { ModelStore } from "../../configuration/stores/model.store";
 import { CreateMobileResourceCommand, MobileResourceDto, UpdateMobileResourceCommand } from "../models/resource.model";
 import { RESOURCE_TYPE_LABELS, ResourceTypeEnum } from "../models/resource-type.model";
 import { STATUS_RESOURCE_LABELS, StatusResourceEnum } from "../models/status-resource.model";
-import { Pencil, PIcon, Plus, Trash } from '@primeicons/angular';
+import { PIcon } from '@primeicons/angular';
 import { DatePickerModule } from 'primeng/datepicker';
 import { LineDto, STATUS_LINE_LABELS, UpdateLineCommand } from "../models/line.model";
+import { AssignmentStore } from "../../assignments/stores/assignment.store";
+import { AssignmentDto } from "../../assignments/models/assignment.model";
+import { ToastService } from "../../../core/services/toast.service";
 
 @Component({
   selector: 'app-phones-page',
@@ -54,9 +58,6 @@ import { LineDto, STATUS_LINE_LABELS, UpdateLineCommand } from "../models/line.m
     FormDialogComponent,
     FormLabelComponent,
     EmptyStateComponent,
-    Pencil,
-    Plus,
-    Trash,
     DatePickerModule,
     CurrencyPipe,
     PIcon,
@@ -67,13 +68,27 @@ export class PhonesPage implements OnInit {
   protected readonly lineStore = inject(LineStore);
   protected readonly brandStore = inject(BrandStore);
   protected readonly modelStore = inject(ModelStore);
+  protected readonly assignmentStore = inject(AssignmentStore);
+  private readonly router = inject(Router);
+  private readonly toast = inject(ToastService);
   protected readonly resourceTypeLabels = RESOURCE_TYPE_LABELS;
   protected readonly statusLabels = STATUS_RESOURCE_LABELS;
   protected readonly statusLineLabels = STATUS_LINE_LABELS;
+  protected readonly statusResourceEnum = StatusResourceEnum;
 
   protected readonly mobileModels = computed(() =>
     this.modelStore.models().filter((m) => m.type === ResourceTypeEnum.MOBILE),
   );
+
+  protected readonly assignmentByResourceId = computed(() => {
+    const map = new Map<string, AssignmentDto>();
+    for (const assignment of this.assignmentStore.assignments()) {
+      if (assignment.isActive) {
+        map.set(assignment.resourceId, assignment);
+      }
+    }
+    return map;
+  });
 
   activeTab = 'mobiles';
   dialogVisible = false;
@@ -123,6 +138,7 @@ export class PhonesPage implements OnInit {
     if (tab === 'mobiles') {
       this.store.loadActiveMobile();
       this.lineStore.loadAvailable();
+      this.assignmentStore.loadActives();
     } else if (tab === 'lines') {
       this.lineStore.loadActive();
     }
@@ -288,6 +304,26 @@ export class PhonesPage implements OnInit {
   protected getStatusLabel(status: StatusResourceEnum | string): string {
     const key = status as StatusResourceEnum;
     return STATUS_RESOURCE_LABELS[key] || String(status);
+  }
+
+  protected openLetter(mobile: MobileResourceDto): void {
+    const assignment = this.assignmentByResourceId().get(mobile.resourceId);
+    if (!assignment) {
+      this.toast.warning('Sin asignación', 'No se encontró una asignación activa para este celular.');
+      return;
+    }
+
+    this.router.navigate(['/app/assignments', assignment.id, 'letter'], {
+      queryParams: {
+        employeeName: assignment.employeeName,
+        assetCode: assignment.assetCode,
+        resourceName: assignment.resourceName,
+        brandName: assignment.brandName,
+        modelName: assignment.modelName,
+        type: assignment.type,
+        assignmentDate: assignment.assignmentDate,
+      },
+    });
   }
 
   protected formatDate(value?: string | null): string {

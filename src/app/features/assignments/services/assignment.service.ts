@@ -1,7 +1,9 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { HttpResponse } from "@angular/common/http";
 import { ApiService } from "../../../core/services/api.service";
 import { AssignmentDto, AssignmentHistoryGroupDto, CreateAssignmentCommand, RenewMobileAssignmentCommand, ReturnAssignmentCommand } from "../models/assignment.model";
+import { AssignmentLetterDto } from "../models/assignment-letter.model";
 
 @Injectable({ providedIn: 'root' })
 export class AssignmentService {
@@ -30,5 +32,19 @@ export class AssignmentService {
 
     renewMobile(data: RenewMobileAssignmentCommand): Observable<string> {
         return this.api.post<RenewMobileAssignmentCommand, string>(`${this.endpoint}/${data.assignmentId}/renew`, data);
+    }
+
+    getLetter(assignmentId: string): Observable<AssignmentLetterDto> {
+        return this.api.get<AssignmentLetterDto>(`${this.endpoint}/${assignmentId}/letter`);
+    }
+
+    downloadLetter(assignmentId: string): Observable<HttpResponse<Blob>> {
+        return this.api.download(`${this.endpoint}/${assignmentId}/letter/download`, 'carta-asignacion.pdf');
+    }
+
+    uploadSignedLetter(assignmentId: string, file: File): Observable<boolean> {
+        const formData = new FormData();
+        formData.append('file', file);
+        return this.api.upload<boolean>(`${this.endpoint}/${assignmentId}/letter/upload`, formData);
     }
 }

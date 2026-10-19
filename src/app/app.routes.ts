@@ -63,6 +63,10 @@ export const routes: Routes = [
                         path: 'history',
                         loadComponent: () => import('./features/assignments/pages/assignment-history.page').then(p => p.AssignmentHistoryPage),
                     },
+                    {
+                        path: ':id/letter',
+                        loadComponent: () => import('./features/assignments/pages/assignment-letter.page').then(p => p.AssignmentLetterPage),
+                    },
                 ],
             },
             {

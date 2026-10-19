@@ -1,4 +1,5 @@
 import { Component, OnInit, inject, computed } from "@angular/core";
+import { Router } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
@@ -36,6 +37,7 @@ export class AssignmentsPage implements OnInit {
   protected readonly resourceStore = inject(ResourceStore);
   protected readonly modelStore = inject(ModelStore);
   private readonly auth = inject(AuthStore);
+  private readonly router = inject(Router);
 
   protected readonly renewDeviceOption = RenewDeviceOption;
   protected readonly renewOptions = [
@@ -111,6 +113,20 @@ export class AssignmentsPage implements OnInit {
       observation: '',
     });
     this.dialogReturnVisible = true;
+  }
+
+  openLetter(assignment: AssignmentDto): void {
+    this.router.navigate(['/app/assignments', assignment.id, 'letter'], {
+      queryParams: {
+        employeeName: assignment.employeeName,
+        assetCode: assignment.assetCode,
+        resourceName: assignment.resourceName,
+        brandName: assignment.brandName,
+        modelName: assignment.modelName,
+        type: assignment.type,
+        assignmentDate: assignment.assignmentDate,
+      },
+    });
   }
 
   async save(): Promise<void> {
