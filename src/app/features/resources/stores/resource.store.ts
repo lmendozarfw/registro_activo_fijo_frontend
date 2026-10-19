@@ -3,7 +3,7 @@ import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
 import { firstValueFrom } from "rxjs";
 import { ToastService } from "../../../core/services/toast.service";
 import { resolveErrorMessage } from "../../../core/utils/error.utils";
-import { ResourceDto, ResourceGroupItemDto, CreateResourceCommand, MobileResourceDto, CreateMobileResourceCommand, UpdateMobileResourceCommand } from "../models/resource.model";
+import { ResourceDto, ResourceGroupItemDto, CreateResourceCommand, UpdateResourceCommand, MobileResourceDto, CreateMobileResourceCommand, UpdateMobileResourceCommand } from "../models/resource.model";
 import { ResourceService } from "../services/resource.service";
 import { MobileResourceService } from "../services/mobile-resource.service";
 import { LoaderService } from "../../../core/services/loader.service";
@@ -118,6 +118,42 @@ export const ResourceStore = signalStore(
                     return true;
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudo crear el recurso');
+                    patchState(store, { saving: false, error: message });
+                    toast.error(message);
+                    return false;
+                } finally {
+                    loader.hide();
+                }
+            },
+            async update(id: string, data: UpdateResourceCommand): Promise<boolean> {
+                patchState(store, { saving: true, error: null });
+                loader.show();
+                try {
+                    const updated = await firstValueFrom(resourceService.update(id, data));
+                    patchState(store, { saving: false });
+                    toast.success('Recurso actualizado');
+                    await this.loadAll();
+                    return true;
+                } catch (error) {
+                    const message = resolveErrorMessage(error, 'No se pudo actualizar el recurso');
+                    patchState(store, { saving: false, error: message });
+                    toast.error(message);
+                    return false;
+                } finally {
+                    loader.hide();
+                }
+            },
+            async remove(id: string): Promise<boolean> {
+                patchState(store, { saving: true, error: null });
+                loader.show();
+                try {
+                    await firstValueFrom(resourceService.softRemove(id));
+                    patchState(store, { saving: false });
+                    toast.success('Recurso eliminado');
+                    await this.loadAll();
+                    return true;
+                } catch (error) {
+                    const message = resolveErrorMessage(error, 'No se pudo eliminar el recurso');
                     patchState(store, { saving: false, error: message });
                     toast.error(message);
                     return false;

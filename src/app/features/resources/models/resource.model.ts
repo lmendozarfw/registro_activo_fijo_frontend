@@ -45,6 +45,14 @@ export interface CreateResourceCommand {
     status?: StatusResourceEnum | null;
 }
 
+export interface UpdateResourceCommand {
+    serialNumber?: string | null;
+    modelId: string;
+    type: ResourceTypeEnum;
+    price: number;
+    observations?: string | null;
+}
+
 export interface MobileResourceDto {
     id: string;
     resourceId: string;

@@ -46,10 +46,20 @@
                 </td>
                 <td>{{ formatDate(resource.createdAt) }}</td>
                 <td>
-                    <button pButton type="button" severity="secondary" text pTooltip="Mantenimiento"
-                        aria-label="Mantenimiento" (click)="openMaintenances(resource)">
-                        <svg [pIcon]="'wrench'" [size]="16"></svg>
-                    </button>
+                    <div class="flex gap-1">
+                        <button pButton type="button" severity="secondary" text pTooltip="Mantenimiento"
+                            aria-label="Mantenimiento" (click)="openMaintenances(resource)">
+                            <svg [pIcon]="'wrench'" [size]="16"></svg>
+                        </button>
+                        <button pButton type="button" severity="secondary" text pTooltip="Editar" aria-label="Editar"
+                            (click)="openEdit(resource)">
+                            <svg [pIcon]="'pencil'" [size]="16"></svg>
+                        </button>
+                        <button pButton type="button" severity="danger" text pTooltip="Eliminar" aria-label="Eliminar"
+                            (click)="openDelete(resource)">
+                            <svg [pIcon]="'trash'" [size]="16"></svg>
+                        </button>
+                    </div>
                 </td>
             </tr>
         </ng-template>
@@ -75,21 +85,16 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <div class="flex flex-col gap-1.5">
-                    <app-form-label>Marca</app-form-label>
-                    <p-select formControlName="brandId" [options]="brandStore.brands()" optionLabel="name"
-                        optionValue="id" placeholder="Todas" [showClear]="true" appendTo="body" class="w-full" />
-                </div>
-                <div class="flex flex-col gap-1.5">
                     <app-form-label required>Modelo</app-form-label>
                     <p-select formControlName="modelId" [options]="modelStore.models()" optionLabel="name"
                         optionValue="id" placeholder="Selecciona un modelo" appendTo="body" class="w-full"
                         [invalid]="form.controls.modelId.invalid && form.controls.modelId.touched" />
                 </div>
-            </div>
 
-            <div class="flex flex-col gap-1.5">
+              <div class="flex flex-col gap-1.5">
                 <app-form-label>Número de serie</app-form-label>
                 <input pInputText formControlName="serialNumber" class="w-full" />
+              </div>
             </div>
 
             <div class="flex flex-col gap-1.5">
@@ -97,14 +102,29 @@
                 <textarea pTextarea formControlName="observations" rows="3" class="w-full"></textarea>
             </div>
 
+            @if (!editingResource) {
             <div class="rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-800">
                 Una vez registrado el activo, se generará e imprimirá la etiqueta del folio.
             </div>
+            }
         </form>
 
         <div dialog-footer class="flex justify-end gap-2">
             <button pButton type="button" severity="secondary" (click)="dialogVisible = false">Cancelar</button>
             <button pButton type="button" [loading]="store.saving()" (click)="save()">Guardar</button>
+        </div>
+    </app-form-dialog>
+
+    <app-form-dialog [(visible)]="deleteDialogVisible" header="Eliminar recurso" width="24rem">
+        <p class="text-sm text-slate-600">
+            ¿Seguro que deseas eliminar el recurso <strong>{{ resourceToDelete?.name }}</strong> ({{ resourceToDelete?.assetCode }})? Esta acción no se puede
+            deshacer.
+        </p>
+
+        <div dialog-footer class="flex justify-end gap-2">
+            <button pButton type="button" severity="secondary" (click)="deleteDialogVisible = false">Cancelar</button>
+            <button pButton type="button" severity="danger" [loading]="store.saving()"
+                (click)="confirmDelete()">Eliminar</button>
         </div>
     </app-form-dialog>
 </div>

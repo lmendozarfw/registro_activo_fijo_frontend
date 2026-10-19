@@ -17,7 +17,7 @@ import { EmptyStateComponent } from "../../../shared/components/empty-state/empt
 import { ResourceStore } from "../stores/resource.store";
 import { BrandStore } from "../../configuration/stores/brand.store";
 import { ModelStore } from "../../configuration/stores/model.store";
-import { CreateResourceCommand, ResourceDto } from "../models/resource.model";
+import { CreateResourceCommand, ResourceDto, UpdateResourceCommand } from "../models/resource.model";
 import { RESOURCE_TYPE_LABELS, ResourceTypeEnum, RESOURCE_TYPE_OPTIONS } from "../models/resource-type.model";
 import { STATUS_RESOURCE_LABELS, StatusResourceEnum } from "../models/status-resource.model";
 import { Subscription } from "rxjs";
@@ -57,18 +57,13 @@ export class ResourcesPage implements OnInit, OnDestroy {
   private readonly pageHeader = inject(PageHeaderService);
   private readonly toast = inject(ToastService);
 
-  protected readonly filteredModels = computed(() => {
-    const brandId = this.form.controls.brandId.value;
-    const type = this.form.controls.type.value;
-    const models = this.modelStore.models();
-    return models.filter((m) => (!brandId || m.brandId === brandId) && (!type || m.type === type));
-  });
-
   dialogVisible = false;
   dialogTitle = 'Nuevo recurso';
+  editingResource: ResourceDto | null = null;
+  deleteDialogVisible = false;
+  resourceToDelete: ResourceDto | null = null;
 
   form = new FormGroup({
-    brandId: new FormControl('', { nonNullable: true }),
     modelId: new FormControl(
       { value: '', disabled: true },
       { nonNullable: true, validators: Validators.required },
@@ -89,25 +84,24 @@ export class ResourcesPage implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.pageHeader.setTitle('Activo fijo');
     this.store.loadAll();
-    this.brandStore.load();
-    this.modelStore.load();
     this.formSubscribers();
   }
 
   formSubscribers() {
     this.brandControlSubscription = this.form
-      .get('brandId')
+      .get('type')
       ?.valueChanges.subscribe(async (value) => {
         if (!value) return;
-        await this.modelStore.loadByBrand(value);
+        await this.modelStore.loadByType(value);
+        this.form.get('modelId')?.reset();
         this.form.get('modelId')?.enable();
       });
   }
 
   openCreate(): void {
+    this.editingResource = null;
     this.dialogTitle = 'Nuevo recurso';
     this.form.reset({
-      brandId: '',
       modelId: '',
       type: ResourceTypeEnum.OTHER,
       serialNumber: '',
@@ -118,13 +112,31 @@ export class ResourcesPage implements OnInit, OnDestroy {
     this.dialogVisible = true;
   }
 
+  openEdit(resource: ResourceDto): void {
+    this.editingResource = resource;
+    this.dialogTitle = 'Editar recurso';
+    this.form.reset(
+      {
+        modelId: resource.modelId ?? '',
+        type: resource.type,
+        serialNumber: resource.serialNumber ?? '',
+        price: resource.price ?? 0,
+        observations: resource.observations ?? '',
+      },
+      { emitEvent: false },
+    );
+    this.form.controls.modelId.enable({ emitEvent: false });
+    void this.modelStore.loadByType(resource.type);
+    this.dialogVisible = true;
+  }
+
   async save(): Promise<void> {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
-    if (this.form.controls.type.value === ResourceTypeEnum.MOBILE) {
+    if (!this.editingResource && this.form.controls.type.value === ResourceTypeEnum.MOBILE) {
       this.toast.warning(
         'Tipo no permitido',
         'Los celulares se registran en la pantalla de Celulares.',
@@ -132,17 +144,35 @@ export class ResourcesPage implements OnInit, OnDestroy {
       return;
     }
 
-    const payload: CreateResourceCommand = {
+    const payload = {
       serialNumber: this.form.controls.serialNumber.value?.trim() || null,
       modelId: this.form.controls.modelId.value,
       type: this.form.controls.type.value,
       price: Number(this.form.controls.price.value) || 0,
       observations: this.form.controls.observations.value?.trim() || null,
-    };
+    } satisfies CreateResourceCommand & UpdateResourceCommand;
 
-    const success = await this.store.create(payload);
+    const success = this.editingResource
+      ? await this.store.update(this.editingResource.id, payload)
+      : await this.store.create(payload);
+
     if (success) {
       this.dialogVisible = false;
+    }
+  }
+
+  openDelete(resource: ResourceDto): void {
+    this.resourceToDelete = resource;
+    this.deleteDialogVisible = true;
+  }
+
+  async confirmDelete(): Promise<void> {
+    if (!this.resourceToDelete) return;
+
+    const success = await this.store.remove(this.resourceToDelete.id);
+    if (success) {
+      this.resourceToDelete = null;
+      this.deleteDialogVisible = false;
     }
   }
 

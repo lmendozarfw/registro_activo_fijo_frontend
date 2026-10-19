@@ -10,7 +10,7 @@
                     <p class="text-sm text-slate-600 max-w-[70%]">Celulares registrados como recursos móviles.</p>
                     <button pButton type="button" (click)="openCreateMobile()">
                         <span class="flex items-center gap-2">
-                            <svg data-p-icon="plus" [size]="16"></svg>
+                            <svg [pIcon]="'plus'" [size]="16"></svg>
                             Nuevo celular
                         </span>
                     </button>
@@ -56,11 +56,11 @@
                                 <div class="flex items-center gap-1">
                                     <button pButton type="button" severity="secondary" text pTooltip="Editar"
                                         aria-label="Editar" (click)="openEditMobile(m)">
-                                        <svg data-p-icon="pencil" [size]="16"></svg>
+                                        <svg [pIcon]="'pencil'" [size]="16"></svg>
                                     </button>
                                     <button pButton type="button" severity="danger" text pTooltip="Eliminar"
                                         aria-label="Eliminar" (click)="openDeleteMobile(m)">
-                                        <svg data-p-icon="trash" [size]="16"></svg>
+                                        <svg [pIcon]="'trash'" [size]="16"></svg>
                                     </button>
                                 </div>
                             </td>
@@ -77,7 +77,14 @@
                             <app-form-label required>Modelo (Celulares)</app-form-label>
                             <p-select formControlName="modelId" [options]="mobileModels()" optionLabel="name"
                                 optionValue="id" placeholder="Selecciona un modelo" appendTo="body" class="w-full"
-                                [invalid]="form.controls.modelId.invalid && form.controls.modelId.touched" />
+                                      [invalid]="form.controls.modelId.invalid && form.controls.modelId.touched">
+                              <ng-template #selectedItem let-selectedOption>
+                                <span>{{ selectedOption.brandName }} - {{ selectedOption.name }}</span>
+                              </ng-template>
+                              <ng-template let-member #item>
+                                <span>{{ member.brandName }} - {{ member.name }}</span>
+                              </ng-template>
+                            </p-select>
                         </div>
 
                       <div class="flex flex-col gap-1.5">
@@ -128,7 +135,7 @@
                     <p class="text-sm text-slate-600 max-w-[70%]">Gestiona las líneas telefónicas.</p>
                     <button pButton type="button" (click)="openCreateLine()">
                         <span class="flex items-center gap-2">
-                            <svg data-p-icon="plus" [size]="16"></svg>
+                            <svg [pIcon]="'plus'" [size]="16"></svg>
                             Nueva línea
                         </span>
                     </button>
@@ -162,11 +169,11 @@
                                 <div class="flex items-center gap-1">
                                     <button pButton type="button" severity="secondary" text pTooltip="Editar"
                                         aria-label="Editar" (click)="openEditLine(line)">
-                                        <svg data-p-icon="pencil" [size]="16"></svg>
+                                        <svg [pIcon]="'pencil'" [size]="16"></svg>
                                     </button>
                                     <button pButton type="button" severity="danger" text pTooltip="Eliminar"
                                         aria-label="Eliminar" (click)="openDeleteLine(line)">
-                                        <svg data-p-icon="trash" [size]="16"></svg>
+                                        <svg [pIcon]="'trash'" [size]="16"></svg>
                                     </button>
                                 </div>
                             </td>
