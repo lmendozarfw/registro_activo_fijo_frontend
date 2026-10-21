@@ -93,7 +93,14 @@
                     <app-form-label required>Modelo</app-form-label>
                     <p-select formControlName="modelId" [options]="modelStore.models()" optionLabel="name"
                         optionValue="id" placeholder="Selecciona un modelo" appendTo="body" class="w-full"
-                        [invalid]="form.controls.modelId.invalid && form.controls.modelId.touched" />
+                        [invalid]="form.controls.modelId.invalid && form.controls.modelId.touched">
+                    <ng-template #selectedItem let-selectedOption>
+                                <span>{{ selectedOption.brandName }} - {{ selectedOption.name }}</span>
+                              </ng-template>
+                              <ng-template let-member #item>
+                                <span>{{ member.brandName }} - {{ member.name }}</span>
+                              </ng-template>    
+                    </p-select>
                 </div>
 
               <div class="flex flex-col gap-1.5">

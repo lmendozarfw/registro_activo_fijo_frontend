@@ -428,8 +428,6 @@ export class KpisPage implements OnInit {
                 return 'desktop';
             case ResourceTypeEnum.CAMERA:
                 return 'camera';
-            case ResourceTypeEnum.CABLE:
-                return 'wrench';
             default:
                 return 'box';
         }

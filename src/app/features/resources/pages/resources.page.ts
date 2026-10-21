@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, computed, OnDestroy } from "@angular/core";
+import { Component, OnInit, inject, OnDestroy } from "@angular/core";
 import { CurrencyPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { PIcon } from '@primeicons/angular/p-icon';

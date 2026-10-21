@@ -3,9 +3,6 @@ export enum ResourceTypeEnum {
     LAPTOP = 'LAPTOP',
     PC = 'PC',
     MONITOR = 'MONITOR',
-    MOUSE = 'MOUSE',
-    KEYBOARD = 'KEYBOARD',
-    CABLE = 'CABLE',
     CAMERA = 'CAMERA',
     OTHER = 'OTHER',
 }
@@ -15,9 +12,6 @@ export const RESOURCE_TYPE_LABELS: Record<ResourceTypeEnum, string> = {
     LAPTOP: 'Laptop',
     PC: 'PC de escritorio',
     MONITOR: 'Monitor',
-    MOUSE: 'Mouse',
-    KEYBOARD: 'Teclado',
-    CABLE: 'Cable',
     CAMERA: 'Cámara',
     OTHER: 'Otro',
 };
