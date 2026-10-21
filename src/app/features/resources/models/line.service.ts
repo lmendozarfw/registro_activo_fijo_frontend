@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { ApiService } from "../../../core/services/api.service";
-import { LineDto, CreateLineCommand, UpdateLineCommand } from "../models/line.model";
+import { LineDto, LineItemDto, CreateLineCommand, UpdateLineCommand } from "../models/line.model";
 
 @Injectable({ providedIn: 'root' })
 export class LineService {
@@ -16,12 +16,12 @@ export class LineService {
         return this.api.getAll<LineDto>(`${this.endpoint}/active`, { search: search ?? '' });
     }
 
-    getAvailable(): Observable<LineDto[]> {
-        return this.api.getAll<LineDto>(`${this.endpoint}/available`);
+    getAvailable(): Observable<LineItemDto[]> {
+        return this.api.getAll<LineItemDto>(`${this.endpoint}/available`);
     }
 
-    create(data: CreateLineCommand): Observable<LineDto> {
-        return this.api.create<CreateLineCommand, LineDto>(this.endpoint, data);
+    create(data: CreateLineCommand): Observable<string> {
+        return this.api.create<CreateLineCommand, string>(this.endpoint, data);
     }
 
     update(id: string, data: UpdateLineCommand): Observable<LineDto> {

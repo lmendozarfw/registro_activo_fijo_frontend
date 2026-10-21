@@ -290,10 +290,10 @@ export class PhonesPage implements OnInit {
       return;
     }
 
-    const line = await this.lineStore.create(payload);
-    if (line) {
+    const lineId = await this.lineStore.create(payload);
+    if (lineId) {
       this.lineDialogVisible = false;
-      this.form.controls.lineId.setValue(line.id);
+      this.form.controls.lineId.setValue(lineId);
     }
   }
 

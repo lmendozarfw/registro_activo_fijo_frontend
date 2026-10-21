@@ -50,11 +50,11 @@ export class MyCredentialsPage implements OnInit {
             return;
         }
 
-        this.store.requestPassword(credential.id);
+        this.store.requestPassword(credential.employeeId, credential.systemId);
     }
 
     protected async copyPassword(credential: Credential): Promise<void> {
-        const password = this.store.revealedPasswords()[credential.id];
+        const password = this.store.revealedPasswords()[`${credential.employeeId}.${credential.systemId}`];
         if (!password) return;
 
         try {

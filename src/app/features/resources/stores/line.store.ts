@@ -73,15 +73,16 @@ export const LineStore = signalStore(
                     loader.hide();
                 }
             },
-            async create(data: CreateLineCommand): Promise<LineDto | null> {
+            async create(data: CreateLineCommand): Promise<string | null> {
                 patchState(store, { saving: true, error: null });
                 loader.show();
                 try {
-                    const line = await firstValueFrom(service.create(data));
+                    const lineId = await firstValueFrom(service.create(data));
                     patchState(store, { saving: false });
                     toast.success('Línea creada');
                     await this.loadActive();
-                    return line;
+                    await this.loadAvailable();
+                    return lineId;
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudo crear la línea');
                     patchState(store, { saving: false, error: message });
@@ -106,6 +107,7 @@ export const LineStore = signalStore(
                     } else {
                         await this.loadActive();
                     }
+                    await this.loadAvailable();
                     return true;
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudo actualizar la línea');
@@ -124,6 +126,7 @@ export const LineStore = signalStore(
                     patchState(store, { saving: false });
                     toast.success('Línea eliminada');
                     await this.loadActive();
+                    await this.loadAvailable();
                     return true;
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudo eliminar la línea');

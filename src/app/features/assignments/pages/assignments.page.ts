@@ -46,7 +46,12 @@ export class AssignmentsPage implements OnInit {
     { label: 'Registrar nuevo celular', value: RenewDeviceOption.NewDevice },
   ];
 
-  protected readonly availableEmployees = computed(() => this.employeeStore.employeesItem());
+  protected readonly availableEmployees = computed(() =>
+    this.employeeStore.employeesItem().map((employee) => ({
+      id: employee.id,
+      label: `${employee.fullName} (No. ${employee.employeeNumber})`,
+    })),
+  );
   protected readonly avaiableResources = computed(() =>
     this.resourceStore.availableResourceGroups(),
   );

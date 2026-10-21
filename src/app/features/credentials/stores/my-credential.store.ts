@@ -10,9 +10,9 @@ type MyCredentialState = {
     credentials: Credential[];
     search: string;
     loading: boolean;
-    requesting: Record<string, boolean>;
-    revealedPasswords: Record<string, string>;
     error: string | null;
+    revealedPasswords: any;
+    requesting: any;
 };
 
 export const MyCredentialStore = signalStore(
@@ -21,9 +21,9 @@ export const MyCredentialStore = signalStore(
         credentials: [],
         search: '',
         loading: false,
-        requesting: {},
-        revealedPasswords: {},
         error: null,
+        revealedPasswords: {},
+        requesting: {}
     }),
     withMethods(
         (
@@ -45,32 +45,24 @@ export const MyCredentialStore = signalStore(
                 }
             },
 
-            async requestPassword(id: string): Promise<void> {
-                if (store.revealedPasswords()[id] || store.requesting()[id]) return;
-
-                patchState(store, { requesting: { ...store.requesting(), [id]: true }, error: null });
+            async requestPassword(employeeId: string, systemId: string): Promise<void> {
+                patchState(store, {requesting: {...store.requesting(), [employeeId+"."+systemId]: true}, error: null });
 
                 try {
-                    const password = await firstValueFrom(service.requestViewPassword(id));
-                    patchState(store, {
-                        requesting: { ...store.requesting(), [id]: false },
-                        revealedPasswords: { ...store.revealedPasswords(), [id]: password },
-                    });
-                    toast.success('Contraseña disponible');
+                    const response = await firstValueFrom(service.getPassword(employeeId, systemId));
+                    const password = response?.message;
+                    patchState(store, {revealedPasswords: {...store.revealedPasswords(), [employeeId+"."+systemId]: password}});
                 } catch (error) {
-                    const message = resolveErrorMessage(error, 'No se pudo solicitar la contraseña');
-                    patchState(store, {
-                        requesting: { ...store.requesting(), [id]: false },
-                        error: message,
-                    });
+                    const message = resolveErrorMessage(error, 'No se pudo obtener la contraseña');
+                    patchState(store, { requesting: {...store.requesting(), [employeeId+"."+systemId]: false}, error: message });
                     toast.error(message);
                 }
             },
 
-            hidePassword(id: string): void {
+            hidePassword(employeeId: string, systemId: string): void {
                 const revealedPasswords = { ...store.revealedPasswords() };
-                delete revealedPasswords[id];
-                patchState(store, { revealedPasswords });
+                delete revealedPasswords[employeeId+"."+systemId];
+                patchState(store, { revealedPasswords});
             },
         }),
     ),
