@@ -3,6 +3,11 @@
         <p class="text-sm text-slate-600">Puedes ver los permisos disponibles en el sistema.</p>
     </div>
 
+    <div class="mb-4 max-w-md">
+        <app-search-input placeholder="Buscar por código, nombre o descripción..."
+            (searched)="onSearch($event)" />
+    </div>
+
     @if (store.permissions().length > 0) {
     <p-table [value]="store.permissions()" [loading]="store.loading()" [paginator]="true" [rows]="10"
         [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '900px' }">

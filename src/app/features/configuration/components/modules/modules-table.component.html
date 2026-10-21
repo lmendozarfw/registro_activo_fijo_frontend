@@ -3,6 +3,11 @@
         <p class="text-sm text-slate-600">Puedes ver los módulos disponibles en el sistema.</p>
     </div>
 
+    <div class="mb-4 max-w-md">
+        <app-search-input placeholder="Buscar por código, nombre o descripción..."
+            (searched)="onSearch($event)" />
+    </div>
+
     @if (store.modules().length > 0) {
     <p-table [value]="store.modules()" [loading]="store.loading()" [paginator]="true" [rows]="10"
         [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '700px' }">

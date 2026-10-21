@@ -10,6 +10,10 @@
         </button>
     </div>
 
+    <div class="mb-4 max-w-md">
+        <app-search-input placeholder="Buscar plantilla..." (searched)="onSearch($event)" />
+    </div>
+
     @if (store.templates().length > 0) {
     <p-table [value]="store.templates()" [loading]="store.loading()" [paginator]="true" [rows]="10"
         [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '1200px' }">

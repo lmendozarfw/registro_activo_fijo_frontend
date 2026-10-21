@@ -43,11 +43,11 @@ export const BrandStore = signalStore(
                     loader.hide();
                 }
             },
-            async loadActive(): Promise<void> {
+            async loadActive(search?: string): Promise<void> {
                 patchState(store, { loading: true, error: null });
                 loader.show();
                 try {
-                    const brands = await firstValueFrom(service.getActive());
+                    const brands = await firstValueFrom(service.getActive(search));
                     patchState(store, { brands, loading: false });
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudieron cargar las marcas activas');

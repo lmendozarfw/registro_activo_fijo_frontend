@@ -13,8 +13,8 @@ export class ModelService {
     return this.api.getAll<Model>(this.endpoint);
   }
 
-  getActive(): Observable<Model[]> {
-    return this.api.getAll<Model>(`${this.endpoint}/active`);
+  getActive(search?: string): Observable<Model[]> {
+    return this.api.getAll<Model>(`${this.endpoint}/active`, { search: search ?? '' });
   }
 
   getOnlyMobiles(): Observable<Model[]> {

@@ -10,6 +10,7 @@ import { FormLabelComponent } from "../../../../shared/components/form-label/for
 import { SystemStore } from "../../stores/system.store";
 import { System, SystemRequest } from "../../models/system.model";
 import { EmptyStateComponent } from "../../../../shared/components/empty-state/empty-state.component";
+import { SearchInputComponent } from "../../../../shared/components/search-input/search-input.component";
 import { Pencil, Plus, Refresh, Trash } from '@primeicons/angular';
 
 const CODE_PATTERN = /^[A-Za-z0-9_-]+$/;
@@ -19,7 +20,7 @@ const CODE_PATTERN = /^[A-Za-z0-9_-]+$/;
     templateUrl: "./systems-table.component.html",
     styles: [],
     imports: [TableModule, ButtonModule, InputText, TextareaModule, TooltipModule, ReactiveFormsModule,
-    FormDialogComponent, FormLabelComponent, EmptyStateComponent, Pencil, Plus, Refresh, Trash]
+    FormDialogComponent, FormLabelComponent, EmptyStateComponent, SearchInputComponent, Pencil, Plus, Refresh, Trash]
 })
 export class SystemsTableComponent implements OnInit {
     protected readonly store = inject(SystemStore);
@@ -47,6 +48,10 @@ export class SystemsTableComponent implements OnInit {
                 this.form.controls.code.setValue(normalized, { emitEvent: false });
             }
         });
+    }
+
+    protected async onSearch(search?: string): Promise<void> {
+        await this.store.loadActive(search);
     }
 
     protected toggleCodeMode(): void {

@@ -11,6 +11,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormDialogComponent } from "../../../shared/components/form-dialog/form-dialog.component";
 import { FormLabelComponent } from "../../../shared/components/form-label/form-label.component";
 import { EmptyStateComponent } from "../../../shared/components/empty-state/empty-state.component";
+import { SearchInputComponent } from "../../../shared/components/search-input/search-input.component";
 import { PageHeaderService } from "../../../core/services/page-header.service";
 import { ToastService } from "../../../core/services/toast.service";
 import { CredentialStore } from "../stores/credential.store";
@@ -26,7 +27,7 @@ type TagSeverity = 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contr
     styles: [],
     imports: [TableModule, ButtonModule, InputPassword, TextareaModule, ToggleSwitchModule,
         SelectModule, TooltipModule, TagModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent,
-        EmptyStateComponent, PIcon],
+        EmptyStateComponent, SearchInputComponent, PIcon],
 })
 export class CredentialsPage implements OnInit {
     protected readonly store = inject(CredentialStore);
@@ -63,6 +64,10 @@ export class CredentialsPage implements OnInit {
     ngOnInit(): void {
         this.pageHeader.setTitle('Credenciales');
         this.store.loadActive();
+    }
+
+    protected async onSearch(search?: string): Promise<void> {
+        await this.store.loadActive(search);
     }
 
     openCreate(): void {

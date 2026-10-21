@@ -11,6 +11,10 @@
         </button>
     </div>
 
+    <div class="mb-4 max-w-md">
+        <app-search-input placeholder="Buscar por marca, modelo o tipo..." (searched)="onSearch($event)" />
+    </div>
+
     @if (store.models().length > 0) {
     <p-table [value]="store.models()" [loading]="store.loading()" [paginator]="true" [rows]="10"
         [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '1200px' }">

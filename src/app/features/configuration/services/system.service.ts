@@ -12,8 +12,8 @@ export class SystemService {
         return this.api.getAll<System>(this.endpoint);
     }
 
-    getActive(): Observable<System[]> {
-        return this.api.getAll<System>(`${this.endpoint}/active`);
+    getActive(search?: string): Observable<System[]> {
+        return this.api.getAll<System>(`${this.endpoint}/active`, { search: search ?? '' });
     }
 
     getById(id: string): Observable<System> {

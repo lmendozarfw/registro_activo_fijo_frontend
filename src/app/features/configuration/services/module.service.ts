@@ -8,7 +8,7 @@ export class ModuleService {
     private readonly api = inject(ApiService);
     private readonly endpoint = 'Modules';
 
-    getAll(): Observable<Module[]> {
-        return this.api.getAll<Module>(this.endpoint);
+    getAll(search?: string): Observable<Module[]> {
+        return this.api.getAll<Module>(this.endpoint, { search: search ?? '' });
     }
 }

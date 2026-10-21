@@ -13,8 +13,8 @@ export class TemplateService {
         return this.api.getAll<ITemplate>(this.endpoint);
     }
 
-    getActive(): Observable<ITemplate[]> {
-        return this.api.getAll<ITemplate>(`${this.endpoint}/active`);
+    getActive(search?: string): Observable<ITemplate[]> {
+        return this.api.getAll<ITemplate>(`${this.endpoint}/active`, { search: search ?? '' });
     }
 
     getById(id: string): Observable<ITemplate> {

@@ -9,6 +9,7 @@ import { FormsModule, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { FormDialogComponent } from "../../../../shared/components/form-dialog/form-dialog.component";
 import { FormLabelComponent } from "../../../../shared/components/form-label/form-label.component";
 import { EmptyStateComponent } from "../../../../shared/components/empty-state/empty-state.component";
+import { SearchInputComponent } from "../../../../shared/components/search-input/search-input.component";
 import { TemplateStore } from "../../stores/template.store";
 import { ITemplate, TemplateRequest } from "../../models/template.model";
 import { PermissionsGroupByModuleDto } from "../../models/permission.model";
@@ -22,7 +23,7 @@ type ModuleSelectionState = 'all' | 'some' | 'none';
     styles: [],
     imports: [TableModule, ButtonModule, InputText, TextareaModule, CheckboxModule, TooltipModule,
         FormsModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent,
-        Pencil, Plus, Spinner, Trash]
+        SearchInputComponent, Pencil, Plus, Spinner, Trash]
 })
 export class TemplatesTableComponent implements OnInit {
     protected readonly store = inject(TemplateStore);
@@ -54,6 +55,10 @@ export class TemplatesTableComponent implements OnInit {
 
     ngOnInit(): void {
         this.store.loadActive();
+    }
+
+    protected async onSearch(search?: string): Promise<void> {
+        await this.store.loadActive(search);
     }
 
     openCreate(): void {

@@ -11,6 +11,7 @@ type AssignmentState = {
     loading: boolean;
     saving: boolean;
     error: string | null;
+    search: string;
 };
 
 export const AssignmentStore = signalStore(
@@ -20,6 +21,7 @@ export const AssignmentStore = signalStore(
         loading: false,
         saving: false,
         error: null,
+        search: '',
     }),
     withMethods(
         (
@@ -38,10 +40,11 @@ export const AssignmentStore = signalStore(
                     toast.error(message);
                 }
             },
-            async loadActives(): Promise<void> {
-                patchState(store, { loading: true, error: null });
+            async loadActives(search?: string): Promise<void> {
+                const term = search ?? store.search();
+                patchState(store, { loading: true, error: null, search: term });
                 try {
-                    const assignments = await firstValueFrom(service.getActive());
+                    const assignments = await firstValueFrom(service.getActive(term));
                     patchState(store, { assignments, loading: false });
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudieron cargar las asignaciones activas');

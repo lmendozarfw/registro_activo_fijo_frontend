@@ -44,11 +44,11 @@ export const DepartmentStore = signalStore(
                 }
             },
 
-            async loadActive(): Promise<void> {
+            async loadActive(search?: string): Promise<void> {
                 patchState(store, { loading: true, error: null });
                 loader.show();
                 try {
-                    const departments = await firstValueFrom(service.getActive());
+                    const departments = await firstValueFrom(service.getActive(search));
                     patchState(store, { departments, loading: false });
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudieron cargar los departamentos activos');

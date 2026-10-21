@@ -13,6 +13,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormDialogComponent } from "../../../shared/components/form-dialog/form-dialog.component";
 import { FormLabelComponent } from "../../../shared/components/form-label/form-label.component";
 import { EmptyStateComponent } from "../../../shared/components/empty-state/empty-state.component";
+import { SearchInputComponent } from "../../../shared/components/search-input/search-input.component";
 import { AssignmentStore } from "../stores/assignment.store";
 import { EmployeeStore } from "../../employees/stores/employee.store";
 import { ResourceStore } from "../../resources/stores/resource.store";
@@ -28,7 +29,7 @@ import { AuthStore } from "../../auth/stores/auth.store";
   styles: [],
   imports: [TableModule, ButtonModule, SelectModule, DatePickerModule, TextareaModule, TagModule, TooltipModule, InputText,
     InputNumberModule, SelectButtonModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent,
-    Undo, ArrowRightArrowLeft, PIcon],
+    SearchInputComponent, Undo, ArrowRightArrowLeft, PIcon],
 
 })
 export class AssignmentsPage implements OnInit {
@@ -94,6 +95,10 @@ export class AssignmentsPage implements OnInit {
     this.resourceStore.loadAvailableToAssign();
     this.modelStore.loadOnlyMobiles();
     this.renewForm.controls.option.valueChanges.subscribe(() => this.updateRenewValidators());
+  }
+
+  onSearch(search?: string): void {
+    this.store.loadActives(search);
   }
 
   openCreate(): void {

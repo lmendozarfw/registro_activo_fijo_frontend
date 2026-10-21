@@ -14,6 +14,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormDialogComponent } from "../../../shared/components/form-dialog/form-dialog.component";
 import { FormLabelComponent } from "../../../shared/components/form-label/form-label.component";
 import { EmptyStateComponent } from "../../../shared/components/empty-state/empty-state.component";
+import { SearchInputComponent } from "../../../shared/components/search-input/search-input.component";
 import { ResourceStore } from "../stores/resource.store";
 import { LineStore } from "../stores/line.store";
 import { BrandStore } from "../../configuration/stores/brand.store";
@@ -58,6 +59,7 @@ import { ToastService } from "../../../core/services/toast.service";
     FormDialogComponent,
     FormLabelComponent,
     EmptyStateComponent,
+    SearchInputComponent,
     DatePickerModule,
     CurrencyPipe,
     PIcon,
@@ -132,6 +134,14 @@ export class PhonesPage implements OnInit {
   onTabChange(tab: string | number | undefined): void {
     this.activeTab = String(tab);
     this.loadTabData(this.activeTab);
+  }
+
+  onMobileSearch(search: string): void {
+    this.store.loadActiveMobile(search);
+  }
+
+  onLineSearch(search: string): void {
+    this.lineStore.loadActive(search);
   }
 
   private loadTabData(tab: string): void {

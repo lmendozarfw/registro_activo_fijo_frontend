@@ -44,11 +44,11 @@ export const ModelStore = signalStore(
           loader.hide();
         }
       },
-      async loadActive(): Promise<void> {
+      async loadActive(search?: string): Promise<void> {
         patchState(store, { loading: true, error: null });
         loader.show();
         try {
-          const models = await firstValueFrom(service.getActive());
+          const models = await firstValueFrom(service.getActive(search));
           patchState(store, { models, loading: false });
         } catch (error) {
           const message = resolveErrorMessage(error, 'No se pudieron cargar los modelos activos');

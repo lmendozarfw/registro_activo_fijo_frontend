@@ -16,6 +16,11 @@
                     </button>
                 </div>
 
+                <div class="mb-4 max-w-md">
+                    <app-search-input placeholder="Buscar por activo, nombre, marca, modelo, IMEI o línea..."
+                        (searched)="onMobileSearch($event)" />
+                </div>
+
                 @if (store.mobileResources().length > 0) {
                 <p-table [value]="store.mobileResources()" [loading]="store.loading()" [paginator]="true" [rows]="10"
                     [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '2700px' }">
@@ -145,6 +150,11 @@
                             Nueva línea
                         </span>
                     </button>
+                </div>
+
+                <div class="mb-4 max-w-md">
+                    <app-search-input placeholder="Buscar por número, operador o plan..."
+                        (searched)="onLineSearch($event)" />
                 </div>
 
                 @if (lineStore.lines().length > 0) {

@@ -10,6 +10,7 @@ import { FormsModule, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { FormDialogComponent } from "../../../shared/components/form-dialog/form-dialog.component";
 import { FormLabelComponent } from "../../../shared/components/form-label/form-label.component";
 import { EmptyStateComponent } from "../../../shared/components/empty-state/empty-state.component";
+import { SearchInputComponent } from "../../../shared/components/search-input/search-input.component";
 import { PageHeaderService } from "../../../core/services/page-header.service";
 import { UserStore } from "../stores/user.store";
 import { User, CreateUserRequest, UpdateUserRequest } from "../models/user.model";
@@ -24,7 +25,7 @@ type ModuleSelectionState = 'all' | 'some' | 'none';
     styles: [],
     imports: [TableModule, ButtonModule, InputText, InputPassword, SelectModule, CheckboxModule, TooltipModule,
         FormsModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent,
-        ChevronDown, Pencil, Plus, Trash],
+        SearchInputComponent, ChevronDown, Pencil, Plus, Trash],
 })
 export class UsersPage implements OnInit {
     protected readonly store = inject(UserStore);
@@ -62,7 +63,11 @@ export class UsersPage implements OnInit {
 
     ngOnInit(): void {
         this.pageHeader.setTitle('Usuarios');
-        this.store.load();
+        this.store.loadActive();
+    }
+
+    protected async onSearch(search?: string): Promise<void> {
+        await this.store.loadActive(search);
     }
 
     openCreate(): void {

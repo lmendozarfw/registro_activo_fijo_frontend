@@ -8,8 +8,8 @@ export class PermissionService {
     private readonly api = inject(ApiService);
     private readonly endpoint = 'Permissions';
 
-    getAll(): Observable<PermissionDto[]> {
-        return this.api.getAll<PermissionDto>(this.endpoint);
+    getAll(search?: string): Observable<PermissionDto[]> {
+        return this.api.getAll<PermissionDto>(this.endpoint, { search: search ?? '' });
     }
 
     getGroupByModules(): Observable<PermissionsGroupByModuleDto[]> {

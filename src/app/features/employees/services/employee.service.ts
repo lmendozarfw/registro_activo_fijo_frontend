@@ -12,8 +12,8 @@ export class EmployeeService {
         return this.api.getAll<Employee>(this.endpoint);
     }
 
-    getActive(): Observable<Employee[]> {
-        return this.api.getAll<Employee>(`${this.endpoint}/active`);
+    getActive(search?: string): Observable<Employee[]> {
+        return this.api.getAll<Employee>(`${this.endpoint}/active`, {search: search ?? ""});
     }
 
     getAvailable(): Observable<EmployeeItem[]> {

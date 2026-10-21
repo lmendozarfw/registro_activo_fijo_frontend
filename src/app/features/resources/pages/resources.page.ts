@@ -14,6 +14,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormDialogComponent } from "../../../shared/components/form-dialog/form-dialog.component";
 import { FormLabelComponent } from "../../../shared/components/form-label/form-label.component";
 import { EmptyStateComponent } from "../../../shared/components/empty-state/empty-state.component";
+import { SearchInputComponent } from "../../../shared/components/search-input/search-input.component";
 import { ResourceStore } from "../stores/resource.store";
 import { BrandStore } from "../../configuration/stores/brand.store";
 import { ModelStore } from "../../configuration/stores/model.store";
@@ -41,6 +42,7 @@ import { ToastService } from '../../../core/services/toast.service';
     FormDialogComponent,
     FormLabelComponent,
     EmptyStateComponent,
+    SearchInputComponent,
     PIcon,
     CurrencyPipe,
   ],
@@ -85,6 +87,10 @@ export class ResourcesPage implements OnInit, OnDestroy {
     this.pageHeader.setTitle('Activo fijo');
     this.store.loadActive();
     this.formSubscribers();
+  }
+
+  onSearch(search?: string): void {
+    this.store.loadActive(search);
   }
 
   formSubscribers() {

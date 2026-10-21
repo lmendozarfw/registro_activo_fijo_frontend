@@ -14,8 +14,8 @@ export class AssignmentService {
         return this.api.getAll<AssignmentDto>(this.endpoint);
     }
 
-    getActive(): Observable<AssignmentDto[]> {
-        return this.api.getAll<AssignmentDto>(`${this.endpoint}/active`);
+    getActive(search?: string): Observable<AssignmentDto[]> {
+        return this.api.getAll<AssignmentDto>(`${this.endpoint}/active`, { search: search ?? '' });
     }
 
     getHistory(): Observable<AssignmentHistoryGroupDto[]> {

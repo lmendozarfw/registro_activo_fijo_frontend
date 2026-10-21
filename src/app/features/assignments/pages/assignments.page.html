@@ -9,6 +9,11 @@
         </button>
     </div>
 
+    <div class="mb-4 max-w-md">
+        <app-search-input placeholder="Buscar por activo, recurso, empleado o marca..."
+            (searched)="onSearch($event)" />
+    </div>
+
     @if (store.assignments().length > 0) {
     <p-table [value]="store.assignments()" [loading]="store.loading()" [paginator]="true" [rows]="10"
         [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '1860px' }">

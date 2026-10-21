@@ -9,6 +9,7 @@ import { FormLabelComponent } from "../../../../shared/components/form-label/for
 import { DepartmentStore } from "../../stores/department.store";
 import { Department, DepartmentRequest } from "../../models/department.model";
 import { EmptyStateComponent } from "../../../../shared/components/empty-state/empty-state.component";
+import { SearchInputComponent } from "../../../../shared/components/search-input/search-input.component";
 import { Pencil, Plus, Trash } from '@primeicons/angular';
 
 @Component({
@@ -16,7 +17,7 @@ import { Pencil, Plus, Trash } from '@primeicons/angular';
     templateUrl: "./departments-table.component.html",
     styles: [],
     imports: [TableModule, ButtonModule, InputText, TooltipModule, ReactiveFormsModule,
-        FormDialogComponent, FormLabelComponent, EmptyStateComponent, Pencil, Plus, Trash]
+        FormDialogComponent, FormLabelComponent, EmptyStateComponent, SearchInputComponent, Pencil, Plus, Trash]
 })
 export class DepartmentsTableComponent implements OnInit {
     protected readonly store = inject(DepartmentStore);
@@ -33,6 +34,10 @@ export class DepartmentsTableComponent implements OnInit {
 
     ngOnInit(): void {
         this.store.loadActive();
+    }
+
+    protected async onSearch(search?: string): Promise<void> {
+        await this.store.loadActive(search);
     }
 
     openCreate(): void {

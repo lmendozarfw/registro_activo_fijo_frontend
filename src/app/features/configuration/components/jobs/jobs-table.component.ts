@@ -9,6 +9,7 @@ import { FormLabelComponent } from "../../../../shared/components/form-label/for
 import { JobStore } from "../../stores/job.store";
 import { Job, JobRequest } from "../../models/job.model";
 import { EmptyStateComponent } from "../../../../shared/components/empty-state/empty-state.component";
+import { SearchInputComponent } from "../../../../shared/components/search-input/search-input.component";
 import { Pencil, Plus, Trash } from '@primeicons/angular';
 
 @Component({
@@ -16,7 +17,7 @@ import { Pencil, Plus, Trash } from '@primeicons/angular';
     templateUrl: "./jobs-table.component.html",
     styles: [],
     imports: [TableModule, ButtonModule, InputText, TooltipModule, ReactiveFormsModule,
-        FormDialogComponent, FormLabelComponent, EmptyStateComponent, Pencil, Plus, Trash]
+        FormDialogComponent, FormLabelComponent, EmptyStateComponent, SearchInputComponent, Pencil, Plus, Trash]
 })
 export class JobsTableComponent implements OnInit {
     protected readonly store = inject(JobStore);
@@ -33,6 +34,10 @@ export class JobsTableComponent implements OnInit {
 
     ngOnInit(): void {
         this.store.loadActive();
+    }
+
+    protected async onSearch(search?: string): Promise<void> {
+        await this.store.loadActive(search);
     }
 
     openCreate(): void {

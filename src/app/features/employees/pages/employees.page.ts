@@ -57,8 +57,8 @@ export class EmployeesPage implements OnInit {
         return `${employee.firstName} ${employee.paternalSurname} ${employee.maternalSurname}`;
     }
 
-    protected onSearch(value: string): void {
-        console.log('Búsqueda de empleados:', value);
+    protected async onSearch(value?: string): Promise<void> {
+        await this.store.loadActive(value);
     }
 
     openCreate(): void {

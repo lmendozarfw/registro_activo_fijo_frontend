@@ -8,12 +8,12 @@ export class ResourceService {
   private readonly api = inject(ApiService);
   private readonly endpoint = 'Resources';
 
-  getAll(): Observable<ResourceDto[]> {
-    return this.api.getAll<ResourceDto>(this.endpoint);
+  getAll(search?: string): Observable<ResourceDto[]> {
+    return this.api.getAll<ResourceDto>(this.endpoint, { search: search ?? '' });
   }
 
-  getActive(): Observable<ResourceDto[]> {
-    return this.api.getAll<ResourceDto>(`${this.endpoint}/active`);
+  getActive(search?: string): Observable<ResourceDto[]> {
+    return this.api.getAll<ResourceDto>(`${this.endpoint}/active`, { search: search ?? '' });
   }
 
   create(data: CreateResourceCommand): Observable<ResourceDto> {

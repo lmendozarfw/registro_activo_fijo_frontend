@@ -5,26 +5,30 @@ import { CreateUserRequest, UpdateUserRequest, User } from "../models/user.model
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-    private readonly api = inject(ApiService);
-    private readonly endpoint = 'Users';
+  private readonly api = inject(ApiService);
+  private readonly endpoint = 'Users';
 
-    getAll(): Observable<User[]> {
-        return this.api.getAll<User>(this.endpoint);
-    }
+  getAll(search?: string): Observable<User[]> {
+    return this.api.getAll<User>(this.endpoint, { search: search ?? '' });
+  }
 
-    getById(id: string): Observable<User> {
-        return this.api.getById<User>(this.endpoint, id);
-    }
+  getActive(search?: string): Observable<User[]> {
+    return this.api.getAll<User>(`${this.endpoint}/active`, { search: search ?? '' });
+  }
 
-    create(data: CreateUserRequest): Observable<User> {
-        return this.api.create<CreateUserRequest, User>(this.endpoint, data);
-    }
+  getById(id: string): Observable<User> {
+    return this.api.getById<User>(this.endpoint, id);
+  }
 
-    update(id: string, data: UpdateUserRequest): Observable<User> {
-        return this.api.update<UpdateUserRequest, User>(this.endpoint, id, data);
-    }
+  create(data: CreateUserRequest): Observable<User> {
+    return this.api.create<CreateUserRequest, User>(this.endpoint, data);
+  }
 
-    remove(id: string): Observable<void> {
-        return this.api.delete<void>(this.endpoint, id);
-    }
+  update(id: string, data: UpdateUserRequest): Observable<User> {
+    return this.api.update<UpdateUserRequest, User>(this.endpoint, id, data);
+  }
+
+  remove(id: string): Observable<void> {
+    return this.api.delete<void>(this.endpoint, id);
+  }
 }

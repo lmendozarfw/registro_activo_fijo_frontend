@@ -51,11 +51,11 @@ export const TemplateStore = signalStore(
                 }
             },
 
-            async loadActive(): Promise<void> {
+            async loadActive(search?: string): Promise<void> {
                 patchState(store, { loading: true, error: null });
                 loader.show();
                 try {
-                    const templates = await firstValueFrom(service.getActive());
+                    const templates = await firstValueFrom(service.getActive(search));
                     patchState(store, { templates, loading: false });
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudieron cargar las plantillas activas');

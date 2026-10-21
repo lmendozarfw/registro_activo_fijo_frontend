@@ -12,8 +12,8 @@ export class DepartmentService {
         return this.api.getAll<Department>(this.endpoint);
     }
 
-    getActive(): Observable<Department[]> {
-        return this.api.getAll<Department>(`${this.endpoint}/active`);
+    getActive(search?: string): Observable<Department[]> {
+        return this.api.getAll<Department>(`${this.endpoint}/active`, { search: search ?? '' });
     }
 
     getById(id: string): Observable<Department> {

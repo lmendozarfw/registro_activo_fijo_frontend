@@ -44,11 +44,11 @@ export const SystemStore = signalStore(
                 }
             },
 
-            async loadActive(): Promise<void> {
+            async loadActive(search?: string): Promise<void> {
                 patchState(store, { loading: true, error: null });
                 loader.show();
                 try {
-                    const systems = await firstValueFrom(service.getActive());
+                    const systems = await firstValueFrom(service.getActive(search));
                     patchState(store, { systems, loading: false });
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudieron cargar los sistemas activos');

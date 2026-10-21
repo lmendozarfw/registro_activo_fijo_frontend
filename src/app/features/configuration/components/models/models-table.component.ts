@@ -9,6 +9,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormDialogComponent } from "../../../../shared/components/form-dialog/form-dialog.component";
 import { FormLabelComponent } from "../../../../shared/components/form-label/form-label.component";
 import { EmptyStateComponent } from "../../../../shared/components/empty-state/empty-state.component";
+import { SearchInputComponent } from "../../../../shared/components/search-input/search-input.component";
 import { ModelStore } from "../../stores/model.store";
 import { BrandStore } from "../../stores/brand.store";
 import { Model, ModelRequest } from "../../models/model.model";
@@ -20,7 +21,7 @@ import { Pencil, Plus, Trash } from '@primeicons/angular';
     templateUrl: "./models-table.component.html",
     styles: [],
     imports: [TableModule, ButtonModule, InputText, SelectModule, TagModule, TooltipModule, ReactiveFormsModule,
-        FormDialogComponent, FormLabelComponent, EmptyStateComponent, Pencil, Plus, Trash]
+        FormDialogComponent, FormLabelComponent, EmptyStateComponent, SearchInputComponent, Pencil, Plus, Trash]
 })
 export class ModelsTableComponent implements OnInit {
     protected readonly store = inject(ModelStore);
@@ -43,6 +44,10 @@ export class ModelsTableComponent implements OnInit {
     ngOnInit(): void {
         this.store.loadActive();
         this.brandStore.loadActive();
+    }
+
+    protected async onSearch(search?: string): Promise<void> {
+        await this.store.loadActive(search);
     }
 
     openCreate(): void {

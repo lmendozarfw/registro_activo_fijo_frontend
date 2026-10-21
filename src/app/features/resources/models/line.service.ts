@@ -12,8 +12,8 @@ export class LineService {
         return this.api.getAll<LineDto>(this.endpoint);
     }
 
-    getActive(): Observable<LineDto[]> {
-        return this.api.getAll<LineDto>(`${this.endpoint}/active`);
+    getActive(search?: string): Observable<LineDto[]> {
+        return this.api.getAll<LineDto>(`${this.endpoint}/active`, { search: search ?? '' });
     }
 
     getAvailable(): Observable<LineDto[]> {

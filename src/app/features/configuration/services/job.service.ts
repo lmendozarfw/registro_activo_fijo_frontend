@@ -12,8 +12,8 @@ export class JobService {
         return this.api.getAll<Job>(this.endpoint);
     }
 
-    getActive(): Observable<Job[]> {
-        return this.api.getAll<Job>(`${this.endpoint}/active`);
+    getActive(search?: string): Observable<Job[]> {
+        return this.api.getAll<Job>(`${this.endpoint}/active`, { search: search ?? '' });
     }
 
     getById(id: string): Observable<Job> {

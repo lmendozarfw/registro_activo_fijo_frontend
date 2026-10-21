@@ -16,6 +16,7 @@ type ResourceState = {
     loading: boolean;
     saving: boolean;
     error: string | null;
+    search: string;
 };
 
 export const ResourceStore = signalStore(
@@ -28,6 +29,7 @@ export const ResourceStore = signalStore(
     loading: false,
     saving: false,
     error: null,
+    search: '',
   }),
   withMethods(
     (
@@ -37,11 +39,12 @@ export const ResourceStore = signalStore(
       toast = inject(ToastService),
       loader = inject(LoaderService),
     ) => ({
-      async loadAll(): Promise<void> {
-        patchState(store, { loading: true, error: null });
+      async loadAll(search?: string): Promise<void> {
+        const term = search ?? store.search();
+        patchState(store, { loading: true, error: null, search: term });
         loader.show();
         try {
-          const resources = await firstValueFrom(resourceService.getAll());
+          const resources = await firstValueFrom(resourceService.getAll(term));
           patchState(store, { resources, loading: false });
         } catch (error) {
           const message = resolveErrorMessage(error, 'No se pudieron cargar los recursos');
@@ -51,11 +54,12 @@ export const ResourceStore = signalStore(
           loader.hide();
         }
       },
-      async loadActive(): Promise<void> {
-        patchState(store, { loading: true, error: null });
+      async loadActive(search?: string): Promise<void> {
+        const term = search ?? store.search();
+        patchState(store, { loading: true, error: null, search: term });
         loader.show();
         try {
-          const resources = await firstValueFrom(resourceService.getActive());
+          const resources = await firstValueFrom(resourceService.getActive(term));
           patchState(store, { resources, loading: false });
         } catch (error) {
           const message = resolveErrorMessage(error, 'No se pudieron cargar los recursos activos');
@@ -79,11 +83,11 @@ export const ResourceStore = signalStore(
           loader.hide();
         }
       },
-      async loadActiveMobile(): Promise<void> {
+      async loadActiveMobile(search?: string): Promise<void> {
         patchState(store, { loading: true, error: null });
         loader.show();
         try {
-          const mobileResources = await firstValueFrom(mobileResourceService.getActive());
+          const mobileResources = await firstValueFrom(mobileResourceService.getActive(search));
           patchState(store, { mobileResources, loading: false });
         } catch (error) {
           const message = resolveErrorMessage(error, 'No se pudieron cargar los celulares activos');

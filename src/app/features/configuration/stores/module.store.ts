@@ -25,11 +25,11 @@ export const ModuleStore = signalStore(
             service = inject(ModuleService),
             toast = inject(ToastService),
         ) => ({
-            async load(): Promise<void> {
+            async load(search?: string): Promise<void> {
                 patchState(store, { loading: true, error: null });
 
                 try {
-                    const modules = await firstValueFrom(service.getAll());
+                    const modules = await firstValueFrom(service.getAll(search));
                     patchState(store, { modules, loading: false });
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudieron cargar los módulos');

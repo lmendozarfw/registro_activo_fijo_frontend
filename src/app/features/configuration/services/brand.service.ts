@@ -12,8 +12,8 @@ export class BrandService {
         return this.api.getAll<Brand>(this.endpoint);
     }
 
-    getActive(): Observable<Brand[]> {
-        return this.api.getAll<Brand>(`${this.endpoint}/active`);
+    getActive(search?: string): Observable<Brand[]> {
+        return this.api.getAll<Brand>(`${this.endpoint}/active`, { search: search ?? '' });
     }
 
     getById(id: string): Observable<Brand> {

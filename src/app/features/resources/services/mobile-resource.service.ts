@@ -12,8 +12,8 @@ export class MobileResourceService {
         return this.api.getAll<MobileResourceDto>(this.endPoint);
     }
 
-    getActive(): Observable<MobileResourceDto[]> {
-        return this.api.getAll<MobileResourceDto>(`${this.endPoint}/active`);
+    getActive(search?: string): Observable<MobileResourceDto[]> {
+        return this.api.getAll<MobileResourceDto>(`${this.endPoint}/active`, { search: search ?? '' });
     }
 
     getUnassigned(): Observable<MobileResourceDto[]> {

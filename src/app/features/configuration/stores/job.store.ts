@@ -44,11 +44,11 @@ export const JobStore = signalStore(
                 }
             },
 
-            async loadActive(): Promise<void> {
+            async loadActive(search?: string): Promise<void> {
                 patchState(store, { loading: true, error: null });
                 loader.show();
                 try {
-                    const jobs = await firstValueFrom(service.getActive());
+                    const jobs = await firstValueFrom(service.getActive(search));
                     patchState(store, { jobs, loading: false });
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudieron cargar los puestos de trabajo activos');

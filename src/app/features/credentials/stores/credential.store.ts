@@ -48,11 +48,11 @@ export const CredentialStore = signalStore(
                 }
             },
 
-            async loadActive(): Promise<void> {
+            async loadActive(search?: string): Promise<void> {
                 patchState(store, { loading: true, error: null });
 
                 try {
-                    const credentials = await firstValueFrom(service.getActive());
+                    const credentials = await firstValueFrom(service.getActive(search));
                     patchState(store, { credentials, loading: false });
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudieron cargar las credenciales');

@@ -25,11 +25,11 @@ export const PermissionStore = signalStore(
             service = inject(PermissionService),
             toast = inject(ToastService),
         ) => ({
-            async load(): Promise<void> {
+            async load(search?: string): Promise<void> {
                 patchState(store, { loading: true, error: null });
 
                 try {
-                    const permissions = await firstValueFrom(service.getAll());
+                    const permissions = await firstValueFrom(service.getAll(search));
                     patchState(store, { permissions, loading: false });
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudieron cargar los permisos');
