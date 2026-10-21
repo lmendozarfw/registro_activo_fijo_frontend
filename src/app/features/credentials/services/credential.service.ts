@@ -16,8 +16,8 @@ export class CredentialService {
         return this.api.getAll<Credential>(`${this.endpoint}/active`, { search: search ?? '' });
     }
 
-    getMy(): Observable<Credential[]> {
-        return this.api.getAll<Credential>(`${this.endpoint}/My`);
+    getMy(search?: string): Observable<Credential[]> {
+        return this.api.getAll<Credential>(`${this.endpoint}/my`, { search: search ?? '' });
     }
 
     getById(id: string): Observable<Credential> {

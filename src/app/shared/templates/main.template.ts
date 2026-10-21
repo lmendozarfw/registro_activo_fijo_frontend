@@ -122,7 +122,7 @@ import { NotesBoardComponent } from '../../features/notes/components/notes-board
                                 }
                             </button>
                             <span class="h-7.5 flex items-center text-xs text-slate-900 rounded-md bg-slate-100 px-2 py-1">
-                              {{ '#5366' }}
+                              {{ 'V.0.1' }}
                             </span>
                         </div>
                     </header>

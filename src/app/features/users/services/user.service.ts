@@ -25,7 +25,7 @@ export class UserService {
   }
 
   update(id: string, data: UpdateUserRequest): Observable<User> {
-    return this.api.update<UpdateUserRequest, User>(this.endpoint, id, data);
+    return this.api.patch<UpdateUserRequest, User>(`${this.endpoint}/${id}`, data);
   }
 
   remove(id: string): Observable<void> {

@@ -32,7 +32,8 @@
         </div>
         }
     </div>
-    } @else {
+    } @else if (mode() === 'manual') {
+        
     <form [formGroup]="loginForm" class="flex flex-col gap-5" (ngSubmit)="onSubmit()">
         <div class="flex flex-col gap-1.5">
             <app-form-label required>Nombre de usuario</app-form-label>

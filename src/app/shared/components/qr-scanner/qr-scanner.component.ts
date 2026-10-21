@@ -44,6 +44,7 @@ export class QrScannerComponent implements AfterViewInit, OnDestroy {
   readonly error = signal<string | null>(null);
 
   private scanner: Html5Qrcode | null = null;
+  private scannerState: 'idle' | 'scanning' | 'paused' = 'idle';
   readonly readerId = `qr-scanner-${instances++}`;
 
   ngAfterViewInit(): void {
@@ -66,19 +67,42 @@ export class QrScannerComponent implements AfterViewInit, OnDestroy {
   }
 
   resume(): void {
-    this.scanner?.resume();
+    const scanner = this.scanner;
+    if (!scanner || this.scannerState !== 'paused') return;
+    try {
+      scanner.resume();
+      this.scannerState = 'scanning';
+    } catch {
+      this.scannerState = 'idle';
+    }
+  }
+
+  private pauseScanner(): void {
+    const scanner = this.scanner;
+    if (!scanner || this.scannerState !== 'scanning') return;
+    try {
+      scanner.pause(true);
+      this.scannerState = 'paused';
+    } catch {
+      this.scannerState = 'idle';
+    }
   }
 
   private destroyScanner(): void {
     const scanner = this.scanner;
-    if (!scanner) return;
     this.scanner = null;
-    scanner
-      .stop()
-      .catch(() => undefined)
-      .finally(() => {
-        document.getElementById(this.readerId)?.replaceChildren();
-      });
+    this.scannerState = 'idle';
+    if (!scanner) return;
+    try {
+      scanner
+        .stop()
+        .catch(() => undefined)
+        .finally(() => {
+          document.getElementById(this.readerId)?.replaceChildren();
+        });
+    } catch {
+      document.getElementById(this.readerId)?.replaceChildren();
+    }
   }
 
   private startCamera(config: { facingMode?: string }, attempt: number): void {
@@ -100,6 +124,9 @@ export class QrScannerComponent implements AfterViewInit, OnDestroy {
         (decodedText) => this.onScanSuccess(decodedText),
         () => undefined,
       )
+      .then(() => {
+        if (this.scanner === scanner) this.scannerState = 'scanning';
+      })
       .catch(() => {
         if (attempt === 0) {
           document.getElementById(this.readerId)?.replaceChildren();
@@ -111,6 +138,7 @@ export class QrScannerComponent implements AfterViewInit, OnDestroy {
           this.startCamera({}, 1);
           return;
         }
+        this.scannerState = 'idle';
         this.error.set(
           'No se pudo iniciar la cámara. Revisa los permisos del navegador e inténtalo de nuevo.',
         );
@@ -118,7 +146,7 @@ export class QrScannerComponent implements AfterViewInit, OnDestroy {
   }
 
   private onScanSuccess(decodedText: string): void {
-    this.scanner?.pause(true);
+    this.pauseScanner();
     this.scanned.emit(decodedText);
   }
 }

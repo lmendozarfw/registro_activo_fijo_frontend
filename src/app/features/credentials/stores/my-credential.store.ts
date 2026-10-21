@@ -8,6 +8,7 @@ import { CredentialService } from "../services/credential.service";
 
 type MyCredentialState = {
     credentials: Credential[];
+    search: string;
     loading: boolean;
     requesting: Record<string, boolean>;
     revealedPasswords: Record<string, string>;
@@ -18,6 +19,7 @@ export const MyCredentialStore = signalStore(
     { providedIn: 'root' },
     withState<MyCredentialState>({
         credentials: [],
+        search: '',
         loading: false,
         requesting: {},
         revealedPasswords: {},
@@ -29,11 +31,12 @@ export const MyCredentialStore = signalStore(
             service = inject(CredentialService),
             toast = inject(ToastService),
         ) => ({
-            async load(): Promise<void> {
-                patchState(store, { loading: true, error: null });
+            async load(search?: string): Promise<void> {
+                const term = search ?? store.search();
+                patchState(store, { loading: true, error: null, search: term });
 
                 try {
-                    const credentials = await firstValueFrom(service.getMy());
+                    const credentials = await firstValueFrom(service.getMy(term));
                     patchState(store, { credentials, loading: false });
                 } catch (error) {
                     const message = resolveErrorMessage(error, 'No se pudieron cargar tus credenciales');

@@ -1,19 +1,19 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { ButtonModule } from 'primeng/button';
-import { InputText } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
 import { EmptyStateComponent } from "../../../shared/components/empty-state/empty-state.component";
+import { SearchInputComponent } from "../../../shared/components/search-input/search-input.component";
 import { PageHeaderService } from "../../../core/services/page-header.service";
 import { ToastService } from "../../../core/services/toast.service";
 import { MyCredentialStore } from "../stores/my-credential.store";
 import { Credential } from "../models/credential.model";
-import { Copy, Eye, EyeSlash, Lock, Search, Spinner } from '@primeicons/angular';
+import { Copy, Eye, EyeSlash, Lock, Spinner } from '@primeicons/angular';
 
 @Component({
     selector: 'app-my-credentials-page',
     templateUrl: './my-credentials.page.html',
     styles: [],
-    imports: [ButtonModule, InputText, TooltipModule, EmptyStateComponent, Copy, Eye, EyeSlash, Lock, Search, Spinner],
+    imports: [ButtonModule, TooltipModule, EmptyStateComponent, SearchInputComponent, Copy, Eye, EyeSlash, Lock, Spinner],
 })
 export class MyCredentialsPage implements OnInit {
     protected readonly store = inject(MyCredentialStore);
@@ -39,8 +39,9 @@ export class MyCredentialsPage implements OnInit {
         this.store.load();
     }
 
-    protected onSearch(event: Event): void {
-        this.searchTerm.set((event.target as HTMLInputElement).value);
+    protected onSearch(term: string): void {
+        this.searchTerm.set(term);
+        void this.store.load(term);
     }
 
     protected requestPassword(credential: Credential): void {
