@@ -77,6 +77,10 @@ export const routes: Routes = [
                 path: 'assets/:id/maintenances',
                 loadComponent: () => import('./features/resources/pages/resource-maintenances.page').then(p => p.ResourceMaintenancesPage),
             },
+            {
+                path: 'reports',
+                loadComponent: () => import('./features/reports/pages/reports.page').then(p => p.ReportsPage),
+            },
         ]
     },
     {

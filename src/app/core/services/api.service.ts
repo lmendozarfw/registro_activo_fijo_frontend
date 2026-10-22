@@ -49,6 +49,16 @@ export class ApiService {
     });
   }
 
+  downloadBlob(
+    endpoint: string,
+    params?: Record<string, string | number | boolean>,
+  ): Observable<Blob> {
+    return this.http.get(`${environment.apiUrl}/${endpoint}`, {
+      params: toHttpParams(params),
+      responseType: 'blob',
+    });
+  }
+
   create<TRequest, TResponse>(endpoint: string, data: Partial<TRequest>): Observable<TResponse> {
     return this.http.post<TResponse>(`${environment.apiUrl}/${endpoint}`, data);
   }
