@@ -19,6 +19,7 @@ import { AuditEventType, Credential, CredentialAuditEvent, CredentialRequest } f
 import { EmployeeStore } from "../../employees/stores/employee.store";
 import { SystemStore } from "../../configuration/stores/system.store";
 import { PIcon } from '@primeicons/angular/p-icon';
+import { HasPermissionDirective } from "../../../core/directives/has-permission.directive";
 type TagSeverity = 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast';
 
 @Component({
@@ -26,8 +27,8 @@ type TagSeverity = 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contr
     templateUrl: './credentials.page.html',
     styles: [],
     imports: [TableModule, ButtonModule, InputPassword, TextareaModule, ToggleSwitchModule,
-        SelectModule, TooltipModule, TagModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent,
-        EmptyStateComponent, SearchInputComponent, PIcon],
+    SelectModule, TooltipModule, TagModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent,
+    EmptyStateComponent, SearchInputComponent, PIcon, HasPermissionDirective],
 })
 export class CredentialsPage implements OnInit {
     protected readonly store = inject(CredentialStore);

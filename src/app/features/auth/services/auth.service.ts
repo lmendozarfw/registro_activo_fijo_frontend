@@ -46,7 +46,7 @@ export class AuthService {
     }
 
     me(): Observable<IMeResponse> {
-        return this.api.get<IMeResponse>('auth/Me');
+        return this.api.get<IMeResponse>('Me');
     }
 
     getAccessToken(): string | null {

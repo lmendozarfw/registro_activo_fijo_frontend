@@ -1,24 +1,17 @@
 import { Component, inject, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PIcon } from '@primeicons/angular/p-icon';
 import { ButtonDirective } from 'primeng/button';
 import { InputPassword } from 'primeng/inputpassword';
 import { InputText } from 'primeng/inputtext';
 import { FormLabelComponent } from '../../../shared/components/form-label/form-label.component';
 import { QrScannerComponent } from '../../../shared/components/qr-scanner/qr-scanner.component';
+import { SOLUTIONS, SolutionConfig } from '../../../core/config/solutions.config';
+import { PermissionsService } from '../../../core/services/permissions.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { safeReturnUrl } from '../../../core/utils/navigation.utils';
 import { AuthStore } from '../../auth/stores/auth.store';
-
-interface Solution {
-  title: string;
-  description: string;
-  icon: string;
-  tone: string;
-  route?: string;
-  external?: string;
-  soon?: boolean;
-}
 
 interface NewsPost {
   title: string;
@@ -46,6 +39,8 @@ interface NewsPost {
 export class LandingPage {
   protected readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly permissions = inject(PermissionsService);
   private readonly toast = inject(ToastService);
   private readonly qrScanner = viewChild(QrScannerComponent);
 
@@ -53,6 +48,9 @@ export class LandingPage {
   readonly loginMode = signal<'manual' | 'qr'>('manual');
   readonly passwordMask = signal(true);
   readonly badgeUser = signal<string | null>(null);
+  private readonly returnUrl = signal<string | null>(
+    safeReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl')),
+  );
 
   readonly loginForm = new FormGroup({
     user: new FormControl('', [Validators.required]),
@@ -61,50 +59,7 @@ export class LandingPage {
 
   readonly year = new Date().getFullYear();
 
-  readonly solutions: Solution[] = [
-    {
-      title: 'Registro de visitantes',
-      description: 'Controla el ingreso y salida de visitantes con un registro claro y seguro.',
-      icon: 'id-card',
-      tone: 'bg-sky-50 text-sky-700',
-      soon: true,
-    },
-    {
-      title: 'Reserva de sala de juntas',
-      description: 'Consulta disponibilidad y agenda tus reuniones sin conflictos de horario.',
-      icon: 'calendar',
-      tone: 'bg-violet-50 text-violet-700',
-      soon: true,
-    },
-    {
-      title: 'Solicitud de permisos',
-      description: 'Gestiona permisos, vacaciones y ausencias de forma rápida y ordenada.',
-      icon: 'file-edit',
-      tone: 'bg-amber-50 text-amber-700',
-      soon: true,
-    },
-    {
-      title: 'Activo fijo',
-      description: 'Administra, asigna y da seguimiento a los activos de la empresa.',
-      icon: 'briefcase',
-      tone: 'bg-emerald-50 text-emerald-700',
-      route: '/app/assets',
-    },
-    {
-      title: 'Mesa de ayuda',
-      description: 'Reporta incidencias y recibe soporte del equipo de Sistemas.',
-      icon: 'headphones',
-      tone: 'bg-rose-50 text-rose-700',
-      soon: true,
-    },
-    {
-      title: 'Portal de difusión',
-      description: 'Consulta comunicados, noticias y contenidos internos de la organización.',
-      icon: 'megaphone',
-      tone: 'bg-indigo-50 text-indigo-700',
-      external: 'https://sites.google.com/view/comunicacion-raudal/inicio',
-    },
-  ];
+  readonly solutions: SolutionConfig[] = SOLUTIONS;
 
   readonly news: NewsPost[] = [
     {
@@ -163,16 +118,32 @@ export class LandingPage {
     this.passwordMask.update((mask) => !mask);
   }
 
-  openSolution(event: Event, solution: Solution): void {
+  openSolution(event: Event, solution: SolutionConfig): void {
     if (solution.external) return;
     event.preventDefault();
 
-    if (solution.route) {
-      void this.router.navigate([solution.route]);
+    if (!this.authStore.isAuthenticated()) {
+      this.returnUrl.set(solution.route);
+      this.toast.info(
+        'Inicia sesión',
+        `Accede con tus credenciales para entrar a ${solution.name}.`,
+      );
+      document.getElementById('acceso')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
 
-    this.toast.info('Muy pronto', `El módulo ${solution.title} estará disponible próximamente.`);
+    if (!this.permissions.hasPermission(solution.permission)) {
+      void this.router.navigate(['/sin-acceso'], {
+        queryParams: {
+          solution: solution.code,
+          permission: solution.permission,
+          returnUrl: solution.route,
+        },
+      });
+      return;
+    }
+
+    void this.router.navigateByUrl(solution.route);
   }
 
   onBadgeScanned(decodedText: string): void {
@@ -209,7 +180,7 @@ export class LandingPage {
       this.resumeScanner();
       return;
     }
-    await this.router.navigate(['app', 'kpis']);
+    await this.router.navigateByUrl(this.returnUrl() ?? '/hub');
   }
 }
 

@@ -119,14 +119,14 @@ export const UserStore = signalStore(
         }
       },
 
-      async loadFormOptions(): Promise<void> {
+      async loadFormOptions(employeeId?: string): Promise<void> {
         if (store.optionsLoading()) return;
 
         patchState(store, { optionsLoading: true });
 
         try {
           const [availableEmployees, templates, permissionGroups] = await Promise.all([
-            firstValueFrom(employeeService.getAvailable()),
+            firstValueFrom(employeeService.getAvailable(employeeId)),
             firstValueFrom(templateService.getAll()),
             firstValueFrom(permissionService.getGroupByModules()),
           ]);

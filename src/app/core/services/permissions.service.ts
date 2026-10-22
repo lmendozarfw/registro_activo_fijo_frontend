@@ -1,16 +1,15 @@
-import { inject, Injectable } from "@angular/core";
-import { AuthStore } from "../../features/auth/stores/auth.store";
+import { inject, Injectable } from '@angular/core';
+import { AuthStore } from '../../features/auth/stores/auth.store';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class PermissionsService {
-    private readonly authStore = inject(AuthStore);
+  private readonly authStore = inject(AuthStore);
 
-    constructor() {}
+  hasPermission(permission: string | null | undefined): boolean {
+    return this.authStore.hasPermission(permission ?? '');
+  }
 
-    hasPermission(permission: string) {
-        if (permission === '') return false;
-        const permissions = this.authStore.permissions();
-        if (Array.isArray(permissions) && permissions.length === 0) return false;
-        return permissions!.includes(permission);
-    }
+  hasAnyPermission(permissions: readonly string[]): boolean {
+    return permissions.some((permission) => this.hasPermission(permission));
+  }
 }

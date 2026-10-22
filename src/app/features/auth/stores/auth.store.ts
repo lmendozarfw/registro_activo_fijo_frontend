@@ -1,16 +1,16 @@
-import { patchState, signalStore, withComputed, withMethods, withState } from "@ngrx/signals";
-import { computed, inject } from "@angular/core";
+import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import { computed, inject } from '@angular/core';
 import {
-    AuthService,
-    ACCESS_TOKEN_KEY,
-    PERMISSIONS_KEY,
-    REFRESH_TOKEN_KEY,
-    USER_KEY,
-} from "../services/auth.service";
-import { firstValueFrom } from "rxjs";
-import { LocalStorageService } from "../../../core/services/storage.service";
-import { resolveErrorMessage } from "../../../core/utils/error.utils";
-import { IAuthTokens, IUserAuth } from "../models/auth.model";
+  AuthService,
+  ACCESS_TOKEN_KEY,
+  PERMISSIONS_KEY,
+  REFRESH_TOKEN_KEY,
+  USER_KEY,
+} from '../services/auth.service';
+import { firstValueFrom } from 'rxjs';
+import { LocalStorageService } from '../../../core/services/storage.service';
+import { resolveErrorMessage } from '../../../core/utils/error.utils';
+import { IAuthTokens, IUserAuth } from '../models/auth.model';
 
 type AuthState = {
   user: IUserAuth | null;
@@ -38,32 +38,44 @@ export const AuthStore = signalStore(
     isAuthenticated: computed(() => !!user() && !!permissions() && !!accessToken()),
   })),
   withMethods(
-    (
-      store,
-      authService = inject(AuthService),
-      storageService = inject(LocalStorageService),
-    ) => ({
+    (store, authService = inject(AuthService), storageService = inject(LocalStorageService)) => ({
       setUser(user: IUserAuth) {
         patchState(store, { user });
+        storageService.set(USER_KEY, user);
       },
 
       setAccessToken(accessToken: string) {
         patchState(store, { accessToken });
+        authService.saveTokens({ accessToken, refreshToken: '' });
       },
 
       setRefreshToken(refreshToken: string) {
         patchState(store, { refreshToken });
+        authService.saveTokens({ accessToken: '', refreshToken });
       },
 
       setTokens(tokens: IAuthTokens) {
-        patchState(store, {
-          accessToken: tokens.accessToken || null,
-          refreshToken: tokens.refreshToken || store.refreshToken(),
-        });
+        const accessToken = tokens.accessToken || null;
+        const refreshToken = tokens.refreshToken || store.refreshToken();
+
+        patchState(store, { accessToken, refreshToken });
+
+        if (accessToken) {
+          authService.saveTokens({
+            accessToken,
+            refreshToken: refreshToken ?? '',
+          });
+        }
       },
 
       setPermissions(permissions: string[]) {
         patchState(store, { permissions });
+        storageService.set(PERMISSIONS_KEY, permissions);
+      },
+
+      hasPermission(permission: string): boolean {
+        if (!permission) return false;
+        return store.permissions()?.includes(permission) ?? false;
       },
 
       logout() {
@@ -72,6 +84,8 @@ export const AuthStore = signalStore(
           permissions: null,
           accessToken: null,
           refreshToken: null,
+          loading: false,
+          error: null,
         });
         storageService.remove(USER_KEY);
         storageService.remove(PERMISSIONS_KEY);
@@ -91,14 +105,24 @@ export const AuthStore = signalStore(
               password,
             }),
           );
-          this.setTokens({accessToken: response.accessToken!, refreshToken: response.refreshToken!});
-          authService.saveTokens({accessToken: response.accessToken!, refreshToken: response.refreshToken!});
-          this.setPermissions(response.permissions);
-          storageService.set(PERMISSIONS_KEY, response.permissions);
-          patchState(store, {
-            loading: false,
+
+          this.setTokens({
+            accessToken: response.accessToken ?? '',
+            refreshToken: response.refreshToken ?? '',
           });
-        } catch (error: any) {
+          this.setPermissions(response.permissions);
+
+          await this.me();
+
+          if (store.error()) {
+            const error = store.error();
+            this.logout();
+            patchState(store, { error });
+            return;
+          }
+
+          patchState(store, { loading: false, error: null });
+        } catch (error: unknown) {
           patchState(store, {
             loading: false,
             error: resolveErrorMessage(error, 'Usuario o contraseña incorrectos'),
@@ -114,23 +138,20 @@ export const AuthStore = signalStore(
 
         try {
           const response = await firstValueFrom(authService.me());
-          const user: IUserAuth = response.user;
-
-          this.setUser(user);
+          this.setUser(response.user);
           this.setPermissions(response.permissions);
-
-          storageService.set(USER_KEY, user);
-          storageService.set(PERMISSIONS_KEY, response.permissions);
-
-          patchState(store, {
-            loading: false,
-          });
-        } catch (error: any) {
+          patchState(store, { loading: false });
+        } catch (error: unknown) {
           patchState(store, {
             loading: false,
             error: resolveErrorMessage(error, 'No se ha podido restaurar la sesión'),
           });
         }
+      },
+
+      async restoreSession() {
+        if (!store.accessToken()) return;
+        await this.me();
       },
     }),
   ),

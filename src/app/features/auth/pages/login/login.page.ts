@@ -1,13 +1,24 @@
 import { Component, inject, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonDirective } from 'primeng/button';
 import { InputPassword } from 'primeng/inputpassword';
 import { InputText } from 'primeng/inputtext';
-import { CheckCircle, Eye, EyeSlash, InfoCircle, Pencil, Qrcode, SignIn, Spinner, User } from '@primeicons/angular';
+import {
+  CheckCircle,
+  Eye,
+  EyeSlash,
+  InfoCircle,
+  Pencil,
+  Qrcode,
+  SignIn,
+  Spinner,
+  User,
+} from '@primeicons/angular';
 import { FormLabelComponent } from '../../../../shared/components/form-label/form-label.component';
 import { QrScannerComponent } from '../../../../shared/components/qr-scanner/qr-scanner.component';
 import { ToastService } from '../../../../core/services/toast.service';
+import { safeReturnUrl } from '../../../../core/utils/navigation.utils';
 import { AuthStore } from '../../stores/auth.store';
 
 export interface BadgeCredentials {
@@ -54,6 +65,7 @@ export class LoginPage {
 
   authStore = inject(AuthStore);
   router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly toast = inject(ToastService);
   private readonly qrScanner = viewChild(QrScannerComponent);
 
@@ -125,6 +137,7 @@ export class LoginPage {
       this.resumeScanner();
       return;
     }
-    await this.router.navigate(['app', 'kpis']);
+    const returnUrl = safeReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl'));
+    await this.router.navigateByUrl(returnUrl ?? '/hub');
   }
 }

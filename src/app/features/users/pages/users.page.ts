@@ -82,7 +82,8 @@ export class UsersPage implements OnInit {
         this.dialogVisible = true;
     }
 
-    openEdit(user: User): void {
+    async openEdit(user: User): Promise<void> {
+        console.log({form: this.form.value});
         this.editingUser = user;
         this.dialogTitle = 'Editar usuario';
         this.permissionsExpanded = false;
@@ -93,9 +94,10 @@ export class UsersPage implements OnInit {
             templateId: '',
         });
         this.selectedPermissionIds.set(new Set(user.permissionIds ?? user.permissions?.map((permission) => permission.id) ?? []));
+        await this.store.load
         this.form.controls.password.setValidators(null);
         this.form.controls.password.updateValueAndValidity();
-        this.store.loadFormOptions();
+        this.store.loadFormOptions(this.form.get('employeeId')?.value);
         this.dialogVisible = true;
     }
 

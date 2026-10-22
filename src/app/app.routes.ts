@@ -1,4 +1,8 @@
 import { Routes } from '@angular/router';
+import { SOLUTION_PERMISSIONS } from './core/config/solutions.config';
+import { authGuard } from './core/guards/auth.guard';
+import { permissionGuard } from './core/guards/permission.guard';
+import { solutionAccessGuard } from './core/guards/solution-access.guard';
 
 export const routes: Routes = [
   {
@@ -18,9 +22,44 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'hub',
+    //canActivate: [authGuard],
+    loadComponent: () => import('./features/hub/pages/hub.page').then((p) => p.HubPage),
+  },
+  {
+    path: 'sin-acceso',
+    //canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/access-denied/pages/access-denied.page').then((p) => p.AccessDeniedPage),
+  },
+  {
+    path: 'soluciones/:solution',
+    //canActivate: [authGuard, solutionAccessGuard],
+    loadComponent: () =>
+      import('./shared/templates/solution/solution.template').then((t) => t.SolutionTemplate),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/solutions/pages/solution-home.page').then((p) => p.SolutionHomePage),
+      },
+      {
+        path: '**',
+        redirectTo: '',
+      },
+    ],
+  },
+  {
     path: 'app',
+    //canActivate: [authGuard, permissionGuard],
+    data: { permission: SOLUTION_PERMISSIONS.activoFijo },
     loadComponent: () => import('./shared/templates/main.template').then((t) => t.MainTemplate),
     children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'assets',
+      },
       {
         path: 'kpis',
         loadComponent: () => import('./features/kpis/pages/kpis.page').then((p) => p.KpisPage),

@@ -336,9 +336,9 @@
       </div>
 
       <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        @for (solution of solutions; track solution.title) {
+        @for (solution of solutions; track solution.code) {
           <a
-            [attr.href]="solution.external ?? null"
+            [attr.href]="solution.external ? solution.route : null"
             [attr.target]="solution.external ? '_blank' : null"
             [attr.rel]="solution.external ? 'noopener noreferrer' : null"
             (click)="openSolution($event, solution)"
@@ -346,14 +346,16 @@
           >
             <div class="flex items-start justify-between gap-3">
               <span
-                [class]="'flex size-12 items-center justify-center rounded-xl ' + solution.tone"
+                [class]="
+                  'flex size-12 items-center justify-center rounded-xl ' + solution.theme.tone
+                "
               >
                 <svg [pIcon]="solution.icon" [size]="23"></svg>
               </span>
-              @if (solution.soon) {
+              @if (solution.preview) {
                 <span
-                  class="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500"
-                  >Próximamente</span
+                  class="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-amber-700"
+                  >Vista de prueba</span
                 >
               } @else {
                 <span
@@ -366,13 +368,13 @@
                 </span>
               }
             </div>
-            <h3 class="mt-5 text-base font-bold text-slate-900">{{ solution.title }}</h3>
+            <h3 class="mt-5 text-base font-bold text-slate-900">{{ solution.name }}</h3>
             <p class="mt-2 text-sm leading-6 text-slate-500">{{ solution.description }}</p>
             <span class="mt-auto pt-5 text-sm font-semibold text-emerald-700">
-              @if (solution.soon) {
-                Disponible muy pronto
-              } @else if (solution.external) {
+              @if (solution.external) {
                 Abrir portal
+              } @else if (solution.preview) {
+                Explorar vista de prueba
               } @else {
                 Entrar al módulo
               }
@@ -409,37 +411,39 @@
       </div>
 
       <div class="grid grid-cols-12 gap-4 w-full mt-10">
-          @for (post of news; track post.title) {
-            <article class="col-span-4 group grid overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-              <div class="relative aspect-[16/9] overflow-hidden bg-slate-100 sm:aspect-auto">
-                <img
-                  [src]="post.image"
-                  [alt]="post.alt"
-                  class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
-                />
+        @for (post of news; track post.title) {
+          <article
+            class="col-span-4 group grid overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
+          >
+            <div class="relative aspect-[16/9] overflow-hidden bg-slate-100 sm:aspect-auto">
+              <img
+                [src]="post.image"
+                [alt]="post.alt"
+                class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
+              />
+            </div>
+            <div class="flex flex-col p-5">
+              <div
+                class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-emerald-700"
+              >
+                <span>{{ post.category }}</span>
+                <span class="size-1 rounded-full bg-emerald-300"></span>
+                <span class="text-slate-400">{{ post.date }}</span>
               </div>
-              <div class="flex flex-col p-5">
-                <div
-                  class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-emerald-700"
-                >
-                  <span>{{ post.category }}</span>
-                  <span class="size-1 rounded-full bg-emerald-300"></span>
-                  <span class="text-slate-400">{{ post.date }}</span>
-                </div>
-                <h3 class="mt-2 text-base font-bold leading-snug text-slate-900">
-                  {{ post.title }}
-                </h3>
-                <p class="mt-2 line-clamp-2 text-sm leading-6 text-slate-500">{{ post.excerpt }}</p>
-                <span
-                  class="mt-auto pt-3 inline-flex items-center gap-2 text-sm font-semibold text-slate-700 transition group-hover:text-emerald-700"
-                >
-                  Leer nota
-                  <svg [pIcon]="'arrow-right'" [size]="14"></svg>
-                </span>
-              </div>
-            </article>
-          }
-        </div>
+              <h3 class="mt-2 text-base font-bold leading-snug text-slate-900">
+                {{ post.title }}
+              </h3>
+              <p class="mt-2 line-clamp-2 text-sm leading-6 text-slate-500">{{ post.excerpt }}</p>
+              <span
+                class="mt-auto pt-3 inline-flex items-center gap-2 text-sm font-semibold text-slate-700 transition group-hover:text-emerald-700"
+              >
+                Leer nota
+                <svg [pIcon]="'arrow-right'" [size]="14"></svg>
+              </span>
+            </div>
+          </article>
+        }
+      </div>
     </div>
   </section>
 
@@ -490,7 +494,9 @@
           </a>
         </div>
 
-        <div class="relative overflow-hidden bg-[#052e16] p-5 sm:p-7 lg:p-9 flex items-center justify-center">
+        <div
+          class="relative overflow-hidden bg-[#052e16] p-5 sm:p-7 lg:p-9 flex items-center justify-center"
+        >
           <div
             class="pointer-events-none absolute -right-16 -top-20 size-64 rounded-full bg-emerald-400/20 blur-3xl"
           ></div>

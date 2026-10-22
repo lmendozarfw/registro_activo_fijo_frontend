@@ -15,13 +15,14 @@ import { Employee, EmployeeRequest } from "../models/employee.model";
 import { JobStore } from "../../configuration/stores/job.store";
 import { DepartmentStore } from "../../configuration/stores/department.store";
 import { Pencil, Plus, Trash } from '@primeicons/angular';
+import { HasPermissionDirective } from "../../../core/directives/has-permission.directive";
 
 @Component({
     selector: 'app-employees-page',
     templateUrl: './employees.page.html',
     styles: [],
         imports: [TableModule, ButtonModule, InputText, SelectModule, TooltipModule, ReactiveFormsModule,
-        FormDialogComponent, FormLabelComponent, EmptyStateComponent, SearchInputComponent, Pencil, Plus, Trash],
+    FormDialogComponent, FormLabelComponent, EmptyStateComponent, SearchInputComponent, Pencil, Plus, Trash, HasPermissionDirective],
 })
 export class EmployeesPage implements OnInit {
     protected readonly store = inject(EmployeeStore);
