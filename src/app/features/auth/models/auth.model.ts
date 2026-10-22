@@ -13,6 +13,7 @@ export interface ILoginResponse {
     refreshToken?: string;
     access_token?: string;
     refresh_token?: string;
+    permissions: string[];
 }
 
 export interface IRefreshTokenRequest {
@@ -24,11 +25,7 @@ export interface IRefreshTokenResponse {
     refreshToken?: string;
     access_token?: string;
     refresh_token?: string;
-}
-
-export interface IPermissionAuth {
-    id: string;
-    code: string;
+    permissions: string[];
 }
 
 export interface IUserAuth {
@@ -39,5 +36,5 @@ export interface IUserAuth {
 export interface IMeResponse {
     id: string;
     user: IUserAuth;
-    permissions: IPermissionAuth[];
+    permissions: string[];
 }

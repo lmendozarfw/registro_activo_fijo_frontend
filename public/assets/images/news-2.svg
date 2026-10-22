@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img" aria-labelledby="news-2-title">
+  <title id="news-2-title">Reconocimiento a la excelencia</title>
+  <defs>
+    <linearGradient id="n2-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#451a03"/>
+      <stop offset="0.55" stop-color="#b45309"/>
+      <stop offset="1" stop-color="#fbbf24"/>
+    </linearGradient>
+    <linearGradient id="n2-cup" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fffbeb"/>
+      <stop offset="1" stop-color="#fde68a"/>
+    </linearGradient>
+    <pattern id="n2-dots" width="34" height="34" patternUnits="userSpaceOnUse">
+      <circle cx="3" cy="3" r="2" fill="#ffffff" opacity=".12"/>
+    </pattern>
+  </defs>
+  <rect width="900" height="560" fill="url(#n2-bg)"/>
+  <rect width="900" height="560" fill="url(#n2-dots)"/>
+  <circle cx="140" cy="90" r="180" fill="#ffffff" opacity=".08"/>
+  <circle cx="790" cy="470" r="200" fill="#ffffff" opacity=".08"/>
+  <path d="M366 130h168v102c0 64-34 112-84 130-50-18-84-66-84-130V130Z" fill="url(#n2-cup)"/>
+  <path d="M366 166h-42c-30 0-48 20-48 48 0 36 28 64 70 64h20" fill="none" stroke="#fffbeb" stroke-width="20" stroke-linecap="round"/>
+  <path d="M534 166h42c30 0 48 20 48 48 0 36-28 64-70 64h-20" fill="none" stroke="#fffbeb" stroke-width="20" stroke-linecap="round"/>
+  <rect x="410" y="362" width="80" height="34" rx="10" fill="#fffbeb"/>
+  <rect x="374" y="396" width="152" height="22" rx="11" fill="#fffbeb"/>
+  <path d="m450 178 14 34 37 3-28 24 9 36-32-20-32 20 9-36-28-24 37-3 14-34Z" fill="#b45309" opacity=".9"/>
+  <rect x="86" y="72" width="196" height="42" rx="21" fill="#ffffff" opacity=".16"/>
+  <circle cx="111" cy="93" r="6" fill="#fde68a"/>
+  <text x="128" y="99" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700" letter-spacing="2.2" fill="#ffffff">EXCELENCIA</text>
+</svg>

@@ -75,7 +75,7 @@ export class ReportsPage implements OnInit {
             key: 'available-mobile-phones',
             title: 'Celulares disponibles',
             description: 'Celulares sin línea asignada, listos para asignar.',
-            icon: 'smartphone',
+            icon: 'mobile',
             tone: 'violet',
         },
     ];

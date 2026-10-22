@@ -1,0 +1,650 @@
+<header class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
+  <div class="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
+    <a routerLink="/" class="flex shrink-0 items-center" aria-label="Raudal Footwear, inicio">
+      <img src="assets/images/raudal-logo.svg" alt="Raudal Footwear" class="h-9 w-auto sm:h-10" />
+    </a>
+
+    <nav class="ml-auto hidden items-center gap-1 lg:flex">
+      <a
+        href="#soluciones"
+        class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+        >Soluciones</a
+      >
+      <a
+        href="#noticias"
+        class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+        >Noticias</a
+      >
+      <a
+        href="#menu"
+        class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+        >Menú semanal</a
+      >
+      <a
+        href="#nosotros"
+        class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+        >Nosotros</a
+      >
+    </nav>
+
+    <a
+      href="#acceso"
+      class="ml-auto hidden items-center gap-2 rounded-xl bg-[#16a34a] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#15803d] active:scale-[0.99] sm:inline-flex lg:ml-3"
+    >
+      <svg [pIcon]="'sign-in'" [size]="15"></svg>
+      Iniciar sesión
+    </a>
+
+    <button
+      type="button"
+      class="ml-auto flex size-10 items-center justify-center rounded-lg border border-slate-200 text-slate-600 transition hover:bg-slate-50 sm:hidden"
+      (click)="toggleMenu()"
+      [attr.aria-label]="menuOpen() ? 'Cerrar menú' : 'Abrir menú'"
+      [attr.aria-expanded]="menuOpen()"
+    >
+      <svg [pIcon]="menuOpen() ? 'times' : 'bars'" [size]="18"></svg>
+    </button>
+  </div>
+
+  @if (menuOpen()) {
+    <nav class="border-t border-slate-100 bg-white px-4 py-3 sm:hidden">
+      <div class="flex flex-col gap-1">
+        <a
+          href="#soluciones"
+          (click)="menuOpen.set(false)"
+          class="rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          >Soluciones</a
+        >
+        <a
+          href="#noticias"
+          (click)="menuOpen.set(false)"
+          class="rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          >Noticias</a
+        >
+        <a
+          href="#menu"
+          (click)="menuOpen.set(false)"
+          class="rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          >Menú semanal</a
+        >
+        <a
+          href="#nosotros"
+          (click)="menuOpen.set(false)"
+          class="rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          >Nosotros</a
+        >
+        <a
+          href="#acceso"
+          (click)="menuOpen.set(false)"
+          class="mt-1 flex items-center justify-center gap-2 rounded-lg bg-[#16a34a] px-3 py-2.5 text-sm font-semibold text-white"
+        >
+          <svg [pIcon]="'sign-in'" [size]="15"></svg>
+          Iniciar sesión
+        </a>
+      </div>
+    </nav>
+  }
+</header>
+
+<main>
+  <section class="relative overflow-hidden bg-slate-950">
+    <div
+      class="pointer-events-none absolute -left-24 top-10 size-80 rounded-full bg-emerald-500/20 blur-3xl"
+    ></div>
+    <div
+      class="pointer-events-none absolute -right-20 bottom-0 size-96 rounded-full bg-teal-400/10 blur-3xl"
+    ></div>
+    <div
+      class="pointer-events-none absolute inset-0 opacity-[0.04]"
+      style="
+        background-image:
+          linear-gradient(#fff 1px, transparent 1px),
+          linear-gradient(90deg, #fff 1px, transparent 1px);
+        background-size: 56px 56px;
+      "
+    ></div>
+
+    <div
+      class="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 lg:grid-cols-[1.12fr_0.88fr] lg:gap-16 lg:px-8 lg:py-24"
+    >
+      <div>
+        <span
+          class="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-200"
+        >
+          <svg [pIcon]="'sparkles'" [size]="14"></svg>
+          Plataforma integral
+        </span>
+
+        <h1
+          class="mt-6 max-w-2xl text-4xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl"
+        >
+          Bienvenido a tu <span class="text-emerald-400">plataforma integral</span> de Raudal
+        </h1>
+
+        <p class="mt-6 max-w-xl text-base leading-7 text-slate-300 sm:text-lg">
+          Un solo lugar para gestionar tus actividades, consultar la información de la empresa y
+          mantenerte al día con lo que sucede en Raudal Footwear.
+        </p>
+
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <a
+            href="#soluciones"
+            class="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-black/10 transition hover:bg-emerald-50 active:scale-[0.99]"
+          >
+            Explorar soluciones
+            <svg [pIcon]="'arrow-right'" [size]="15"></svg>
+          </a>
+          <a
+            href="#noticias"
+            class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/10 active:scale-[0.99]"
+          >
+            <svg [pIcon]="'megaphone'" [size]="15"></svg>
+            Ver noticias
+          </a>
+        </div>
+
+        <div class="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-slate-400">
+          <span class="inline-flex items-center gap-2">
+            <svg class="text-emerald-400" [pIcon]="'check-circle'" [size]="16"></svg>
+            Acceso con contraseña o gafete QR
+          </span>
+          <span class="inline-flex items-center gap-2">
+            <svg class="text-emerald-400" [pIcon]="'shield'" [size]="16"></svg>
+            Información centralizada y segura
+          </span>
+        </div>
+
+        <div
+          class="mt-10 inline-flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-3 pr-6 backdrop-blur"
+        >
+          <span class="rounded-xl bg-white p-2 shadow-lg">
+            <img src="assets/images/raudal-logo.svg" alt="Raudal Footwear" class="h-8 w-auto" />
+          </span>
+          <div>
+            <p class="text-sm font-semibold text-white">Raudal Footwear</p>
+            <p class="text-xs text-slate-400">Calzado de seguridad industrial y de trabajo</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="acceso" class="w-full scroll-mt-24 justify-self-end lg:max-w-md">
+        <div
+          class="rounded-3xl border border-white/10 bg-white p-6 shadow-2xl shadow-black/30 sm:p-7"
+        >
+          <div class="mb-5 flex items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600">
+                Acceso al sistema
+              </p>
+              <h2 class="mt-1 text-2xl font-bold tracking-tight text-slate-900">Inicia sesión</h2>
+              <p class="mt-1 text-sm text-slate-500">Bienvenido de nuevo. Nos alegra verte.</p>
+            </div>
+            <span
+              class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700"
+            >
+              <svg [pIcon]="'lock'" [size]="20"></svg>
+            </span>
+          </div>
+
+          <div class="mb-5 grid grid-cols-2 gap-1 rounded-xl bg-slate-100 p-1">
+            <button
+              type="button"
+              (click)="setLoginMode('manual')"
+              class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition"
+              [class]="
+                loginMode() === 'manual'
+                  ? 'bg-white text-slate-900 shadow-sm'
+                  : 'text-slate-500 hover:text-slate-700'
+              "
+            >
+              <svg [pIcon]="'pencil'" [size]="14"></svg>
+              Contraseña
+            </button>
+            <button
+              type="button"
+              (click)="setLoginMode('qr')"
+              class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition"
+              [class]="
+                loginMode() === 'qr'
+                  ? 'bg-white text-slate-900 shadow-sm'
+                  : 'text-slate-500 hover:text-slate-700'
+              "
+            >
+              <svg [pIcon]="'qrcode'" [size]="14"></svg>
+              Gafete QR
+            </button>
+          </div>
+
+          @if (loginMode() === 'manual') {
+            <form [formGroup]="loginForm" class="flex flex-col gap-4" (ngSubmit)="onSubmit()">
+              <div class="flex flex-col gap-1.5">
+                <app-form-label required>Nombre de usuario</app-form-label>
+                <input
+                  pInputText
+                  formControlName="user"
+                  type="text"
+                  placeholder="nombre.apellido"
+                  class="w-full"
+                  [invalid]="!!userError"
+                  autocomplete="username"
+                />
+                @if (userError) {
+                  <span class="text-xs text-rose-600">{{ userError }}</span>
+                }
+              </div>
+
+              <div class="flex flex-col gap-1.5">
+                <app-form-label required>Contraseña</app-form-label>
+                <div class="relative">
+                  <input
+                    pInputPassword
+                    formControlName="password"
+                    [mask]="passwordMask()"
+                    class="w-full pr-10"
+                    placeholder="••••••••••"
+                    [invalid]="!!passwordError"
+                    autocomplete="current-password"
+                  />
+                  <button
+                    type="button"
+                    (click)="togglePasswordMask()"
+                    [attr.aria-label]="passwordMask() ? 'Mostrar contraseña' : 'Ocultar contraseña'"
+                    class="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-slate-400 transition hover:text-slate-600"
+                  >
+                    @if (passwordMask()) {
+                      <svg [pIcon]="'eye'" [size]="16"></svg>
+                    } @else {
+                      <svg [pIcon]="'eye-slash'" [size]="16"></svg>
+                    }
+                  </button>
+                </div>
+                @if (passwordError) {
+                  <span class="text-xs text-rose-600">{{ passwordError }}</span>
+                }
+              </div>
+
+              <button
+                pButton
+                type="submit"
+                [loading]="authStore.loading()"
+                class="mt-1 w-full bg-[#16a34a]! hover:bg-[#15803d]! border-transparent! text-white!"
+              >
+                <span class="flex items-center justify-center gap-2">
+                  @if (authStore.loading()) {
+                    <svg [pIcon]="'spinner'" [spin]="true" [size]="16"></svg>
+                  } @else {
+                    <svg [pIcon]="'sign-in'" [size]="16"></svg>
+                  }
+                  Iniciar sesión
+                </span>
+              </button>
+            </form>
+          } @else {
+            <div class="flex flex-col gap-4">
+              <app-qr-scanner
+                [size]="280"
+                [busy]="authStore.loading()"
+                [busyText]="'Validando ' + (badgeUser() ?? 'credenciales') + '…'"
+                hint="Apunta el QR de tu gafete"
+                (scanned)="onBadgeScanned($event)"
+              />
+
+              @if (badgeUser() && !authStore.loading()) {
+                <div
+                  class="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-700"
+                >
+                  <svg [pIcon]="'user'" [size]="16"></svg>
+                  <span class="min-w-0 flex-1 truncate"
+                    >Sesión iniciada como <b>{{ badgeUser() }}</b></span
+                  >
+                </div>
+              } @else {
+                <div
+                  class="flex items-start gap-2 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2.5 text-xs text-blue-800"
+                >
+                  <svg [pIcon]="'info-circle'" [size]="16"></svg>
+                  <span
+                    >El gafete trae tu usuario y contraseña en el QR, así que el acceso es
+                    automático.</span
+                  >
+                </div>
+              }
+            </div>
+          }
+
+          <p class="mt-5 border-t border-slate-100 pt-4 text-center text-xs text-slate-500">
+            ¿Problemas para acceder? Contacta al área de Sistemas.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="soluciones" class="scroll-mt-20 bg-slate-50 py-20 sm:py-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl">
+        <span class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600"
+          >Soluciones</span
+        >
+        <h2 class="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+          Todo lo que necesitas, en un solo lugar
+        </h2>
+        <p class="mt-3 text-base leading-7 text-slate-600">
+          Accede a las herramientas que simplifican tu día a día y mantienen a nuestro equipo
+          conectado.
+        </p>
+      </div>
+
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        @for (solution of solutions; track solution.title) {
+          <a
+            [attr.href]="solution.external ?? null"
+            [attr.target]="solution.external ? '_blank' : null"
+            [attr.rel]="solution.external ? 'noopener noreferrer' : null"
+            (click)="openSolution($event, solution)"
+            class="cursor-pointer group flex min-h-56 flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-900/5"
+          >
+            <div class="flex items-start justify-between gap-3">
+              <span
+                [class]="'flex size-12 items-center justify-center rounded-xl ' + solution.tone"
+              >
+                <svg [pIcon]="solution.icon" [size]="23"></svg>
+              </span>
+              @if (solution.soon) {
+                <span
+                  class="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500"
+                  >Próximamente</span
+                >
+              } @else {
+                <span
+                  class="flex size-8 items-center justify-center rounded-full text-slate-300 transition group-hover:bg-emerald-50 group-hover:text-emerald-600"
+                >
+                  <svg
+                    [pIcon]="solution.external ? 'external-link' : 'arrow-right'"
+                    [size]="16"
+                  ></svg>
+                </span>
+              }
+            </div>
+            <h3 class="mt-5 text-base font-bold text-slate-900">{{ solution.title }}</h3>
+            <p class="mt-2 text-sm leading-6 text-slate-500">{{ solution.description }}</p>
+            <span class="mt-auto pt-5 text-sm font-semibold text-emerald-700">
+              @if (solution.soon) {
+                Disponible muy pronto
+              } @else if (solution.external) {
+                Abrir portal
+              } @else {
+                Entrar al módulo
+              }
+            </span>
+          </a>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section id="noticias" class="scroll-mt-20 bg-white py-20 sm:py-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div class="max-w-2xl">
+          <span class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600"
+            >Avisos y noticias</span
+          >
+          <h2 class="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            Lo último de Raudal
+          </h2>
+          <p class="mt-3 text-base leading-7 text-slate-600">
+            Comunicados, logros y novedades que construyen nuestra comunidad.
+          </p>
+        </div>
+        <a
+          href="https://sites.google.com/view/comunicacion-raudal/inicio"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:text-emerald-700"
+        >
+          Ver todas las noticias
+          <svg [pIcon]="'external-link'" [size]="14"></svg>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-12 gap-4 w-full mt-10">
+          @for (post of news; track post.title) {
+            <article class="col-span-4 group grid overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+              <div class="relative aspect-[16/9] overflow-hidden bg-slate-100 sm:aspect-auto">
+                <img
+                  [src]="post.image"
+                  [alt]="post.alt"
+                  class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
+                />
+              </div>
+              <div class="flex flex-col p-5">
+                <div
+                  class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-emerald-700"
+                >
+                  <span>{{ post.category }}</span>
+                  <span class="size-1 rounded-full bg-emerald-300"></span>
+                  <span class="text-slate-400">{{ post.date }}</span>
+                </div>
+                <h3 class="mt-2 text-base font-bold leading-snug text-slate-900">
+                  {{ post.title }}
+                </h3>
+                <p class="mt-2 line-clamp-2 text-sm leading-6 text-slate-500">{{ post.excerpt }}</p>
+                <span
+                  class="mt-auto pt-3 inline-flex items-center gap-2 text-sm font-semibold text-slate-700 transition group-hover:text-emerald-700"
+                >
+                  Leer nota
+                  <svg [pIcon]="'arrow-right'" [size]="14"></svg>
+                </span>
+              </div>
+            </article>
+          }
+        </div>
+    </div>
+  </section>
+
+  <section id="menu" class="scroll-mt-20 bg-slate-50 py-20 sm:py-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div
+        class="grid overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm lg:grid-cols-[0.85fr_1.15fr]"
+      >
+        <div class="flex flex-col justify-center p-7 sm:p-10 lg:p-12">
+          <span
+            class="inline-flex w-fit items-center gap-2 rounded-full bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-700"
+          >
+            <svg [pIcon]="'clock'" [size]="14"></svg>
+            Actualizado cada semana
+          </span>
+          <h2 class="mt-5 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            Menú semanal
+          </h2>
+          <p class="mt-4 text-base leading-7 text-slate-600">
+            Consulta los platillos que el comedor preparó para esta semana. Una alimentación variada
+            también forma parte de nuestro bienestar.
+          </p>
+
+          <div class="mt-6 flex flex-wrap gap-2">
+            <span
+              class="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600"
+              >Lunes a viernes</span
+            >
+            <span
+              class="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600"
+              >Comida corrida</span
+            >
+            <span
+              class="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600"
+              >Opciones balanceadas</span
+            >
+          </div>
+
+          <a
+            href="assets/images/menu-semanal.svg"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mt-8 inline-flex w-fit items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 active:scale-[0.99]"
+          >
+            <svg [pIcon]="'image'" [size]="16"></svg>
+            Abrir menú completo
+            <svg [pIcon]="'external-link'" [size]="14"></svg>
+          </a>
+        </div>
+
+        <div class="relative overflow-hidden bg-[#052e16] p-5 sm:p-7 lg:p-9 flex items-center justify-center">
+          <div
+            class="pointer-events-none absolute -right-16 -top-20 size-64 rounded-full bg-emerald-400/20 blur-3xl"
+          ></div>
+          <div
+            class="pointer-events-none absolute -bottom-24 -left-16 size-64 rounded-full bg-teal-300/10 blur-3xl"
+          ></div>
+          <img
+            src="http://192.168.1.100/Img/ImagenNoticia3.jpg"
+            alt="Menú semanal del comedor Raudal, del 19 al 23 de octubre"
+            class="relative w-[350px] rounded-2xl shadow-2xl shadow-black/30 ring-1 ring-white/10"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="nosotros" class="scroll-mt-20 bg-white py-20 sm:py-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl">
+        <span class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600"
+          >Nuestra esencia</span
+        >
+        <h2 class="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+          La filosofía que nos mueve
+        </h2>
+        <p class="mt-3 text-base leading-7 text-slate-600">
+          Calidad, compromiso y desarrollo humano en cada paso de nuestro proceso.
+        </p>
+      </div>
+
+      <article
+        class="relative mt-10 overflow-hidden rounded-3xl bg-[#052e16] p-7 text-white shadow-xl sm:p-10 lg:p-12"
+      >
+        <div
+          class="pointer-events-none absolute -right-16 -top-20 size-72 rounded-full bg-emerald-400/15 blur-3xl"
+        ></div>
+        <div
+          class="pointer-events-none absolute -bottom-24 left-1/3 size-64 rounded-full bg-teal-300/10 blur-3xl"
+        ></div>
+        <div class="relative grid gap-8 lg:grid-cols-[0.28fr_0.72fr] lg:items-start">
+          <div>
+            <span
+              class="flex size-14 items-center justify-center rounded-2xl bg-white/10 text-emerald-300 ring-1 ring-white/10"
+            >
+              <svg [pIcon]="'verified'" [size]="26"></svg>
+            </span>
+            <p class="mt-5 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-300">
+              Política de calidad
+            </p>
+            <h3 class="mt-2 text-2xl font-bold">Compromiso con la excelencia</h3>
+          </div>
+          <p class="text-base leading-8 text-emerald-50/90">
+            Somos una empresa dedicada a la manufactura de calzado de seguridad industrial y de
+            trabajo; con un equipo de personas altamente capacitado, motivado y comprometido; que
+            busca la mejora continua de nuestros productos y procesos mediante la optimización de
+            nuestros sistemas productivos y de gestión; para lograr la satisfacción de nuestros
+            clientes y consumidores por la calidad, confort, desempeño del producto, servicio y
+            entrega a tiempo.
+          </p>
+        </div>
+      </article>
+
+      <div class="mt-5 grid gap-5 lg:grid-cols-2">
+        <article class="rounded-3xl border border-slate-200 bg-slate-50 p-7 sm:p-9">
+          <span
+            class="flex size-12 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700"
+          >
+            <svg [pIcon]="'bullseye'" [size]="23"></svg>
+          </span>
+          <p class="mt-5 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
+            Misión
+          </p>
+          <h3 class="mt-2 text-2xl font-bold tracking-tight text-slate-900">
+            Crecer con propósito
+          </h3>
+          <p class="mt-4 text-sm leading-7 text-slate-600">
+            Fabricar calzado de seguridad industrial y de trabajo eficientemente con los más altos
+            estándares de calidad, tecnología, ergonomía, salud, innovación, confort y desempeño;
+            con un equipo de personas altamente productivo, responsable, capacitado, motivado y
+            comprometido para cubrir las demandas programadas y lograr la satisfacción total y
+            lealtad de nuestros clientes; viviendo la mejora continua, el desarrollo humano y la
+            responsabilidad social de manera coherente.
+          </p>
+        </article>
+
+        <article class="rounded-3xl border border-slate-200 bg-slate-50 p-7 sm:p-9">
+          <span class="flex size-12 items-center justify-center rounded-xl bg-sky-100 text-sky-700">
+            <svg [pIcon]="'eye'" [size]="23"></svg>
+          </span>
+          <p class="mt-5 text-xs font-semibold uppercase tracking-[0.2em] text-sky-700">Visión</p>
+          <h3 class="mt-2 text-2xl font-bold tracking-tight text-slate-900">Hacia dónde vamos</h3>
+          <p class="mt-4 text-sm leading-7 text-slate-600">
+            Ser una planta de manufactura altamente productiva y profundamente humana, comprometida
+            con la filosofía de servicio al cliente y mejora continua, en donde brindar un producto
+            de excelente calidad es nuestro valor más importante.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- <footer class="bg-slate-950 text-slate-400">
+  <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="grid gap-10 md:grid-cols-[1.3fr_0.7fr_0.7fr]">
+      <div>
+        <span class="inline-flex rounded-xl bg-white p-2">
+          <img src="assets/images/raudal-logo.svg" alt="Raudal Footwear" class="h-9 w-auto" />
+        </span>
+        <p class="mt-4 max-w-md text-sm leading-6 text-slate-400">
+          Plataforma integral de Raudal Footwear. Un espacio para conectar a nuestro equipo con la
+          información, las herramientas y la cultura de la empresa.
+        </p>
+      </div>
+
+      <div>
+        <p class="text-sm font-semibold text-white">Explora</p>
+        <div class="mt-4 flex flex-col gap-2.5 text-sm">
+          <a href="#soluciones" class="transition hover:text-emerald-400">Soluciones</a>
+          <a href="#noticias" class="transition hover:text-emerald-400">Noticias</a>
+          <a href="#menu" class="transition hover:text-emerald-400">Menú semanal</a>
+          <a href="#nosotros" class="transition hover:text-emerald-400">Nosotros</a>
+        </div>
+      </div>
+
+      <div>
+        <p class="text-sm font-semibold text-white">Accesos</p>
+        <div class="mt-4 flex flex-col gap-2.5 text-sm">
+          <a href="#acceso" class="transition hover:text-emerald-400">Iniciar sesión</a>
+          <a routerLink="/auth/login" class="transition hover:text-emerald-400"
+            >Acceso con gafete QR</a
+          >
+          <a
+            href="https://sites.google.com/view/comunicacion-raudal/inicio"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 transition hover:text-emerald-400"
+          >
+            Portal de difusión
+            <svg [pIcon]="'external-link'" [size]="13"></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-slate-500"
+    >
+      <p>{{ year }} Raudal Footwear. Todos los derechos reservados.</p>
+      <p class="inline-flex items-center gap-1.5">
+        Hecho con orgullo por y para nuestro equipo
+        <svg class="text-rose-400" [pIcon]="'heart-fill'" [size]="13"></svg>
+      </p>
+    </div>
+  </div>
+</footer> -->

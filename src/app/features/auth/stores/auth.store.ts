@@ -10,11 +10,11 @@ import {
 import { firstValueFrom } from "rxjs";
 import { LocalStorageService } from "../../../core/services/storage.service";
 import { resolveErrorMessage } from "../../../core/utils/error.utils";
-import { IAuthTokens, IPermissionAuth, IUserAuth } from "../models/auth.model";
+import { IAuthTokens, IUserAuth } from "../models/auth.model";
 
 type AuthState = {
   user: IUserAuth | null;
-  permissions: IPermissionAuth[] | null;
+  permissions: string[] | null;
   accessToken: string | null;
   refreshToken: string | null;
   loading: boolean;
@@ -27,7 +27,7 @@ export const AuthStore = signalStore(
     const storageService = inject(LocalStorageService);
     return {
       user: storageService.get<IUserAuth>(USER_KEY),
-      permissions: storageService.get<IPermissionAuth[]>(PERMISSIONS_KEY) ?? null,
+      permissions: storageService.get<string[]>(PERMISSIONS_KEY) ?? null,
       accessToken: storageService.get<string>(ACCESS_TOKEN_KEY) ?? null,
       refreshToken: storageService.get<string>(REFRESH_TOKEN_KEY) ?? null,
       loading: false,
@@ -62,7 +62,7 @@ export const AuthStore = signalStore(
         });
       },
 
-      setPermissions(permissions: IPermissionAuth[]) {
+      setPermissions(permissions: string[]) {
         patchState(store, { permissions });
       },
 
@@ -85,14 +85,16 @@ export const AuthStore = signalStore(
         });
 
         try {
-          const tokens = await firstValueFrom(
+          const response = await firstValueFrom(
             authService.login({
               username,
               password,
             }),
           );
-          this.setTokens(tokens);
-          authService.saveTokens(tokens);
+          this.setTokens({accessToken: response.accessToken!, refreshToken: response.refreshToken!});
+          authService.saveTokens({accessToken: response.accessToken!, refreshToken: response.refreshToken!});
+          this.setPermissions(response.permissions);
+          storageService.set(PERMISSIONS_KEY, response.permissions);
           patchState(store, {
             loading: false,
           });

@@ -21,16 +21,28 @@ export class AuthService {
     private api = inject(ApiService);
     private storageService = inject(LocalStorageService);
 
-    login(request: ILoginRequest): Observable<IAuthTokens> {
+    login(request: ILoginRequest): Observable<ILoginResponse> {
         return this.api
             .post<ILoginRequest, ILoginResponse>('Auth/Login', request)
-            .pipe(map((response) => this.normalizeTokens(response)));
+            .pipe(map((response) => {
+                return {
+                    accessToken: response.accessToken ?? response.access_token ?? '',
+                    refreshToken: response.refreshToken ?? response.refresh_token ?? '',
+                    permissions: response.permissions
+                }
+            }));
     }
 
-    refreshToken(refreshToken: string): Observable<IAuthTokens> {
+    refreshToken(refreshToken: string): Observable<ILoginResponse> {
         return this.api
             .post<IRefreshTokenRequest, IRefreshTokenResponse>('Auth/refresh-token', { refreshToken })
-            .pipe(map((response) => this.normalizeTokens(response)));
+            .pipe(map((response) => {
+                return {
+                    accessToken: response.accessToken ?? response.access_token ?? '',
+                    refreshToken: response.refreshToken ?? response.refresh_token ?? '',
+                    permissions: response.permissions
+                }
+            }));
     }
 
     me(): Observable<IMeResponse> {
@@ -63,12 +75,5 @@ export class AuthService {
         this.clearTokens();
         this.storageService.remove(USER_KEY);
         this.storageService.remove(PERMISSIONS_KEY);
-    }
-
-    private normalizeTokens(response: ILoginResponse | IRefreshTokenResponse): IAuthTokens {
-        return {
-            accessToken: response.accessToken ?? response.access_token ?? '',
-            refreshToken: response.refreshToken ?? response.refresh_token ?? '',
-        };
     }
 }
