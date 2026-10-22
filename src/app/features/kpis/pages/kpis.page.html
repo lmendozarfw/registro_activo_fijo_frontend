@@ -101,13 +101,13 @@
                     </span>
                     <h2 class="text-sm font-semibold text-slate-800">Estado del inventario</h2>
                 </div>
-                <span class="text-xs text-slate-400">{{ totalAssets() }} activos</span>
+                <span class="text-xs text-slate-400">{{ statusTotal() }} activos</span>
             </div>
             <div class="flex flex-col items-center gap-6 sm:flex-row sm:justify-around">
                 <div class="relative size-40 shrink-0">
                     <div echarts [options]="statusChart()" [autoResize]="true" class="h-full w-full"></div>
                     <div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-                        <span class="text-2xl font-semibold text-slate-800">{{ totalAssets() }}</span>
+                        <span class="text-2xl font-semibold text-slate-800">{{ statusTotal() }}</span>
                         <span class="text-xs text-slate-500">activos</span>
                     </div>
                 </div>
@@ -126,38 +126,6 @@
                     }
                 </div>
             </div>
-        </section>
-    </div>
-
-    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <section class="rounded-xl border border-slate-200 bg-white p-4">
-            <div class="mb-4 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="flex size-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-                        <svg [pIcon]="'chart-line'" [size]="16"></svg>
-                    </span>
-                    <h2 class="text-sm font-semibold text-slate-800">Asignaciones por mes</h2>
-                </div>
-                <span class="text-xs text-slate-400">Últimos 6 meses</span>
-            </div>
-            <div echarts [options]="monthlyChart()" [autoResize]="true" class="h-56 w-full"></div>
-        </section>
-
-        <section class="rounded-xl border border-slate-200 bg-white p-4">
-            <div class="mb-4 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="flex size-8 items-center justify-center rounded-lg bg-sky-50 text-sky-600">
-                        <svg [pIcon]="'building'" [size]="16"></svg>
-                    </span>
-                    <h2 class="text-sm font-semibold text-slate-800">Activos por departamento</h2>
-                </div>
-                <span class="text-xs text-slate-400">Asignaciones activas</span>
-            </div>
-            @if (topDepartments().length > 0) {
-            <div echarts [options]="topDepartmentsChart()" [autoResize]="true" class="h-56 w-full"></div>
-            } @else {
-            <p class="text-sm text-slate-500">Sin asignaciones activas.</p>
-            }
         </section>
     </div>
     }
