@@ -138,7 +138,8 @@ export const AuthStore = signalStore(
 
         try {
           const response = await firstValueFrom(authService.me());
-          this.setUser(response.user);
+          console.log({ response, name: response.employeeFullName });
+          this.setUser({id: response.id, fullName: response.employeeFullName});
           this.setPermissions(response.permissions);
           patchState(store, { loading: false });
         } catch (error: unknown) {

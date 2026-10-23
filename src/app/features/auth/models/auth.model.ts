@@ -34,7 +34,10 @@ export interface IUserAuth {
 }
 
 export interface IMeResponse {
-    id: string;
-    user: IUserAuth;
+  id: string;
+    active: string;
+    employeeFullName: string;
+    employeeId: string;
+    username: string;
     permissions: string[];
 }

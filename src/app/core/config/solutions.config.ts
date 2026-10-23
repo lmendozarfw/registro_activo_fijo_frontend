@@ -1,9 +1,9 @@
 export const SOLUTION_PERMISSIONS = {
-  visitantes: 'visitantes.ver',
-  salas: 'salas.ver',
-  permisos: 'permisos.ver',
-  activoFijo: 'activo-fijo.ver',
-  mesaAyuda: 'mesa-ayuda.ver',
+  visitantes: 'registro_visitantes.acceso',
+  salas: 'reserva_sala_juntas.acceso',
+  permisos: 'solicitud_permisos.acceso',
+  activoFijo: 'activo_fijo.acceso',
+  mesaAyuda: 'mesa_ayuda.acceso',
 } as const;
 
 export interface SolutionTheme {
@@ -77,7 +77,7 @@ export const SOLUTIONS: SolutionConfig[] = [
     description: 'Administra, asigna y da seguimiento a los activos de la empresa.',
     icon: 'briefcase',
     permission: SOLUTION_PERMISSIONS.activoFijo,
-    route: '/app/assets',
+    route: '/app/kpis',
     theme: {
       tone: 'bg-emerald-50 text-emerald-700',
       gradient: 'from-emerald-950 via-emerald-900 to-emerald-700',

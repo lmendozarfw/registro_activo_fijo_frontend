@@ -1,25 +1,15 @@
 import { Component, inject, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ButtonDirective } from 'primeng/button';
 import { InputPassword } from 'primeng/inputpassword';
 import { InputText } from 'primeng/inputtext';
-import {
-  CheckCircle,
-  Eye,
-  EyeSlash,
-  InfoCircle,
-  Pencil,
-  Qrcode,
-  SignIn,
-  Spinner,
-  User,
-} from '@primeicons/angular';
 import { FormLabelComponent } from '../../../../shared/components/form-label/form-label.component';
 import { QrScannerComponent } from '../../../../shared/components/qr-scanner/qr-scanner.component';
 import { ToastService } from '../../../../core/services/toast.service';
 import { safeReturnUrl } from '../../../../core/utils/navigation.utils';
 import { AuthStore } from '../../stores/auth.store';
+import { PIcon } from '@primeicons/angular';
 
 export interface BadgeCredentials {
   username: string;
@@ -44,20 +34,13 @@ function toCredentials(username: unknown, password: unknown): BadgeCredentials |
   templateUrl: './login.page.html',
   imports: [
     ReactiveFormsModule,
+    RouterLink,
     FormLabelComponent,
     QrScannerComponent,
     InputText,
     InputPassword,
     ButtonDirective,
-    CheckCircle,
-    User,
-    InfoCircle,
-    SignIn,
-    Spinner,
-    Pencil,
-    Qrcode,
-    Eye,
-    EyeSlash,
+    PIcon,
   ],
 })
 export class LoginPage {

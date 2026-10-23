@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { SOLUTION_PERMISSIONS } from './core/config/solutions.config';
 import { authGuard } from './core/guards/auth.guard';
-import { permissionGuard } from './core/guards/permission.guard';
 import { solutionAccessGuard } from './core/guards/solution-access.guard';
+import { permissionGuard } from './core/guards/permission.guard';
 
 export const routes: Routes = [
   {
@@ -23,18 +23,18 @@ export const routes: Routes = [
   },
   {
     path: 'hub',
-    //canActivate: [authGuard],
+    canActivate: [authGuard],
     loadComponent: () => import('./features/hub/pages/hub.page').then((p) => p.HubPage),
   },
   {
     path: 'sin-acceso',
-    //canActivate: [authGuard],
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/access-denied/pages/access-denied.page').then((p) => p.AccessDeniedPage),
   },
   {
     path: 'soluciones/:solution',
-    //canActivate: [authGuard, solutionAccessGuard],
+    canActivate: [authGuard, solutionAccessGuard],
     loadComponent: () =>
       import('./shared/templates/solution/solution.template').then((t) => t.SolutionTemplate),
     children: [
@@ -51,7 +51,7 @@ export const routes: Routes = [
   },
   {
     path: 'app',
-    //canActivate: [authGuard, permissionGuard],
+    canActivate: [authGuard, permissionGuard],
     data: { permission: SOLUTION_PERMISSIONS.activoFijo },
     loadComponent: () => import('./shared/templates/main.template').then((t) => t.MainTemplate),
     children: [

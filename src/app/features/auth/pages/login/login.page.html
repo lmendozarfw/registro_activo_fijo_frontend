@@ -2,7 +2,7 @@
     <div class="flex flex-col items-center mb-6">
         <span
             class="flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-[#052e16] to-[#22c55e] text-white mb-4">
-            <svg data-p-icon="check-circle" [size]="24"></svg>
+            <svg [pIcon]="'check-circle'" [size]="24"></svg>
         </span>
         <h2 class="text-2xl font-bold text-slate-800 mb-1 text-center">Bienvenido de nuevo</h2>
         @if (mode() === 'qr') {
@@ -20,20 +20,20 @@
 
         @if (badgeUser() && !authStore.loading()) {
         <div class="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-700">
-            <svg data-p-icon="user" [size]="16"></svg>
+            <svg [pIcon]="'user'" [size]="16"></svg>
             <span class="min-w-0 flex-1 truncate">
                 Sesión iniciada como <b>{{ badgeUser() }}</b>
             </span>
         </div>
         } @else {
         <div class="flex items-start gap-2 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2.5 text-xs text-blue-800">
-            <svg data-p-icon="info-circle" [size]="16"></svg>
+            <svg [pIcon]="'info-circle'" [size]="16"></svg>
             <span>El gafete trae tu usuario y contraseña en el QR, así que el acceso es automático.</span>
         </div>
         }
     </div>
     } @else if (mode() === 'manual') {
-        
+
     <form [formGroup]="loginForm" class="flex flex-col gap-5" (ngSubmit)="onSubmit()">
         <div class="flex flex-col gap-1.5">
             <app-form-label required>Nombre de usuario</app-form-label>
@@ -53,9 +53,9 @@
                     [attr.aria-label]="passwordMask() ? 'Mostrar contraseña' : 'Ocultar contraseña'"
                     class="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-slate-400 transition hover:text-slate-600">
                     @if (passwordMask()) {
-                    <svg data-p-icon="eye" [size]="16"></svg>
+                    <svg [pIcon]="'eye'" [size]="16"></svg>
                     } @else {
-                    <svg data-p-icon="eye-slash" [size]="16"></svg>
+                    <svg [pIcon]="'eye-slash'" [size]="16"></svg>
                     }
                 </button>
             </div>
@@ -68,9 +68,9 @@
             class="mt-2 w-full bg-[#16a34a]! hover:bg-[#15803d]! border-transparent! text-white!">
             <span class="flex items-center justify-center gap-2">
                 @if (authStore.loading()) {
-                <svg data-p-icon="spinner" [spin]="true" [size]="16"></svg>
+                <svg [pIcon]="'spinner'" [spin]="true" [size]="16"></svg>
                 } @else {
-                <svg data-p-icon="sign-in" [size]="16"></svg>
+                <svg [pIcon]="'sign-in'" [size]="16"></svg>
                 }
                 Iniciar sesión
             </span>
@@ -82,10 +82,16 @@
         class="mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 py-2.5 text-sm font-semibold text-slate-600 transition hover:border-[#16a34a] hover:text-[#16a34a] active:scale-[0.99]"
         (click)="toggleMode()">
         @if (mode() === 'qr') {
-        <svg data-p-icon="pencil" [size]="16"></svg>
+        <svg [pIcon]="'pencil'" [size]="16"></svg>
         } @else {
-        <svg data-p-icon="qrcode" [size]="16"></svg>
+        <svg [pIcon]="'qrcode'" [size]="16"></svg>
         }
         {{ mode() === 'qr' ? 'Ingresar manualmente' : 'Escanear QR del gafete' }}
     </button>
+
+    <a routerLink="/"
+        class="mt-6 flex items-center justify-center gap-2 text-sm font-medium text-slate-500 transition hover:text-slate-800">
+        <svg [pIcon]="'arrow-left'" [size]="14"></svg>
+        Volver al inicio
+    </a>
 </div>

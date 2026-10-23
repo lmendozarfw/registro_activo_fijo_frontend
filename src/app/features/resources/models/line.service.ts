@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { ApiService } from "../../../core/services/api.service";
-import { LineDto, LineItemDto, CreateLineCommand, UpdateLineCommand } from "../models/line.model";
+import { LineDto, LineItemDto, CreateLineCommand, UpdateLineCommand } from './line.model';
 
 @Injectable({ providedIn: 'root' })
 export class LineService {
