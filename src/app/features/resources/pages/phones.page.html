@@ -125,8 +125,9 @@
                                     línea</button>
                             </div>
                             <p-select formControlName="lineId" [options]="lineStore.available()" optionLabel="phoneNumber"
-                                optionValue="id" placeholder="Selecciona una línea (opcional)" appendTo="body"
-                                class="w-full" />
+                                optionValue="id" [filter]="true" filterBy="phoneNumber,operator,plan"
+                                filterPlaceholder="Buscar línea..." placeholder="Selecciona una línea (opcional)"
+                                appendTo="body" class="w-full" />
                         </div>
 
                         <div class="flex flex-col col-span-2 gap-1.5">
