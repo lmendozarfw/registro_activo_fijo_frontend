@@ -70,14 +70,16 @@
             <div class="flex flex-col gap-1.5">
                 <app-form-label required>Empleado</app-form-label>
                 <p-select formControlName="employeeId" [options]="availableEmployees()" optionLabel="label"
-                    optionValue="id" placeholder="Selecciona un empleado" appendTo="body" class="w-full" />
+                    optionValue="id" [filter]="true" filterBy="label" filterPlaceholder="Buscar empleado..."
+                    placeholder="Selecciona un empleado" appendTo="body" class="w-full" />
                 <span class="text-xs text-slate-500">Solo se muestran empleados activos sin asignación activa.</span>
             </div>
 
             <div class="flex flex-col gap-1.5">
                 <app-form-label required>Recurso</app-form-label>
                 <p-select formControlName="resourceId" [options]="avaiableResources()" [group]="true" optionLabel="name"
-                    optionValue="id" optionGroupLabel="name" optionGroupChildren="resourceItems"
+                    optionValue="id" optionGroupLabel="name" optionGroupChildren="resourceItems" [filter]="true"
+                    filterBy="name,assetCode" filterPlaceholder="Buscar por activo o recurso..."
                     placeholder="Selecciona un recurso" appendTo="body" class="w-full">
                     <ng-template #selectedItem let-selectedOption>
                         <div class="flex items-center gap-2">
@@ -181,7 +183,9 @@
             <div class="flex flex-col gap-1.5">
                 <app-form-label required>Celular disponible</app-form-label>
                 <p-select formControlName="existingMobileResourceId" [options]="availableMobileItems()" optionLabel="name"
-                    optionValue="id" placeholder="Selecciona un celular" appendTo="body" class="w-full"
+                    optionValue="id" [filter]="true" filterBy="name,assetCode,brandName,modelName"
+                    filterPlaceholder="Buscar celular..." placeholder="Selecciona un celular" appendTo="body"
+                    class="w-full"
                     [invalid]="renewForm.controls.existingMobileResourceId.invalid && renewForm.controls.existingMobileResourceId.touched">
                     <ng-template #selectedItem let-selectedOption>
                         <div class="flex items-center gap-2">
@@ -216,7 +220,8 @@
                     <div class="flex flex-col gap-1.5">
                         <app-form-label required>Modelo (Celulares)</app-form-label>
                         <p-select formControlName="modelId" [options]="mobileModels()" optionLabel="name"
-                            optionValue="id" placeholder="Selecciona un modelo" appendTo="body" class="w-full"
+                            optionValue="id" [filter]="true" filterBy="name" filterPlaceholder="Buscar modelo..."
+                            placeholder="Selecciona un modelo" appendTo="body" class="w-full"
                             [invalid]="renewForm.controls.modelId.invalid && renewForm.controls.modelId.touched" />
                     </div>
                     <div class="flex flex-col gap-1.5">

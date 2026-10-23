@@ -121,7 +121,8 @@
                 <div class="flex flex-col gap-1.5">
                     <app-form-label required>Puesto</app-form-label>
                     <p-select formControlName="jobId" [options]="jobStore.jobs()" optionLabel="name"
-                        optionValue="id" placeholder="Selecciona un puesto" appendTo="body" class="w-full"
+                        optionValue="id" [filter]="true" filterBy="name" filterPlaceholder="Buscar puesto..."
+                        placeholder="Selecciona un puesto" appendTo="body" class="w-full"
                         [invalid]="form.controls.jobId.invalid && form.controls.jobId.touched" />
                     @if (form.controls.jobId.invalid && form.controls.jobId.touched) {
                     <span class="text-xs text-rose-600">Selecciona un puesto</span>
@@ -131,8 +132,9 @@
                 <div class="flex flex-col gap-1.5">
                     <app-form-label required>Departamento</app-form-label>
                     <p-select formControlName="departmentId" [options]="departmentStore.departments()"
-                        optionLabel="name" optionValue="id" placeholder="Selecciona un departamento" appendTo="body"
-                        class="w-full"
+                        optionLabel="name" optionValue="id" [filter]="true" filterBy="name"
+                        filterPlaceholder="Buscar departamento..." placeholder="Selecciona un departamento"
+                        appendTo="body" class="w-full"
                         [invalid]="form.controls.departmentId.invalid && form.controls.departmentId.touched" />
                     @if (form.controls.departmentId.invalid && form.controls.departmentId.touched) {
                     <span class="text-xs text-rose-600">Selecciona un departamento</span>

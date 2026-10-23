@@ -241,7 +241,7 @@
         </div>
         <div class="flex flex-col gap-1.5">
           <app-form-label>Plan de mantenimiento</app-form-label>
-          <p-select formControlName="maintenancePlanId" [options]="planOptions()" optionLabel="label" optionValue="value" placeholder="Sin plan" [showClear]="true" appendTo="body" class="w-full" />
+          <p-select formControlName="maintenancePlanId" [options]="planOptions()" optionLabel="label" optionValue="value" [filter]="true" filterBy="label" filterPlaceholder="Buscar plan..." placeholder="Sin plan" [showClear]="true" appendTo="body" class="w-full" />
         </div>
       </div>
       <div class="flex flex-col gap-1.5">
@@ -261,7 +261,7 @@
       <div class="grid grid-cols-2 gap-4">
         <div class="flex flex-col gap-1.5">
           <app-form-label>Responsable</app-form-label>
-          <p-select formControlName="responsibleEmployeeId" [options]="employeeOptions()" optionLabel="label" optionValue="value" placeholder="Seleccionar empleado" [showClear]="true" appendTo="body" class="w-full" />
+          <p-select formControlName="responsibleEmployeeId" [options]="employeeOptions()" optionLabel="label" optionValue="value" [filter]="true" filterBy="label" filterPlaceholder="Buscar empleado..." placeholder="Seleccionar empleado" [showClear]="true" appendTo="body" class="w-full" />
         </div>
         <div class="flex flex-col gap-1.5">
           <app-form-label>Estado</app-form-label>
