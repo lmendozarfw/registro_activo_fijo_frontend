@@ -17,7 +17,7 @@ export class EmployeeService {
     }
 
     getAvailable(employeeId?: string): Observable<EmployeeItem[]> {
-        return this.api.getAll<EmployeeItem>(`${this.endpoint}/available?includedEmployeeId=${employeeId}`);
+        return this.api.getAll<EmployeeItem>(`${this.endpoint}/available?includedEmployeeId=${employeeId ?? ""}`);
     }
 
     getAvailableToAssignments(): Observable<EmployeeItem[]> {
