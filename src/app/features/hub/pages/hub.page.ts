@@ -4,6 +4,7 @@ import { PIcon } from '@primeicons/angular/p-icon';
 import { ButtonDirective } from 'primeng/button';
 import { SOLUTIONS, SolutionConfig } from '../../../core/config/solutions.config';
 import { AuthStore } from '../../auth/stores/auth.store';
+import { SolutionCardComponent } from '../../../shared/components/solucion-card/solution-card.component';
 
 const HUB_PERMISSIONS: Record<string, string> = {
   visitantes: 'registro_visitantes.acceso',
@@ -17,7 +18,7 @@ const HUB_PERMISSIONS: Record<string, string> = {
 @Component({
   selector: 'app-hub-page',
   templateUrl: './hub.page.html',
-  imports: [RouterLink, PIcon, ButtonDirective],
+  imports: [RouterLink, PIcon, ButtonDirective, SolutionCardComponent],
 })
 export class HubPage {
   protected readonly authStore = inject(AuthStore);
@@ -34,9 +35,8 @@ export class HubPage {
     }),
   );
 
-  openSolution(event: Event, solution: SolutionConfig): void {
+  openSolution(solution: SolutionConfig): void {
     if (solution.external) return;
-    event.preventDefault();
     void this.router.navigateByUrl(solution.route);
   }
 
