@@ -90,3 +90,12 @@ export const COMUNICACION_MENU: MenuItem[] = [
     route: '/comunicacion/noticias',
   },
 ];
+
+export const VISITOR_MENU: MenuItem[] = [
+  {
+    key: 'visitas',
+    label: 'Visitas',
+    icon: 'users',
+    route: '/visitantes/visitas'
+  }
+];

@@ -105,6 +105,12 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'visitantes',
+    canActivate: [authGuard, permissionGuard],
+    data: { permissions:  SOLUTION_PERMISSIONS.visitantes},
+    loadComponent: () => import('./shared/templates/visitor.template').then((t) => t.VisitorTemplate),
+  },
+  {
     path: 'app',
     canActivate: [authGuard, permissionGuard],
     data: { permission: SOLUTION_PERMISSIONS.activoFijo },
