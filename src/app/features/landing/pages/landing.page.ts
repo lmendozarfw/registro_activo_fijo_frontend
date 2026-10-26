@@ -1,4 +1,4 @@
-import { Component, inject, signal, viewChild } from '@angular/core';
+import { Component, OnInit, inject, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PIcon } from '@primeicons/angular/p-icon';
@@ -12,15 +12,8 @@ import { PermissionsService } from '../../../core/services/permissions.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { safeReturnUrl } from '../../../core/utils/navigation.utils';
 import { AuthStore } from '../../auth/stores/auth.store';
-
-interface NewsPost {
-  title: string;
-  excerpt: string;
-  category: string;
-  date: string;
-  image: string;
-  alt: string;
-}
+import { PublicNewsCardComponent } from '../../news/components/public-news-card/public-news-card.component';
+import { PublicNewsStore } from '../../news/stores/public-news.store';
 
 @Component({
   selector: 'app-landing-page',
@@ -34,10 +27,12 @@ interface NewsPost {
     InputPassword,
     FormLabelComponent,
     QrScannerComponent,
+    PublicNewsCardComponent,
   ],
 })
-export class LandingPage {
+export class LandingPage implements OnInit {
   protected readonly authStore = inject(AuthStore);
+  protected readonly publicNews = inject(PublicNewsStore);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly permissions = inject(PermissionsService);
@@ -61,35 +56,9 @@ export class LandingPage {
 
   readonly solutions: SolutionConfig[] = SOLUTIONS;
 
-  readonly news: NewsPost[] = [
-    {
-      title: 'Reforzamos nuestra cultura de seguridad y bienestar',
-      excerpt:
-        'Concluimos una nueva jornada de capacitación enfocada en prevención de riesgos, ergonomía y uso correcto del equipo de protección personal. La seguridad es una responsabilidad compartida.',
-      category: 'Seguridad',
-      date: '15 de octubre de 2026',
-      image: 'assets/images/news-1.svg',
-      alt: 'Ilustración de un escudo con una marca de verificación',
-    },
-    {
-      title: 'Reconocimiento a la excelencia en cada proceso',
-      excerpt:
-        'Reconocimos al equipo de producción por su compromiso con la calidad y la mejora continua.',
-      category: 'Calidad',
-      date: '08 de octubre de 2026',
-      image: 'assets/images/news-2.svg',
-      alt: 'Ilustración de un trofeo sobre fondo cálido',
-    },
-    {
-      title: 'Innovación que fortalece nuestros procesos',
-      excerpt:
-        'Nuevas herramientas y mejoras operativas nos ayudan a ser una planta más eficiente y humana.',
-      category: 'Innovación',
-      date: '01 de octubre de 2026',
-      image: 'assets/images/news-3.svg',
-      alt: 'Ilustración de un engranaje con destellos sobre fondo azul',
-    },
-  ];
+  ngOnInit(): void {
+    void this.publicNews.loadFeatured(3);
+  }
 
   get userError(): string | null {
     const control = this.loginForm.get('user');

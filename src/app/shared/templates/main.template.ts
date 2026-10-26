@@ -2,14 +2,15 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { AvatarModule } from 'primeng/avatar';
 import { SidebarModule } from 'primeng/sidebar';
 import { ButtonModule } from 'primeng/button';
-import { ChevronDown, ChevronRight, NoteSticky, Sidebar } from '@primeicons/angular';
+import { ChevronDown, NoteSticky, Sidebar } from '@primeicons/angular';
 import { PIcon } from '@primeicons/angular/p-icon';
 import { MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import { MenuModule } from 'primeng/menu';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { HeaderTitleComponent } from '../components/header-title/header-title.component';
-import { MenuService } from '../../core/services/menu.service';
+import { SidebarMenuComponent } from '../components/sidebar-menu/sidebar-menu.component';
+import { ACTIVO_FIJO_MENU } from '../../core/config/menu.config';
 import { AuthStore } from '../../features/auth/stores/auth.store';
 import { NotesStore } from '../../features/notes/stores/note.store';
 import { NotesBoardStore } from '../../features/notes/stores/notes-board.store';
@@ -38,52 +39,13 @@ import { NotesBoardComponent } from '../../features/notes/components/notes-board
                                 </p-sidebar-menu>
                             </p-sidebar-header>
                             <p-sidebar-content>
-                                <p-sidebar-group>
-                                    <p-sidebar-group-label>Menú</p-sidebar-group-label>
-                                    <p-sidebar-group-content>
-                                        <p-sidebar-menu>
-                                            @for (item of menuService.items(); track item.key) {
-                                                @if (item.children?.length) {
-                                                    <p-sidebar-menu-item [collapsible]="true"
-                                                        [open]="menuService.isGroupOpen(item.key, menuService.isActive(item))"
-                                                        (openChange)="menuService.setGroupOpen(item.key, $event)">
-                                                        <button type="button" pSidebarMenuButton [isActive]="menuService.isActive(item)">
-                                                            <svg [pIcon]="item.icon || ''"></svg>
-                                                            <span>{{ item.label }}</span>
-                                                            <svg data-p-icon="chevron-right" class="ml-auto transition-transform duration-200"
-                                                                [class.rotate-90]="menuService.isGroupOpen(item.key, menuService.isActive(item))"></svg>
-                                                        </button>
-                                                        <p-sidebar-menu-sub>
-                                                            @for (child of item.children; track child.key) {
-                                                                <p-sidebar-menu-sub-item>
-                                                                    <a pSidebarMenuSubButton [routerLink]="child.route" [isActive]="menuService.isActive(child)" (click)="closeNav()">
-                                                                        @if (child.icon) {
-                                                                            <svg [pIcon]="child.icon"></svg>
-                                                                        }
-                                                                        <span>{{ child.label }}</span>
-                                                                    </a>
-                                                                </p-sidebar-menu-sub-item>
-                                                            }
-                                                        </p-sidebar-menu-sub>
-                                                    </p-sidebar-menu-item>
-                                                } @else {
-                                                    <p-sidebar-menu-item>
-                                                        <a pSidebarMenuButton [routerLink]="item.route" [isActive]="menuService.isActive(item)" (click)="closeNav()">
-                                                            <svg [pIcon]="item.icon || ''"></svg>
-                                                            <span>{{ item.label }}</span>
-                                                        </a>
-                                                    </p-sidebar-menu-item>
-                                                }
-                                            }
-                                        </p-sidebar-menu>
-                                    </p-sidebar-group-content>
-                                </p-sidebar-group>
+                                <app-sidebar-menu [items]="menuItems" (navigated)="closeNav()" />
                             </p-sidebar-content>
                             <p-sidebar-footer>
                                 <p-sidebar-menu>
                                     <p-sidebar-menu-item>
                                         <button pSidebarMenuButton class="p-1!" (click)="userMenu.toggle($event)">
-                                            <span>Luis Angel Mendoza Lucio</span>
+                                            <span>{{ authStore.user()?.fullName ?? 'Usuario' }}</span>
                                             <svg data-p-icon="chevron-down" class="ml-auto"></svg>
                                         </button>
                                         <p-menu #userMenu [model]="userItems" [popup]="true" appendTo="body">
@@ -148,13 +110,12 @@ import { NotesBoardComponent } from '../../features/notes/components/notes-board
         PIcon,
         Sidebar,
         ChevronDown,
-        ChevronRight,
         NoteSticky,
         Menu,
         MenuModule,
         RouterOutlet,
-        RouterLink,
         HeaderTitleComponent,
+        SidebarMenuComponent,
         NotesBoardComponent
     ],
 })
@@ -170,8 +131,8 @@ export class MainTemplate {
         }
     ];
 
-    protected menuService = inject(MenuService);
-    private readonly authStore = inject(AuthStore);
+    protected readonly menuItems = ACTIVO_FIJO_MENU;
+    protected readonly authStore = inject(AuthStore);
     private readonly router = inject(Router);
     protected readonly notesStore = inject(NotesStore);
     protected readonly notesBoard = inject(NotesBoardStore);

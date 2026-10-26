@@ -4,6 +4,7 @@ export const SOLUTION_PERMISSIONS = {
   permisos: 'solicitud_permisos.acceso',
   activoFijo: 'activo_fijo.acceso',
   mesaAyuda: 'mesa_ayuda.acceso',
+  comunicacion: 'comunicacion.acceso',
 } as const;
 
 export interface SolutionTheme {
@@ -99,6 +100,20 @@ export const SOLUTIONS: SolutionConfig[] = [
       accentSoft: 'bg-rose-500/10 border-rose-400/20',
     },
     preview: true,
+  },
+  {
+    code: 'comunicacion',
+    name: 'Comunicación Interna',
+    description: 'Publica y consulta noticias, comunicados y avisos internos de la organización.',
+    icon: 'comments',
+    permission: SOLUTION_PERMISSIONS.comunicacion,
+    route: '/comunicacion/noticias',
+    theme: {
+      tone: 'bg-teal-50 text-teal-700',
+      gradient: 'from-teal-950 via-teal-900 to-teal-700',
+      accentText: 'text-teal-300',
+      accentSoft: 'bg-teal-500/10 border-teal-400/20',
+    },
   },
   {
     code: 'difusion',

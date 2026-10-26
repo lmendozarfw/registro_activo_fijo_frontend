@@ -11,6 +11,7 @@ const HUB_PERMISSIONS: Record<string, string> = {
   permisos: 'solicitud_permisos.acceso',
   'activo-fijo': 'activo_fijo.acceso',
   'mesa-ayuda': 'mesa_ayuda.acceso',
+  comunicacion: 'comunicacion.acceso',
 };
 
 @Component({

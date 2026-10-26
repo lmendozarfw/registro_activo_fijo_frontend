@@ -1,0 +1,239 @@
+<div class="flex flex-col gap-4">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div class="flex flex-col gap-1">
+      <div class="flex flex-wrap items-center gap-2">
+        <h1 class="text-lg font-semibold text-slate-900">
+          {{ isEditing() ? 'Editar noticia' : 'Nueva noticia' }}
+        </h1>
+        @if (store.detail(); as detail) {
+          <app-news-status-tag [status]="detail.status" />
+        }
+      </div>
+      <p class="max-w-2xl text-sm text-slate-600">
+        Redacta el contenido, define el estado y administra las imágenes de la
+        noticia.
+      </p>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button pButton type="button" severity="secondary" (click)="cancel()">
+        Volver
+      </button>
+      <button
+        pButton
+        type="button"
+        [loading]="store.saving()"
+        (click)="save()"
+      >
+        Guardar
+      </button>
+    </div>
+  </div>
+
+  @if (isEditing() && store.detailLoading() && !store.detail()) {
+    <div class="space-y-3">
+      <div class="h-28 animate-pulse rounded-lg bg-slate-100"></div>
+      <div class="h-64 animate-pulse rounded-lg bg-slate-100"></div>
+      <div class="h-40 animate-pulse rounded-lg bg-slate-100"></div>
+    </div>
+  } @else if (isEditing() && store.detailNotFound()) {
+    <div
+      class="flex flex-col items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-12 text-center"
+    >
+      <h2 class="text-base font-semibold text-slate-800">Noticia no encontrada</h2>
+      <p class="mt-1 text-sm text-slate-500">
+        La noticia solicitada no existe o fue eliminada.
+      </p>
+      <button
+        pButton
+        type="button"
+        severity="secondary"
+        class="mt-4"
+        (click)="cancel()"
+      >
+        Volver al listado
+      </button>
+    </div>
+  } @else if (isEditing() && store.detailError() && !store.detail()) {
+    <div
+      class="flex flex-col items-center justify-center rounded-lg border border-red-200 bg-red-50 px-4 py-12 text-center"
+    >
+      <p class="text-sm text-red-700">{{ store.detailError() }}</p>
+      <div class="mt-4 flex gap-2">
+        <button pButton type="button" severity="secondary" (click)="cancel()">
+          Volver
+        </button>
+        <button pButton type="button" (click)="retryLoad()">Reintentar</button>
+      </div>
+    </div>
+  } @else {
+    <form [formGroup]="form" class="flex flex-col gap-4" (ngSubmit)="save()">
+      @if (isArchived()) {
+        <div class="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+          Esta noticia está archivada. Al guardar se actualizará con el estado
+          seleccionado y dejará de estar archivada.
+        </div>
+      }
+
+      <section class="flex flex-col gap-4 rounded-lg border border-slate-200 bg-white p-4">
+        <div>
+          <h2 class="text-sm font-semibold text-slate-800">Contenido</h2>
+          <p class="text-xs text-slate-500">
+            El título y el contenido son obligatorios. El contenido admite formato
+            enriquecido.
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <app-form-label required>Título</app-form-label>
+          <input
+            pInputText
+            formControlName="title"
+            maxlength="200"
+            class="w-full"
+            placeholder="Escribe un título..."
+          />
+          <div class="flex items-start justify-between gap-3">
+            @if (form.controls.title.invalid && form.controls.title.touched) {
+              <span class="text-xs text-red-600">
+                El título es obligatorio y debe tener máximo 200 caracteres.
+              </span>
+            } @else {
+              <span></span>
+            }
+            <span class="shrink-0 text-xs text-slate-400">
+              {{ form.controls.title.value.length }}/200
+            </span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div class="flex flex-col gap-1.5">
+            <app-form-label required>Estado</app-form-label>
+            <p-select
+              formControlName="status"
+              [options]="statusOptions"
+              optionLabel="label"
+              optionValue="value"
+              appendTo="body"
+              class="w-full"
+            />
+          </div>
+
+          @if (isScheduled()) {
+            <div class="flex flex-col gap-1.5">
+              <app-form-label required>Fecha de publicación</app-form-label>
+              <p-datepicker
+                formControlName="scheduledPublishAt"
+                [minDate]="minDate"
+                [showTime]="true"
+                hourFormat="24"
+                dateFormat="dd/mm/yy"
+                appendTo="body"
+                class="w-full"
+                [invalid]="scheduleError()"
+              />
+              @if (scheduleError()) {
+                <span class="text-xs text-red-600">
+                  Selecciona la fecha y hora de publicación.
+                </span>
+              } @else {
+                <span class="text-xs text-slate-500">
+                  Se publicará el
+                  {{ scheduleDateValue() | newsDate: 'datetime' : 'utc' }}
+                  (UTC).
+                </span>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <app-form-label required>Contenido</app-form-label>
+          <p-editor
+            formControlName="content"
+            [style]="{ height: '320px' }"
+            [invalid]="
+              form.controls.content.invalid &&
+              form.controls.content.touched
+            "
+          />
+          @if (
+            form.controls.content.invalid && form.controls.content.touched
+          ) {
+            <span class="text-xs text-red-600">
+              El contenido es obligatorio.
+            </span>
+          }
+        </div>
+      </section>
+
+      <section class="flex flex-col gap-4 rounded-lg border border-slate-200 bg-white p-4">
+        @if (isEditing() && store.detail()) {
+          <app-news-image-manager
+            [images]="store.detail()?.images ?? []"
+            [uploading]="store.uploading()"
+            [removing]="store.removingImage()"
+            (uploadRequested)="uploadImage($event)"
+            (coverRequested)="setCover($event)"
+            (removeRequested)="requestRemoveImage($event)"
+          />
+        } @else {
+          <div>
+            <h2 class="text-sm font-semibold text-slate-800">Imágenes</h2>
+            <p class="mt-1 text-sm text-slate-500">
+              Guarda la noticia para poder agregar imágenes.
+            </p>
+          </div>
+        }
+      </section>
+
+      <div class="flex justify-end gap-2">
+        <button
+          pButton
+          type="button"
+          severity="secondary"
+          (click)="cancel()"
+        >
+          Cancelar
+        </button>
+        <button pButton type="submit" [loading]="store.saving()">
+          Guardar
+        </button>
+      </div>
+    </form>
+  }
+</div>
+
+<app-form-dialog
+  [visible]="deleteImageDialogVisible()"
+  (visibleChange)="deleteImageDialogVisible.set($event)"
+  header="Eliminar imagen"
+  width="28rem"
+>
+  <p class="text-sm text-slate-600">
+    ¿Eliminar la imagen
+    <strong>{{ imageToDelete()?.originalFileName }}</strong>
+    ? Esta acción no se puede deshacer.
+  </p>
+
+  <div dialog-footer class="flex justify-end gap-2">
+    <button
+      pButton
+      type="button"
+      severity="secondary"
+      (click)="deleteImageDialogVisible.set(false)"
+    >
+      Cancelar
+    </button>
+    <button
+      pButton
+      type="button"
+      severity="danger"
+      [loading]="store.removingImage()"
+      (click)="confirmRemoveImage()"
+    >
+      Eliminar
+    </button>
+  </div>
+</app-form-dialog>

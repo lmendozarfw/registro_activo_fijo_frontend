@@ -1,0 +1,89 @@
+<div class="h-dvh overflow-hidden">
+  <p-sidebar-layout class="relative! h-full min-h-full!">
+    @if (isMobile()) {
+      <p-sidebar-backdrop class="absolute!" />
+    }
+
+    <p-sidebar
+      id="comunicacion-nav"
+      [collapsible]="isMobile() ? 'offcanvas' : 'icon'"
+      [overlay]="isMobile()"
+      [open]="sidebarOpen()"
+      (openChange)="mobileNavOpen.set($event)"
+      width="14rem"
+    >
+      <p-sidebar-spacer />
+      <p-sidebar-aside>
+        <p-sidebar-panel>
+          <p-sidebar-header>
+            <p-sidebar-menu>
+              <p-sidebar-menu-item>
+                <button pSidebarMenuButton class="p-1!">
+                  <div
+                    class="flex size-6 shrink-0 items-center justify-center rounded-md bg-linear-to-br from-red-500 to-red-800 text-white text-xs font-bold leading-none"
+                  >
+                    R
+                  </div>
+                  <span class="font-semibold text-sm">Raudal Footwear</span>
+                </button>
+              </p-sidebar-menu-item>
+            </p-sidebar-menu>
+          </p-sidebar-header>
+
+          <p-sidebar-content>
+            <app-sidebar-menu [items]="menuItems" (navigated)="closeNav()" />
+          </p-sidebar-content>
+
+          <p-sidebar-footer>
+            <p-sidebar-menu>
+              <p-sidebar-menu-item>
+                <button
+                  pSidebarMenuButton
+                  class="p-1!"
+                  (click)="userMenu.toggle($event)"
+                >
+                  <span>{{ authStore.user()?.fullName ?? 'Usuario' }}</span>
+                  <svg data-p-icon="chevron-down" class="ml-auto"></svg>
+                </button>
+                <p-menu #userMenu [model]="userItems" [popup]="true" appendTo="body">
+                  <ng-template #item let-item>
+                    <a class="flex items-center gap-2">
+                      <svg [pIcon]="item.icon || ''" [size]="14" class="ml-2"></svg>
+                      <span>{{ item.label }}</span>
+                    </a>
+                  </ng-template>
+                </p-menu>
+              </p-sidebar-menu-item>
+            </p-sidebar-menu>
+          </p-sidebar-footer>
+        </p-sidebar-panel>
+      </p-sidebar-aside>
+    </p-sidebar>
+
+    <p-sidebar-main class="min-w-0 overflow-hidden">
+      <header class="flex h-12 shrink-0 items-center gap-2 border-b border-slate-200 px-4">
+        <button
+          pButton
+          pSidebarTrigger
+          target="comunicacion-nav"
+          severity="secondary"
+          text
+          size="small"
+        >
+          <svg data-p-icon="sidebar"></svg>
+        </button>
+        <app-header-title />
+        <div class="ml-auto flex items-center gap-2">
+          <span
+            class="h-7.5 flex items-center rounded-md bg-slate-100 px-2 py-1 text-xs text-slate-900"
+          >
+            {{ 'V.0.1' }}
+          </span>
+        </div>
+      </header>
+      <div class="flex min-h-0 flex-1 flex-col overflow-x-auto overflow-y-auto p-4">
+        <router-outlet />
+      </div>
+    </p-sidebar-main>
+  </p-sidebar-layout>
+</div>

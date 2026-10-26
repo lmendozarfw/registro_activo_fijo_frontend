@@ -1,0 +1,326 @@
+<div class="flex flex-col gap-4">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div>
+      <h1 class="text-lg font-semibold text-slate-900">Noticias internas</h1>
+      <p class="mt-1 max-w-2xl text-sm text-slate-600">
+        Publica, programa y administra las noticias que se muestran en el portal de
+        Comunicación Interna.
+      </p>
+    </div>
+    <button pButton type="button" (click)="create()">
+      <span class="flex items-center gap-2">
+        <svg [pIcon]="'plus'" [size]="16"></svg>
+        Nueva noticia
+      </span>
+    </button>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-3">
+    <div class="w-full max-w-md">
+      <app-search-input
+        placeholder="Buscar por título..."
+        (searched)="onSearch($event)"
+      />
+    </div>
+
+    <p-select
+      [formControl]="statusControl"
+      [options]="statusOptions"
+      optionLabel="label"
+      optionValue="value"
+      appendTo="body"
+      class="w-44"
+      aria-label="Filtrar por estado"
+    />
+  </div>
+
+  @if (store.loading() && store.items().length === 0) {
+    <div class="space-y-2">
+      @for (row of [1, 2, 3, 4, 5]; track row) {
+        <div class="h-12 animate-pulse rounded-md bg-slate-100"></div>
+      }
+    </div>
+  } @else if (store.listError() && store.items().length === 0) {
+    <div
+      class="flex flex-col items-center justify-center rounded-lg border border-red-200 bg-red-50 px-4 py-10 text-center"
+    >
+      <p class="text-sm text-red-700">{{ store.listError() }}</p>
+      <button
+        pButton
+        type="button"
+        severity="secondary"
+        class="mt-3"
+        (click)="retry()"
+      >
+        Reintentar
+      </button>
+    </div>
+  } @else if (viewItems().length > 0) {
+    <p-table
+      [value]="viewItems()"
+      [loading]="store.loading()"
+      showGridlines
+      [tableStyle]="{ 'min-width': '1180px' }"
+    >
+      <ng-template #header>
+        <tr>
+          <th style="width: 100px">Portada</th>
+          <th style="width: 420px">Título</th>
+          <th style="width: 130px">Estado</th>
+          <th style="width: 160px">Publicada</th>
+          <th style="width: 160px">Programada</th>
+          <th style="width: 160px">Creada</th>
+          <th style="width: 210px">Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template #body let-news>
+        <tr>
+          <td>
+            @if (news.coverImage?.url) {
+              <img
+                [src]="news.coverImage?.url"
+                [alt]="news.coverImage?.originalFileName || news.title"
+                class="h-10 w-16 rounded-md border border-slate-200 object-cover"
+              />
+            } @else {
+              <span
+                class="inline-flex h-10 w-16 items-center justify-center rounded-md bg-slate-100 text-slate-400"
+              >
+                <svg [pIcon]="'image'" [size]="16"></svg>
+              </span>
+            }
+          </td>
+          <td>
+            <button
+              type="button"
+              class="cursor-pointer text-left font-medium text-slate-800 hover:text-primary"
+              (click)="edit(news.id)"
+            >
+              {{ news.title }}
+            </button>
+          </td>
+          <td>
+            <app-news-status-tag [status]="news.status" />
+          </td>
+          <td class="text-sm text-slate-600">
+            {{ news.publishedAt | newsDate: 'datetime' }}
+          </td>
+          <td class="text-sm text-slate-600">
+            {{ news.scheduledPublishAt | newsDate: 'datetime' }}
+          </td>
+          <td class="text-sm text-slate-600">
+            {{ news.createdAt | newsDate: 'datetime' }}
+          </td>
+          <td>
+            <div class="flex items-center gap-1">
+              @if (news.canViewPublic) {
+                <a
+                  pButton
+                  severity="secondary"
+                  text
+                  [routerLink]="['/noticias', news.id]"
+                  target="_blank"
+                  rel="noopener"
+                  pTooltip="Ver pública"
+                  aria-label="Ver pública"
+                >
+                  <svg [pIcon]="'external-link'" [size]="16"></svg>
+                </a>
+              }
+
+              <button
+                pButton
+                type="button"
+                severity="secondary"
+                text
+                pTooltip="Editar"
+                aria-label="Editar"
+                (click)="edit(news.id)"
+              >
+                <svg [pIcon]="'pencil'" [size]="16"></svg>
+              </button>
+
+              @if (news.canPublish) {
+                <button
+                  pButton
+                  type="button"
+                  severity="secondary"
+                  text
+                  pTooltip="Publicar"
+                  aria-label="Publicar"
+                  (click)="openPublish(news)"
+                >
+                  <svg [pIcon]="'check-circle'" [size]="16"></svg>
+                </button>
+              }
+
+              @if (news.canSchedule) {
+                <button
+                  pButton
+                  type="button"
+                  severity="secondary"
+                  text
+                  pTooltip="Programar"
+                  aria-label="Programar"
+                  (click)="openSchedule(news)"
+                >
+                  <svg [pIcon]="'calendar'" [size]="16"></svg>
+                </button>
+              }
+
+              @if (news.canArchive) {
+                <button
+                  pButton
+                  type="button"
+                  severity="danger"
+                  text
+                  pTooltip="Archivar"
+                  aria-label="Archivar"
+                  (click)="openArchive(news)"
+                >
+                  <svg [pIcon]="'inbox'" [size]="16"></svg>
+                </button>
+              }
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    @if (store.hasMore()) {
+      <div class="flex justify-center pt-2">
+        <button
+          pButton
+          type="button"
+          severity="secondary"
+          [loading]="store.loadingMore()"
+          (click)="store.loadMore()"
+        >
+          Cargar más
+        </button>
+      </div>
+    }
+  } @else {
+    <app-empty-state
+      message="No se encontraron noticias"
+      description="Crea una nueva noticia o ajusta los filtros de búsqueda."
+    />
+  }
+</div>
+
+<app-form-dialog
+  [visible]="publishDialogVisible()"
+  (visibleChange)="publishDialogVisible.set($event)"
+  header="Publicar noticia"
+  width="30rem"
+>
+  <p class="text-sm text-slate-600">
+    ¿Publicar
+    <strong>{{ publishTarget()?.title }}</strong>
+    ahora? La noticia será visible de inmediato en el portal público.
+  </p>
+
+  <div dialog-footer class="flex justify-end gap-2">
+    <button
+      pButton
+      type="button"
+      severity="secondary"
+      (click)="publishDialogVisible.set(false)"
+    >
+      Cancelar
+    </button>
+    <button
+      pButton
+      type="button"
+      [loading]="store.saving()"
+      (click)="confirmPublish()"
+    >
+      Publicar
+    </button>
+  </div>
+</app-form-dialog>
+
+<app-form-dialog
+  [visible]="scheduleDialogVisible()"
+  (visibleChange)="scheduleDialogVisible.set($event)"
+  header="Programar publicación"
+  width="30rem"
+>
+  <div class="flex flex-col gap-3">
+    <p class="text-sm text-slate-600">
+      Selecciona la fecha y hora en tu horario local para publicar
+      <strong>{{ scheduleTarget()?.title }}</strong>.
+    </p>
+
+    <p-datepicker
+      [formControl]="scheduleControl"
+      [minDate]="minDate"
+      [showTime]="true"
+      hourFormat="24"
+      dateFormat="dd/mm/yy"
+      appendTo="body"
+      class="w-full"
+    />
+
+    <p class="text-xs text-slate-500">
+      Se guardará como
+      {{ scheduleValue() | newsDate: 'datetime' : 'utc' }}
+      (UTC).
+    </p>
+  </div>
+
+  <div dialog-footer class="flex justify-end gap-2">
+    <button
+      pButton
+      type="button"
+      severity="secondary"
+      (click)="scheduleDialogVisible.set(false)"
+    >
+      Cancelar
+    </button>
+    <button
+      pButton
+      type="button"
+      [loading]="store.saving()"
+      [disabled]="!scheduleValue()"
+      (click)="confirmSchedule()"
+    >
+      Programar
+    </button>
+  </div>
+</app-form-dialog>
+
+<app-form-dialog
+  [visible]="archiveDialogVisible()"
+  (visibleChange)="archiveDialogVisible.set($event)"
+  header="Archivar noticia"
+  width="30rem"
+>
+  <p class="text-sm text-slate-600">
+    ¿Archivar
+    <strong>{{ archiveTarget()?.title }}</strong>
+    ? Dejará de mostrarse en el portal público y podrá seguir editándose desde el
+    administrador.
+  </p>
+
+  <div dialog-footer class="flex justify-end gap-2">
+    <button
+      pButton
+      type="button"
+      severity="secondary"
+      (click)="archiveDialogVisible.set(false)"
+    >
+      Cancelar
+    </button>
+    <button
+      pButton
+      type="button"
+      severity="danger"
+      [loading]="store.saving()"
+      (click)="confirmArchive()"
+    >
+      Archivar
+    </button>
+  </div>
+</app-form-dialog>

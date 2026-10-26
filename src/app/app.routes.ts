@@ -33,6 +33,21 @@ export const routes: Routes = [
       import('./features/access-denied/pages/access-denied.page').then((p) => p.AccessDeniedPage),
   },
   {
+    path: 'noticias',
+    pathMatch: 'full',
+    loadComponent: () =>
+      import('./features/news/pages/public-news-list/public-news-list.page').then(
+        (p) => p.PublicNewsListPage,
+      ),
+  },
+  {
+    path: 'noticias/:id',
+    loadComponent: () =>
+      import('./features/news/pages/public-news-detail/public-news-detail.page').then(
+        (p) => p.PublicNewsDetailPage,
+      ),
+  },
+  {
     path: 'soluciones/:solution',
     canActivate: [authGuard, solutionAccessGuard],
     loadComponent: () =>
@@ -46,6 +61,46 @@ export const routes: Routes = [
       {
         path: '**',
         redirectTo: '',
+      },
+    ],
+  },
+  {
+    path: 'comunicacion',
+    canActivate: [authGuard, permissionGuard],
+    data: { permission: SOLUTION_PERMISSIONS.comunicacion },
+    loadComponent: () =>
+      import('./shared/templates/notice.template').then((t) => t.NoticeTemplate),
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'noticias',
+      },
+      {
+        path: 'noticias',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('./features/news/pages/news-list/news-list.page').then(
+            (p) => p.NewsListPage,
+          ),
+      },
+      {
+        path: 'noticias/nueva',
+        loadComponent: () =>
+          import('./features/news/pages/news-form/news-form.page').then(
+            (p) => p.NewsFormPage,
+          ),
+      },
+      {
+        path: 'noticias/:id/editar',
+        loadComponent: () =>
+          import('./features/news/pages/news-form/news-form.page').then(
+            (p) => p.NewsFormPage,
+          ),
+      },
+      {
+        path: '**',
+        redirectTo: 'noticias',
       },
     ],
   },
