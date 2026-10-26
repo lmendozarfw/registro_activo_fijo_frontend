@@ -5,7 +5,7 @@ import { AuthStore } from '../../../auth/stores/auth.store';
 @Component({
   selector: 'app-public-header',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'block' },
+  host: { display: 'block' },
   imports: [RouterLink, RouterLinkActive],
   template: `
     <header
@@ -20,7 +20,7 @@ import { AuthStore } from '../../../auth/stores/auth.store';
           aria-label="Raudal Footwear, inicio"
         >
           <img
-            src="assets/images/raudal-logo.svg"
+            src="assets/images/sinergyHub.jpg"
             alt="Raudal Footwear"
             class="h-9 w-auto sm:h-10"
           />

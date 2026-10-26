@@ -22,6 +22,7 @@ export interface NewsListDto {
   scheduledPublishAt: string | null;
   createdAt: string;
   coverImage: NewsImageDto | null;
+  url?: string;
 }
 
 export interface NewsDetailDto {

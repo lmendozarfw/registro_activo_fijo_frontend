@@ -92,7 +92,7 @@ export const NewsStore = signalStore(
                 take: LIST_PAGE_SIZE,
               }),
             );
-
+            console.log({items});
             if (requestId !== listRequestId) return;
 
             patchState(store, {

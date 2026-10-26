@@ -1,9 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
-
+@import 'animate.css';
 @import 'tailwindcss';
 
 :root {
   color-scheme: light;
+  --animate-duration: 700ms;
 }
 
 .p-paginator {

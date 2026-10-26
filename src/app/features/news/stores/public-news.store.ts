@@ -53,6 +53,7 @@ export const PublicNewsStore = signalStore(
           const featured = await firstValueFrom(
             service.getPublicList(0, take),
           );
+          console.log({landing: featured});
           if (requestId !== featuredRequestId) return;
 
           patchState(store, { featured, featuredLoading: false });
@@ -87,6 +88,7 @@ export const PublicNewsStore = signalStore(
               PUBLIC_PAGE_SIZE,
             ),
           );
+          console.log({public: items});
           if (requestId !== listRequestId) return;
 
           patchState(store, {

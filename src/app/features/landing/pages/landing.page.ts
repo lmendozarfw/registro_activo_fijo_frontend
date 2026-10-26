@@ -14,6 +14,7 @@ import { safeReturnUrl } from '../../../core/utils/navigation.utils';
 import { AuthStore } from '../../auth/stores/auth.store';
 import { PublicNewsCardComponent } from '../../news/components/public-news-card/public-news-card.component';
 import { PublicNewsStore } from '../../news/stores/public-news.store';
+import { AnimateOnScrollDirective } from '../../../core/directives/animate-on-scroll.directive';
 
 @Component({
   selector: 'app-landing-page',
@@ -28,7 +29,8 @@ import { PublicNewsStore } from '../../news/stores/public-news.store';
     FormLabelComponent,
     QrScannerComponent,
     PublicNewsCardComponent,
-  ],
+    AnimateOnScrollDirective
+],
 })
 export class LandingPage implements OnInit {
   protected readonly authStore = inject(AuthStore);
