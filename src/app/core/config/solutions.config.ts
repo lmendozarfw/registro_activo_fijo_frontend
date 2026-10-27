@@ -91,14 +91,14 @@ export const SOLUTIONS: SolutionConfig[] = [
     description: 'Reporta incidencias y recibe soporte del equipo de Sistemas.',
     icon: 'headphones',
     permission: SOLUTION_PERMISSIONS.mesaAyuda,
-    route: '/soluciones/mesa-ayuda',
+    route: 'http://192.168.1.210:8081/Login.jsp',
+    external: true,
     theme: {
       tone: 'bg-neutral-100 text-neutral-700',
       gradient: 'from-neutral-950 via-neutral-800 to-neutral-600',
       accentText: 'text-neutral-300',
       accentSoft: 'bg-neutral-500/10 border-neutral-400/20',
     },
-    preview: true,
   },
   {
     code: 'comunicacion',
@@ -113,20 +113,5 @@ export const SOLUTIONS: SolutionConfig[] = [
       accentText: 'text-brand-300',
       accentSoft: 'bg-brand-500/10 border-brand-400/20',
     },
-  },
-  {
-    code: 'difusion',
-    name: 'Portal de difusión',
-    description: 'Consulta comunicados, noticias y contenidos internos de la organización.',
-    icon: 'megaphone',
-    permission: '',
-    route: 'https://sites.google.com/view/comunicacion-raudal/inicio',
-    theme: {
-      tone: 'bg-neutral-100 text-neutral-700',
-      gradient: 'from-neutral-950 via-neutral-800 to-neutral-600',
-      accentText: 'text-neutral-300',
-      accentSoft: 'bg-neutral-500/10 border-neutral-400/20',
-    },
-    external: true,
-  },
+  }
 ];

@@ -12,7 +12,7 @@ import { NewsDatePipe } from '../../pipes/news-date.pipe';
   template: `
     <a
       [routerLink]="['/noticias', news().id]"
-      class="group flex h-full flex-col overflow-hidden rounded-2xl bg-white transition duration-200 hover:-translate-y-1 hover:border-brand-200 hover:shadow-xl hover:shadow-brand-900/5"
+      class="shadow-card group flex h-full flex-col overflow-hidden rounded-2xl bg-white transition duration-200 hover:-translate-y-1 hover:border-brand-200 hover:shadow-xl hover:shadow-brand-900/5"
     >
       <div class="relative aspect-[16/9] overflow-hidden bg-neutral-100">
         <img

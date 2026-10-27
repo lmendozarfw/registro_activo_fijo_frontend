@@ -225,3 +225,7 @@ p-table {
 .news-content .ql-indent-3 {
   padding-left: 6rem;
 }
+
+.shadow-card {
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}

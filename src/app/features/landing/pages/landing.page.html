@@ -147,6 +147,14 @@
             <svg [pIcon]="'megaphone'" [size]="15"></svg>
             Ver noticias
           </a>
+          <a
+            href="https://sites.google.com/view/comunicacion-raudal/inicio"
+            style="animation-delay: 450ms"
+            class="animate__animated animate__fadeInUp inline-flex items-center gap-2 rounded-xl border border-white/15 bg-transparent px-5 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/10 active:scale-[0.99]"
+          >
+            Portal de difeusión
+            <svg [pIcon]="'external-link'" [size]="15"></svg>
+          </a>
         </div>
 
         <div class="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-neutral-400">
@@ -458,7 +466,7 @@
     appAnimateOnScroll="fadeInLeft"
     class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div
-        class="grid overflow-hidden rounded-3xl bg-white shadow-sm lg:grid-cols-[0.85fr_1.15fr]"
+        class="grid overflow-hidden rounded-3xl bg-white shadow-card lg:grid-cols-[0.85fr_1.15fr]"
       >
         <div class="flex flex-col justify-center p-7 sm:p-10 lg:p-12">
           <span
@@ -514,7 +522,7 @@
           <img
             src="http://192.168.1.100/Img/ImagenNoticia3.jpg"
             alt="Menú semanal del comedor Raudal, del 19 al 23 de octubre"
-            class="relative w-[350px] rounded-2xl shadow-2xl shadow-black/30 ring-1 ring-white/10"
+            class="relative w-[350px] rounded-2xl ring-1 ring-white/10"
             loading="lazy"
           />
         </div>
@@ -661,8 +669,7 @@
     >
       <p>{{ year }} Raudal Footwear. Todos los derechos reservados.</p>
       <p class="inline-flex items-center gap-1.5">
-        Hecho con por el equipo de sistemas
-        <svg class="text-brand-500" [pIcon]="'heart-fill'" [size]="13"></svg>
+        Hecho con <svg class="text-brand-500" [pIcon]="'heart-fill'" [size]="13"></svg> por el equipo de sistemas.
       </p>
     </div>
   </div>
