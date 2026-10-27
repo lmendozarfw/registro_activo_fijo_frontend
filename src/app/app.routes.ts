@@ -68,8 +68,7 @@ export const routes: Routes = [
     path: 'comunicacion',
     canActivate: [authGuard, permissionGuard],
     data: { permission: SOLUTION_PERMISSIONS.comunicacion },
-    loadComponent: () =>
-      import('./shared/templates/notice.template').then((t) => t.NoticeTemplate),
+    loadComponent: () => import('./shared/templates/notice.template').then((t) => t.NoticeTemplate),
     children: [
       {
         path: '',
@@ -80,23 +79,17 @@ export const routes: Routes = [
         path: 'noticias',
         pathMatch: 'full',
         loadComponent: () =>
-          import('./features/news/pages/news-list/news-list.page').then(
-            (p) => p.NewsListPage,
-          ),
+          import('./features/news/pages/news-list/news-list.page').then((p) => p.NewsListPage),
       },
       {
         path: 'noticias/nueva',
         loadComponent: () =>
-          import('./features/news/pages/news-form/news-form.page').then(
-            (p) => p.NewsFormPage,
-          ),
+          import('./features/news/pages/news-form/news-form.page').then((p) => p.NewsFormPage),
       },
       {
         path: 'noticias/:id/editar',
         loadComponent: () =>
-          import('./features/news/pages/news-form/news-form.page').then(
-            (p) => p.NewsFormPage,
-          ),
+          import('./features/news/pages/news-form/news-form.page').then((p) => p.NewsFormPage),
       },
       {
         path: '**',
@@ -107,8 +100,49 @@ export const routes: Routes = [
   {
     path: 'visitantes',
     canActivate: [authGuard, permissionGuard],
-    data: { permissions:  SOLUTION_PERMISSIONS.visitantes},
-    loadComponent: () => import('./shared/templates/visitor.template').then((t) => t.VisitorTemplate),
+    data: { permission: SOLUTION_PERMISSIONS.visitantes },
+    loadComponent: () =>
+      import('./shared/templates/visitor.template').then((t) => t.VisitorTemplate),
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'visitas',
+      },
+      {
+        path: 'visitas',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('./features/visitors/pages/visits-list/visits-list.page').then(
+            (p) => p.VisitsListPage,
+          ),
+      },
+      {
+        path: 'visitas/nueva',
+        loadComponent: () =>
+          import('./features/visitors/pages/visit-form/visit-form.page').then(
+            (p) => p.VisitFormPage,
+          ),
+      },
+      {
+        path: 'visitas/:id/editar',
+        loadComponent: () =>
+          import('./features/visitors/pages/visit-form/visit-form.page').then(
+            (p) => p.VisitFormPage,
+          ),
+      },
+      {
+        path: 'visitas/:id',
+        loadComponent: () =>
+          import('./features/visitors/pages/visit-detail/visit-detail.page').then(
+            (p) => p.VisitDetailPage,
+          ),
+      },
+      {
+        path: '**',
+        redirectTo: 'visitas',
+      },
+    ],
   },
   {
     path: 'app',

@@ -23,7 +23,7 @@
 
                 @if (store.mobileResources().length > 0) {
                 <p-table [value]="store.mobileResources()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-                    [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '2700px' }">
+                    [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '2700px' }">
                     <ng-template #header>
                         <tr>
                             <th style="width: 200px">Código activo</th>
@@ -162,7 +162,7 @@
 
                 @if (lineStore.lines().length > 0) {
                 <p-table [value]="lineStore.lines()" [loading]="lineStore.loading()" [paginator]="true" [rows]="10"
-                    [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '1350px' }">
+                    [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '1350px' }">
                     <ng-template #header>
                         <tr>
                             <th style="width: 150px">Número</th>

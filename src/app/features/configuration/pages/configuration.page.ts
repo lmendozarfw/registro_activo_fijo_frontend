@@ -9,6 +9,7 @@ import { DepartmentsTableComponent } from "../components/departments/departments
 import { JobsTableComponent } from "../components/jobs/jobs-table.component";
 import { BrandsTableComponent } from "../components/brands/brands-table.component";
 import { ModelsTableComponent } from "../components/models/models-table.component";
+import { BusinessUnitsTableComponent } from "../components/business-units/business-units-table.component";
 
 @Component({
     selector: 'app-configuration',
@@ -47,6 +48,9 @@ import { ModelsTableComponent } from "../components/models/models-table.componen
                             @case ('models') {
                                 <app-models-table />
                             }
+                            @case ('business-units') {
+                                <app-business-units-table />
+                            }
                         }
                     </p-tabpanel>
                 </p-tabpanels>
@@ -65,7 +69,8 @@ import { ModelsTableComponent } from "../components/models/models-table.componen
         }
         `],
     imports: [TabsModule, ModulesTableComponent, PermissionsTableComponent, TemplatesTableComponent, SystemsTableComponent,
-        DepartmentsTableComponent, JobsTableComponent, BrandsTableComponent, ModelsTableComponent],
+        DepartmentsTableComponent, JobsTableComponent, BrandsTableComponent, ModelsTableComponent,
+        BusinessUnitsTableComponent],
 })
 export class ConfigurationPage implements OnInit {
     private readonly pageHeader = inject(PageHeaderService);
@@ -80,6 +85,7 @@ export class ConfigurationPage implements OnInit {
         { id: 'jobs', title: 'Puestos de trabajo' },
         { id: 'brands', title: 'Marcas' },
         { id: 'models', title: 'Modelos' },
+        { id: 'business-units', title: 'Unidades de negocio' },
     ];
 
     ngOnInit(): void {

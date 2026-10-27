@@ -1,0 +1,169 @@
+<div class="flex flex-col gap-4">
+  <section class="rounded-xl bg-white p-4">
+    <div class="flex flex-wrap items-start justify-between gap-3">
+      <div>
+        <h2 class="text-base font-semibold text-neutral-900">Unidades de negocio</h2>
+        <p class="mt-1 text-sm text-neutral-500">
+          Administra las unidades disponibles al registrar visitas. Las unidades inactivas no se
+          pueden seleccionar en visitas nuevas.
+        </p>
+      </div>
+      <button pButton type="button" (click)="openCreate()">
+        <span class="flex items-center gap-2">
+          <svg [pIcon]="'plus'" [size]="16"></svg>
+          Nueva unidad
+        </span>
+      </button>
+    </div>
+
+    <div class="mt-4 max-w-md">
+      <app-search-input placeholder="Buscar unidad de negocio..." (searched)="onSearch($event)" />
+    </div>
+  </section>
+
+  @if (store.error()) {
+    <div
+      class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700"
+    >
+      <span>{{ store.error() }}</span>
+      <button pButton type="button" severity="danger" text (click)="retryLoad()">Reintentar</button>
+    </div>
+  }
+
+  @if (store.items().length > 0) {
+    <p-table
+      [value]="store.items()"
+      [loading]="store.loading()"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      [tableStyle]="{ 'min-width': '780px' }"
+    >
+      <ng-template #header>
+        <tr>
+          <th style="width: 320px">Unidad de negocio</th>
+          <th style="width: 120px">Estado</th>
+          <th style="width: 190px">Registrada</th>
+          <th style="width: 190px">Actualizada</th>
+          <th style="width: 120px">Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template #body let-item>
+        <tr>
+          <td>
+            <span class="font-medium text-neutral-900">{{ item.name }}</span>
+          </td>
+          <td>
+            <p-tag
+              [value]="item.active ? 'Activa' : 'Inactiva'"
+              [severity]="item.active ? 'success' : 'secondary'"
+            />
+          </td>
+          <td>
+            <span class="text-sm text-neutral-600">{{ formatDate(item.createdAt) }}</span>
+          </td>
+          <td>
+            <span class="text-sm text-neutral-600">{{ formatDate(item.updatedAt) }}</span>
+          </td>
+          <td>
+            <div class="flex items-center gap-1">
+              <button
+                pButton
+                type="button"
+                severity="secondary"
+                text
+                pTooltip="Editar"
+                aria-label="Editar unidad"
+                (click)="openEdit(item)"
+              >
+                <svg [pIcon]="'pencil'" [size]="16"></svg>
+              </button>
+              <button
+                pButton
+                type="button"
+                [severity]="item.active ? 'danger' : 'success'"
+                text
+                [pTooltip]="item.active ? 'Desactivar' : 'Activar'"
+                [attr.aria-label]="item.active ? 'Desactivar unidad' : 'Activar unidad'"
+                (click)="askToggle(item)"
+              >
+                <svg [pIcon]="item.active ? 'ban' : 'check'" [size]="16"></svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  } @else if (!store.loading() && !store.error()) {
+    <app-empty-state
+      message="No se encontraron unidades de negocio"
+      description="Registra una unidad para poder utilizarla en las visitas."
+    />
+  }
+
+  <app-form-dialog
+    [visible]="dialogVisible()"
+    (visibleChange)="dialogVisible.set($event)"
+    [header]="editing() ? 'Editar unidad de negocio' : 'Nueva unidad de negocio'"
+    width="28rem"
+  >
+    <div class="flex flex-col gap-1.5">
+      <app-form-label required>Nombre</app-form-label>
+      <input
+        pInputText
+        [formControl]="form.controls.name"
+        maxlength="200"
+        class="w-full"
+        placeholder="Nombre de la unidad de negocio"
+        [invalid]="showNameError()"
+        (keydown.enter)="save()"
+      />
+      @if (showNameError()) {
+        <span class="text-xs text-rose-600">
+          El nombre es obligatorio y debe tener máximo 200 caracteres.
+        </span>
+      }
+    </div>
+
+    <div dialog-footer class="flex justify-end gap-2">
+      <button pButton type="button" severity="secondary" (click)="dialogVisible.set(false)">
+        Cancelar
+      </button>
+      <button pButton type="button" [loading]="store.saving()" (click)="save()">Guardar</button>
+    </div>
+  </app-form-dialog>
+
+  <app-form-dialog
+    [visible]="confirmVisible()"
+    (visibleChange)="onConfirmVisibleChange($event)"
+    [header]="confirmTarget()?.active ? 'Desactivar unidad' : 'Activar unidad'"
+    width="26rem"
+  >
+    @if (confirmTarget(); as item) {
+      <p class="text-sm text-neutral-600">
+        @if (item.active) {
+          ¿Deseas desactivar <strong>{{ item.name }}</strong
+          >? No estará disponible para nuevas visitas, pero las visitas existentes conservarán la
+          unidad.
+        } @else {
+          ¿Deseas activar <strong>{{ item.name }}</strong
+          >? Volverá a estar disponible para nuevas visitas.
+        }
+      </p>
+    }
+
+    <div dialog-footer class="flex justify-end gap-2">
+      <button pButton type="button" severity="secondary" (click)="closeConfirm()">Volver</button>
+      <button
+        pButton
+        type="button"
+        [severity]="confirmTarget()?.active ? 'danger' : 'success'"
+        [loading]="store.saving()"
+        (click)="confirmToggle()"
+      >
+        {{ confirmTarget()?.active ? 'Desactivar' : 'Activar' }}
+      </button>
+    </div>
+  </app-form-dialog>
+</div>

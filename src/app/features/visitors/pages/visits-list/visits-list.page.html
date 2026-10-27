@@ -1,0 +1,310 @@
+<div class="flex flex-col gap-4">
+  <section class="rounded-xl bg-white p-4">
+    <div class="flex flex-wrap items-start justify-between gap-3">
+      <div>
+        <h2 class="text-base font-semibold text-neutral-900">Registro de visitas</h2>
+        <p class="mt-1 text-sm text-neutral-500">
+          Consulta, programa y da seguimiento al ingreso de visitantes.
+        </p>
+      </div>
+      <button pButton type="button" (click)="newVisit()">
+        <span class="flex items-center gap-2">
+          <svg [pIcon]="'plus'" [size]="16"></svg>
+          Nueva visita
+        </span>
+      </button>
+    </div>
+
+    <div class="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+      <app-search-input
+        class="col-span-12"
+        placeholder="Buscar por empresa, motivo o visitante..."
+        (searched)="onSearch($event)"
+      />
+
+      <p-select
+        [ngModel]="store.status()"
+        (onChange)="onStatusChange($event.value)"
+        [options]="statusOptions"
+        optionLabel="label"
+        optionValue="value"
+        appendTo="body"
+        class="w-full"
+      />
+
+      <p-select
+        [ngModel]="store.businessUnitId()"
+        (onChange)="onBusinessUnitChange($event.value)"
+        [options]="businessUnitStore.activeItems()"
+        optionLabel="name"
+        optionValue="id"
+        placeholder="Unidad de negocio"
+        [showClear]="true"
+        [filter]="true"
+        filterBy="name"
+        filterPlaceholder="Buscar unidad..."
+        appendTo="body"
+        class="w-full"
+      />
+
+      <p-select
+        [ngModel]="store.departmentId()"
+        (onChange)="onDepartmentChange($event.value)"
+        [options]="departmentStore.departments()"
+        optionLabel="name"
+        optionValue="id"
+        placeholder="Departamento"
+        [showClear]="true"
+        [filter]="true"
+        filterBy="name"
+        filterPlaceholder="Buscar departamento..."
+        appendTo="body"
+        class="w-full"
+      />
+
+      <p-datepicker
+        [formControl]="dateRange"
+        selectionMode="range"
+        [readonlyInput]="true"
+        [showButtonBar]="true"
+        dateFormat="dd/mm/yy"
+        placeholder="Rango de fechas"
+        appendTo="body"
+        class="w-full"
+      />
+
+      <button
+        pButton
+        type="button"
+        severity="secondary"
+        text
+        [disabled]="!hasFilters()"
+        (click)="clearFilters()"
+      >
+        <span class="flex items-center gap-2">
+          <svg [pIcon]="'times'" [size]="14"></svg>
+          Limpiar filtros
+        </span>
+      </button>
+    </div>
+
+
+  </section>
+
+  @if (store.listError()) {
+    <div
+      class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700"
+    >
+      <span>{{ store.listError() }}</span>
+      <button pButton type="button" severity="danger" text (click)="retryLoad()">Reintentar</button>
+    </div>
+  }
+
+  @if (store.items().length > 0) {
+    <p-table
+      [value]="store.items()"
+      [loading]="store.loading()"
+      [lazy]="true"
+      [paginator]="true"
+      [first]="store.skip()"
+      [rows]="store.take()"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      [totalRecords]="store.totalRecords()"
+      (onPage)="onPage($event)"
+      [tableStyle]="{ 'min-width': '1700px' }"
+    >
+      <ng-template #header>
+        <tr>
+          <th style="width: 320px">Visita</th>
+          <th style="width: 300px">Unidad y departamento</th>
+          <th style="width: 250px">Anfitrión</th>
+          <th style="width: 250px">Programación</th>
+          <th style="width: 220px">Visitantes</th>
+          <th style="width: 130px">Estado</th>
+          <th style="width: 230px">Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template #body let-visit>
+        <tr>
+          <td>
+            <div class="font-medium text-neutral-900">{{ visit.companyName }}</div>
+            <div class="mt-0.5 text-xs text-neutral-500">{{ visit.reason }}</div>
+            <div class="mt-1 flex flex-wrap items-center gap-1">
+              @if (visit.isWalkIn) {
+                <span
+                  class="rounded-full border border-brand-200 bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700"
+                >
+                  Walk-in
+                </span>
+              }
+              @if (visit.highRiskActivity) {
+                <span
+                  class="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700"
+                >
+                  Alto riesgo
+                </span>
+              }
+            </div>
+            @if (visit.visitorNames.length > 0) {
+              <div
+                class="mt-1 max-w-xs truncate text-[11px] text-neutral-400"
+                [title]="visit.visitorNames.join(', ')"
+              >
+                {{ visit.visitorNames.join(', ') }}
+              </div>
+            }
+          </td>
+          <td>
+            <div class="text-sm text-neutral-800">{{ visit.businessUnitName }}</div>
+            <div class="mt-0.5 text-xs text-neutral-500">{{ visit.departmentName }}</div>
+          </td>
+          <td>
+            <span class="text-sm text-neutral-700">{{ visit.employeeFullName || '—' }}</span>
+          </td>
+          <td>
+            <span class="text-sm text-neutral-700">{{ formatSchedule(visit) }}</span>
+            @if (visit.startedAt) {
+              <div class="mt-0.5 text-[11px] text-neutral-400">
+                Entrada: {{ formatDate(visit.startedAt) }}
+              </div>
+            }
+            @if (visit.finishedAt) {
+              <div class="text-[11px] text-neutral-400">
+                Salida: {{ formatDate(visit.finishedAt) }}
+              </div>
+            }
+          </td>
+          <td>
+            <div class="flex flex-wrap items-center gap-1">
+              <span
+                class="rounded-md bg-neutral-100 px-1.5 py-0.5 text-[11px] font-medium text-neutral-700"
+              >
+                Total {{ visit.visitorCount }}
+              </span>
+              @if (visit.visitorsPending > 0) {
+                <span
+                  class="rounded-md bg-amber-50 px-1.5 py-0.5 text-[11px] font-medium text-amber-700"
+                >
+                  Pend. {{ visit.visitorsPending }}
+                </span>
+              }
+              @if (visit.visitorsAllowed > 0) {
+                <span
+                  class="rounded-md bg-emerald-50 px-1.5 py-0.5 text-[11px] font-medium text-emerald-700"
+                >
+                  Permitidos {{ visit.visitorsAllowed }}
+                </span>
+              }
+              @if (visit.visitorsDenied > 0) {
+                <span
+                  class="rounded-md bg-rose-50 px-1.5 py-0.5 text-[11px] font-medium text-rose-700"
+                >
+                  Denegados {{ visit.visitorsDenied }}
+                </span>
+              }
+            </div>
+          </td>
+          <td>
+            <app-visit-status-tag [status]="visit.status" />
+          </td>
+          <td>
+            <div class="flex items-center gap-1">
+              <button
+                pButton
+                type="button"
+                severity="secondary"
+                text
+                pTooltip="Ver detalle"
+                aria-label="Ver detalle"
+                (click)="openVisit(visit)"
+              >
+                <svg [pIcon]="'eye'" [size]="16"></svg>
+              </button>
+
+              @if (visit.status === 'SCHEDULED') {
+                <button
+                  pButton
+                  type="button"
+                  severity="secondary"
+                  text
+                  pTooltip="Editar"
+                  aria-label="Editar"
+                  (click)="editVisit(visit)"
+                >
+                  <svg [pIcon]="'pencil'" [size]="16"></svg>
+                </button>
+                <button
+                  pButton
+                  type="button"
+                  severity="success"
+                  text
+                  pTooltip="Iniciar visita"
+                  aria-label="Iniciar visita"
+                  (click)="openAction('start', visit)"
+                >
+                  <svg [pIcon]="'play'" [size]="16"></svg>
+                </button>
+              }
+
+              @if (visit.status === 'STARTED') {
+                <button
+                  pButton
+                  type="button"
+                  severity="success"
+                  text
+                  pTooltip="Finalizar"
+                  aria-label="Finalizar visita"
+                  (click)="openAction('finish', visit)"
+                >
+                  <svg [pIcon]="'check'" [size]="16"></svg>
+                </button>
+              }
+
+              @if (visit.status === 'SCHEDULED' || visit.status === 'STARTED') {
+                <button
+                  pButton
+                  type="button"
+                  severity="danger"
+                  text
+                  pTooltip="Cancelar"
+                  aria-label="Cancelar visita"
+                  (click)="openAction('cancel', visit)"
+                >
+                  <svg [pIcon]="'times'" [size]="16"></svg>
+                </button>
+              }
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  } @else if (!store.loading() && !store.listError()) {
+    <app-empty-state
+      message="No se encontraron visitas"
+      description="Ajusta los filtros o registra una nueva visita para comenzar."
+    />
+  }
+
+  <app-form-dialog
+    [visible]="confirmVisible()"
+    (visibleChange)="onConfirmVisibleChange($event)"
+    [header]="confirmTitle()"
+    width="26rem"
+  >
+    <p class="text-sm text-neutral-600">{{ confirmMessage() }}</p>
+
+    <div dialog-footer class="flex justify-end gap-2">
+      <button pButton type="button" severity="secondary" (click)="closeConfirm()">Volver</button>
+      <button
+        pButton
+        type="button"
+        [severity]="actionType() === 'cancel' ? 'danger' : 'primary'"
+        [loading]="store.actionLoading()"
+        (click)="confirmAction()"
+      >
+        {{ confirmLabel() }}
+      </button>
+    </div>
+  </app-form-dialog>
+</div>

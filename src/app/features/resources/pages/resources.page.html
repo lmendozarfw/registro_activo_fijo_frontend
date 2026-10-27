@@ -17,7 +17,7 @@
 
     @if (store.resources().length > 0) {
     <p-table [value]="store.resources()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '1700px' }">
+        [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '1700px' }">
         <ng-template #header>
             <tr>
                 <th style="width: 200px">Código de activo</th>
@@ -101,7 +101,7 @@
                               </ng-template>
                               <ng-template let-member #item>
                                 <span>{{ member.brandName }} - {{ member.name }}</span>
-                              </ng-template>    
+                              </ng-template>
                     </p-select>
                 </div>
 

@@ -1,0 +1,708 @@
+<div class="flex flex-col gap-4">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div class="flex items-start gap-3">
+      <button
+        pButton
+        type="button"
+        severity="secondary"
+        text
+        aria-label="Volver al listado"
+        (click)="goBack()"
+      >
+        <svg [pIcon]="'arrow-left'" [size]="16"></svg>
+      </button>
+
+      <div>
+        <div class="flex flex-wrap items-center gap-2">
+          <h1 class="text-lg font-semibold text-neutral-900">
+            {{ detail()?.companyName || 'Detalle de visita' }}
+          </h1>
+          @if (detail(); as visit) {
+            <app-visit-status-tag [status]="visit.status" />
+          }
+        </div>
+        <p class="mt-1 max-w-2xl text-sm text-neutral-600">
+          {{ detail()?.reason || 'Consulta la información completa de la visita.' }}
+        </p>
+        @if (detail(); as visit) {
+          <div class="mt-2 flex flex-wrap items-center gap-1">
+            @if (visit.isWalkIn) {
+              <span
+                class="rounded-full border border-brand-200 bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700"
+              >
+                Walk-in
+              </span>
+            }
+            @if (visit.highRiskActivity) {
+              <span
+                class="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700"
+              >
+                Alto riesgo
+              </span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2">
+      @if (canEditVisit()) {
+        <button pButton type="button" severity="secondary" (click)="editVisit()">
+          <span class="flex items-center gap-2">
+            <svg [pIcon]="'pencil'" [size]="14"></svg>
+            Editar
+          </span>
+        </button>
+      }
+      @if (canStart()) {
+        <button pButton type="button" severity="success" (click)="openStatusAction('start')">
+          <span class="flex items-center gap-2">
+            <svg [pIcon]="'play'" [size]="14"></svg>
+            Iniciar
+          </span>
+        </button>
+      }
+      @if (canFinish()) {
+        <button pButton type="button" severity="success" (click)="openStatusAction('finish')">
+          <span class="flex items-center gap-2">
+            <svg [pIcon]="'check'" [size]="14"></svg>
+            Finalizar
+          </span>
+        </button>
+      }
+      @if (canCancel()) {
+        <button
+          pButton
+          type="button"
+          severity="danger"
+          outlined
+          (click)="openStatusAction('cancel')"
+        >
+          <span class="flex items-center gap-2">
+            <svg [pIcon]="'times'" [size]="14"></svg>
+            Cancelar
+          </span>
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (store.detailLoading() && !detail()) {
+    <div class="space-y-3">
+      <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        @for (item of [1, 2, 3, 4]; track item) {
+          <div class="h-20 animate-pulse rounded-xl bg-neutral-100"></div>
+        }
+      </div>
+      <div class="grid gap-4 xl:grid-cols-2">
+        <div class="h-56 animate-pulse rounded-xl bg-neutral-100"></div>
+        <div class="h-56 animate-pulse rounded-xl bg-neutral-100"></div>
+      </div>
+      <div class="h-72 animate-pulse rounded-xl bg-neutral-100"></div>
+    </div>
+  } @else if (store.detailNotFound()) {
+    <div
+      class="flex flex-col items-center justify-center rounded-lg bg-white px-4 py-12 text-center"
+    >
+      <h2 class="text-base font-semibold text-neutral-800">Visita no encontrada</h2>
+      <p class="mt-1 text-sm text-neutral-500">La visita solicitada no existe o fue eliminada.</p>
+      <button pButton type="button" severity="secondary" class="mt-4" (click)="goBack()">
+        Volver al listado
+      </button>
+    </div>
+  } @else if (store.detailError() && !detail()) {
+    <div
+      class="flex flex-col items-center justify-center rounded-lg border border-rose-200 bg-rose-50 px-4 py-12 text-center"
+    >
+      <p class="text-sm text-rose-700">{{ store.detailError() }}</p>
+      <div class="mt-4 flex gap-2">
+        <button pButton type="button" severity="secondary" (click)="goBack()">Volver</button>
+        <button pButton type="button" (click)="retryLoad()">Reintentar</button>
+      </div>
+    </div>
+  } @else if (detail(); as visit) {
+    @if (!canManage()) {
+      <div
+        class="rounded-lg bg-neutral-50 px-3 py-2 text-xs text-neutral-600"
+      >
+        Esta visita está finalizada o cancelada. La información, los visitantes y los documentos son
+        de solo consulta.
+      </div>
+    }
+
+    <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div class="rounded-xl bg-white p-4">
+        <p class="text-xs font-medium uppercase tracking-wide text-neutral-500">Total</p>
+        <p class="mt-1 text-2xl font-semibold text-neutral-900">{{ visitorCount() }}</p>
+        <p class="text-xs text-neutral-500">visitantes registrados</p>
+      </div>
+      <div class="rounded-xl border border-amber-200 bg-amber-50 p-4">
+        <p class="text-xs font-medium uppercase tracking-wide text-amber-700">Pendientes</p>
+        <p class="mt-1 text-2xl font-semibold text-amber-800">{{ visitorsPending() }}</p>
+        <p class="text-xs text-amber-700">por definir acceso</p>
+      </div>
+      <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+        <p class="text-xs font-medium uppercase tracking-wide text-emerald-700">Permitidos</p>
+        <p class="mt-1 text-2xl font-semibold text-emerald-800">{{ visitorsAllowed() }}</p>
+        <p class="text-xs text-emerald-700">con acceso autorizado</p>
+      </div>
+      <div class="rounded-xl border border-rose-200 bg-rose-50 p-4">
+        <p class="text-xs font-medium uppercase tracking-wide text-rose-700">Denegados</p>
+        <p class="mt-1 text-2xl font-semibold text-rose-800">{{ visitorsDenied() }}</p>
+        <p class="text-xs text-rose-700">con acceso rechazado</p>
+      </div>
+    </div>
+
+    <div class="grid gap-4 xl:grid-cols-2">
+      <section class="rounded-xl bg-white p-4">
+        <h2 class="text-sm font-semibold text-neutral-800">Datos de la visita</h2>
+        <dl class="mt-3 grid gap-3 text-sm sm:grid-cols-2">
+          <div>
+            <dt class="text-xs text-neutral-500">Empresa</dt>
+            <dd class="mt-0.5 font-medium text-neutral-800">{{ visit.companyName }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs text-neutral-500">Motivo</dt>
+            <dd class="mt-0.5 font-medium text-neutral-800">{{ visit.reason }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs text-neutral-500">Unidad de negocio</dt>
+            <dd class="mt-0.5 text-neutral-800">{{ visit.businessUnitName }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs text-neutral-500">Departamento</dt>
+            <dd class="mt-0.5 text-neutral-800">{{ visit.departmentName }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs text-neutral-500">Anfitrión</dt>
+            <dd class="mt-0.5 text-neutral-800">{{ visit.employeeFullName || '—' }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs text-neutral-500">Registrada por</dt>
+            <dd class="mt-0.5 text-neutral-800">{{ visit.createdByUsername || '—' }}</dd>
+          </div>
+          <div class="sm:col-span-2">
+            <dt class="text-xs text-neutral-500">Observaciones</dt>
+            <dd class="mt-0.5 whitespace-pre-line text-neutral-800">
+              {{ visit.observations || '—' }}
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="rounded-xl bg-white p-4">
+        <h2 class="text-sm font-semibold text-neutral-800">Programación y registro</h2>
+        <dl class="mt-3 grid gap-3 text-sm sm:grid-cols-2">
+          <div class="sm:col-span-2">
+            <dt class="text-xs text-neutral-500">Programación</dt>
+            <dd class="mt-0.5 font-medium text-neutral-800">{{ formatSchedule(visit) }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs text-neutral-500">Entrada</dt>
+            <dd class="mt-0.5 text-neutral-800">{{ formatDateTime(visit.startedAt) }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs text-neutral-500">Salida</dt>
+            <dd class="mt-0.5 text-neutral-800">{{ formatDateTime(visit.finishedAt) }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs text-neutral-500">Cancelada</dt>
+            <dd class="mt-0.5 text-neutral-800">{{ formatDateTime(visit.cancelledAt) }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs text-neutral-500">Creada</dt>
+            <dd class="mt-0.5 text-neutral-800">{{ formatDateTime(visit.createdAt) }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs text-neutral-500">Actualizada</dt>
+            <dd class="mt-0.5 text-neutral-800">{{ formatDateTime(visit.updatedAt) }}</dd>
+          </div>
+        </dl>
+      </section>
+    </div>
+
+    <section class="rounded-xl bg-white p-4">
+      <div class="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 class="text-sm font-semibold text-neutral-800">Visitantes</h2>
+          <p class="text-xs text-neutral-500">
+            Define el acceso, registra equipos y carga documentos de cada visitante.
+          </p>
+        </div>
+        @if (canManage()) {
+          <button pButton type="button" severity="secondary" (click)="openAddVisitor()">
+            <span class="flex items-center gap-2">
+              <svg [pIcon]="'plus'" [size]="14"></svg>
+              Agregar visitante
+            </span>
+          </button>
+        }
+      </div>
+
+      @if (visitors().length === 0) {
+        <div class="mt-4 rounded-lg bg-neutral-50 px-3 py-6 text-center text-sm text-neutral-500">
+          No hay visitantes registrados en esta visita.
+        </div>
+      } @else {
+        <div class="mt-4 flex flex-col gap-3">
+          @for (visitor of visitors(); track visitor.id) {
+            <article class="rounded-lg p-3">
+              <div class="flex flex-wrap items-start justify-between gap-3">
+                <div class="flex min-w-0 items-center gap-3">
+                  <span
+                    class="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-50 text-sm font-semibold text-brand-700"
+                  >
+                    {{ visitor.fullName.charAt(0).toUpperCase() }}
+                  </span>
+                  <div class="min-w-0">
+                    <div class="flex flex-wrap items-center gap-2">
+                      <p class="truncate font-medium text-neutral-900">
+                        {{ visitor.fullName }}
+                      </p>
+                      <app-visitor-access-tag [status]="visitor.accessStatus" />
+                    </div>
+                    <p class="mt-0.5 text-xs text-neutral-500">
+                      Registrado {{ formatDateTime(visitor.createdAt) }}
+                    </p>
+                  </div>
+                </div>
+
+                @if (canManage()) {
+                  <div class="flex flex-wrap items-center gap-1">
+                    <button
+                      pButton
+                      type="button"
+                      severity="success"
+                      size="small"
+                      outlined
+                      [disabled]="visitor.accessStatus === 'PERMIT'"
+                      [loading]="store.accessLoadingVisitorId() === visitor.id"
+                      (click)="setVisitorAccess(visitor, 'PERMIT')"
+                    >
+                      Permitir
+                    </button>
+                    <button
+                      pButton
+                      type="button"
+                      severity="danger"
+                      size="small"
+                      outlined
+                      [disabled]="visitor.accessStatus === 'DENIED'"
+                      [loading]="store.accessLoadingVisitorId() === visitor.id"
+                      (click)="setVisitorAccess(visitor, 'DENIED')"
+                    >
+                      Denegar
+                    </button>
+                    <button
+                      pButton
+                      type="button"
+                      severity="secondary"
+                      text
+                      pTooltip="Editar visitante"
+                      aria-label="Editar visitante"
+                      (click)="openEditVisitor(visitor)"
+                    >
+                      <svg [pIcon]="'pencil'" [size]="14"></svg>
+                    </button>
+                    <button
+                      pButton
+                      type="button"
+                      severity="danger"
+                      text
+                      pTooltip="Eliminar visitante"
+                      aria-label="Eliminar visitante"
+                      (click)="requestRemoveVisitor(visitor)"
+                    >
+                      <svg [pIcon]="'trash'" [size]="14"></svg>
+                    </button>
+                  </div>
+                }
+              </div>
+
+              <div class="mt-3 grid gap-3 lg:grid-cols-2">
+                <div class="rounded-md bg-neutral-50 p-3">
+                  <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                      <h3 class="text-xs font-semibold uppercase tracking-wide text-neutral-600">
+                        Equipos
+                      </h3>
+                      <span class="text-[11px] text-neutral-400">
+                        {{ visitor.equipments.length }}
+                      </span>
+                    </div>
+                    @if (canManage()) {
+                      <button
+                        pButton
+                        type="button"
+                        severity="secondary"
+                        text
+                        size="small"
+                        aria-label="Agregar equipo"
+                        (click)="openAddEquipment(visitor)"
+                      >
+                        <svg [pIcon]="'plus'" [size]="14"></svg>
+                      </button>
+                    }
+                  </div>
+
+                  @if (visitor.equipments.length === 0) {
+                    <p class="mt-2 text-xs text-neutral-500">Sin equipos registrados.</p>
+                  } @else {
+                    <div class="mt-2 flex flex-col gap-2">
+                      @for (equipment of visitor.equipments; track equipment.id) {
+                        <div
+                          class="flex items-start justify-between gap-2 rounded-md bg-white p-2"
+                        >
+                          <div class="min-w-0">
+                            <p class="truncate text-sm font-medium text-neutral-800">
+                              {{ equipment.name }}
+                            </p>
+                            <p class="text-[11px] text-neutral-500">
+                              {{ equipmentSummary(equipment) }}
+                              @if (equipment.serialNumber) {
+                                · Serie {{ equipment.serialNumber }}
+                              }
+                            </p>
+                            @if (equipment.observations) {
+                              <p class="mt-0.5 text-[11px] text-neutral-400">
+                                {{ equipment.observations }}
+                              </p>
+                            }
+                          </div>
+                          @if (canManage()) {
+                            <div class="flex shrink-0 items-center">
+                              <button
+                                pButton
+                                type="button"
+                                severity="secondary"
+                                text
+                                size="small"
+                                aria-label="Editar equipo"
+                                (click)="openEditEquipment(visitor, equipment)"
+                              >
+                                <svg [pIcon]="'pencil'" [size]="12"></svg>
+                              </button>
+                              <button
+                                pButton
+                                type="button"
+                                severity="danger"
+                                text
+                                size="small"
+                                aria-label="Eliminar equipo"
+                                (click)="requestRemoveEquipment(visitor, equipment)"
+                              >
+                                <svg [pIcon]="'trash'" [size]="12"></svg>
+                              </button>
+                            </div>
+                          }
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <div class="rounded-md bg-neutral-50 p-3">
+                  <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                      <h3 class="text-xs font-semibold uppercase tracking-wide text-neutral-600">
+                        Documentos
+                      </h3>
+                      <span class="text-[11px] text-neutral-400">
+                        {{ visitor.documents.length }}
+                      </span>
+                    </div>
+                    @if (canManage()) {
+                      <button
+                        pButton
+                        type="button"
+                        severity="secondary"
+                        text
+                        size="small"
+                        aria-label="Cargar documento"
+                        (click)="openUploadDocument(visitor)"
+                      >
+                        <svg [pIcon]="'upload'" [size]="14"></svg>
+                      </button>
+                    }
+                  </div>
+
+                  @if (visitor.documents.length === 0) {
+                    <p class="mt-2 text-xs text-neutral-500">Sin documentos cargados.</p>
+                  } @else {
+                    <div class="mt-2 flex flex-col gap-2">
+                      @for (document of visitor.documents; track document.id) {
+                        <div
+                          class="flex items-center justify-between gap-2 rounded-md bg-white p-2"
+                        >
+                          <div class="flex min-w-0 items-center gap-2">
+                            <span
+                              class="shrink-0 rounded bg-neutral-100 px-1.5 py-0.5 text-[10px] font-semibold text-neutral-600"
+                            >
+                              {{ documentTypeLabel(document.documentType) }}
+                            </span>
+                            <div class="min-w-0">
+                              <p class="truncate text-sm font-medium text-neutral-800">
+                                {{ document.originalName }}
+                              </p>
+                              <p class="text-[11px] text-neutral-500">
+                                {{ formatDateTime(document.uploadedAt) }}
+                              </p>
+                            </div>
+                          </div>
+                          <div class="flex shrink-0 items-center">
+                            <button
+                              pButton
+                              type="button"
+                              severity="secondary"
+                              text
+                              size="small"
+                              aria-label="Descargar documento"
+                              [loading]="store.downloadingDocumentId() === document.id"
+                              (click)="downloadDocument(visitor, document)"
+                            >
+                              <svg [pIcon]="'download'" [size]="12"></svg>
+                            </button>
+                            @if (canManage()) {
+                              <button
+                                pButton
+                                type="button"
+                                severity="danger"
+                                text
+                                size="small"
+                                aria-label="Eliminar documento"
+                                [loading]="store.documentDeletingId() === document.id"
+                                (click)="requestRemoveDocument(visitor, document)"
+                              >
+                                <svg [pIcon]="'trash'" [size]="12"></svg>
+                              </button>
+                            }
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </section>
+  }
+</div>
+
+<app-form-dialog
+  [visible]="visitorDialogVisible()"
+  (visibleChange)="visitorDialogVisible.set($event)"
+  [header]="editingVisitor() ? 'Editar visitante' : 'Agregar visitante'"
+  width="26rem"
+>
+  <div class="flex flex-col gap-1.5">
+    <app-form-label required>Nombre completo</app-form-label>
+    <input
+      pInputText
+      [formControl]="visitorForm.controls.fullName"
+      maxlength="200"
+      class="w-full"
+      placeholder="Nombre completo del visitante"
+      [invalid]="showVisitorError()"
+    />
+    @if (showVisitorError()) {
+      <span class="text-xs text-rose-600">
+        El nombre es obligatorio y debe tener máximo 200 caracteres.
+      </span>
+    }
+  </div>
+
+  <div dialog-footer class="flex justify-end gap-2">
+    <button pButton type="button" severity="secondary" (click)="visitorDialogVisible.set(false)">
+      Cancelar
+    </button>
+    <button pButton type="button" [loading]="store.visitorSaving()" (click)="saveVisitor()">
+      Guardar
+    </button>
+  </div>
+</app-form-dialog>
+
+<app-form-dialog
+  [visible]="equipmentDialogVisible()"
+  (visibleChange)="equipmentDialogVisible.set($event)"
+  [header]="editingEquipment() ? 'Editar equipo' : 'Agregar equipo'"
+  width="40rem"
+>
+  @if (equipmentVisitor(); as visitor) {
+    <div class="rounded-md bg-neutral-50 px-3 py-2 text-xs text-neutral-600">
+      Visitante: <strong>{{ visitor.fullName }}</strong>
+    </div>
+  }
+
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div class="flex flex-col gap-1.5">
+      <app-form-label required>Nombre del equipo</app-form-label>
+      <input
+        pInputText
+        [formControl]="equipmentForm.controls.name"
+        maxlength="200"
+        class="w-full"
+        placeholder="Laptop, herramienta, etc."
+        [invalid]="showEquipmentError(equipmentForm.controls.name)"
+      />
+      @if (showEquipmentError(equipmentForm.controls.name)) {
+        <span class="text-xs text-rose-600">El nombre es obligatorio.</span>
+      }
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <app-form-label>Tipo</app-form-label>
+      <input
+        pInputText
+        [formControl]="equipmentForm.controls.type"
+        maxlength="100"
+        class="w-full"
+        placeholder="Computadora, herramienta..."
+      />
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <app-form-label>Marca</app-form-label>
+      <input
+        pInputText
+        [formControl]="equipmentForm.controls.brandName"
+        maxlength="100"
+        class="w-full"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <app-form-label>Modelo</app-form-label>
+      <input
+        pInputText
+        [formControl]="equipmentForm.controls.modelName"
+        maxlength="100"
+        class="w-full"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <app-form-label>Número de serie</app-form-label>
+      <input
+        pInputText
+        [formControl]="equipmentForm.controls.serialNumber"
+        maxlength="100"
+        class="w-full"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1.5 md:col-span-2">
+      <app-form-label>Observaciones</app-form-label>
+      <textarea
+        pTextarea
+        [formControl]="equipmentForm.controls.observations"
+        rows="3"
+        maxlength="1000"
+        class="w-full"
+      ></textarea>
+    </div>
+  </div>
+
+  <div dialog-footer class="flex justify-end gap-2">
+    <button pButton type="button" severity="secondary" (click)="equipmentDialogVisible.set(false)">
+      Cancelar
+    </button>
+    <button pButton type="button" [loading]="store.equipmentSaving()" (click)="saveEquipment()">
+      Guardar
+    </button>
+  </div>
+</app-form-dialog>
+
+<app-form-dialog
+  [visible]="documentDialogVisible()"
+  (visibleChange)="documentDialogVisible.set($event)"
+  header="Cargar documento"
+  width="30rem"
+>
+  <div class="flex flex-col gap-1.5">
+    <app-form-label required>Tipo de documento</app-form-label>
+    <p-select
+      [formControl]="documentForm.controls.documentType"
+      [options]="documentTypeOptions"
+      optionLabel="label"
+      optionValue="value"
+      appendTo="body"
+      class="w-full"
+      [invalid]="showDocumentTypeError()"
+    />
+    @if (showDocumentTypeError()) {
+      <span class="text-xs text-rose-600">Selecciona el tipo de documento.</span>
+    }
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <app-form-label required>Archivo</app-form-label>
+    <input
+      #documentFileInput
+      type="file"
+      class="hidden"
+      accept=".pdf,.jpg,.jpeg,.png,.webp"
+      (change)="onDocumentFileSelected($event)"
+    />
+    <button pButton type="button" severity="secondary" outlined (click)="documentFileInput.click()">
+      <span class="flex items-center gap-2">
+        <svg [pIcon]="'upload'" [size]="14"></svg>
+        Seleccionar archivo
+      </span>
+    </button>
+
+    @if (selectedDocumentFile(); as file) {
+      <div class="rounded-md bg-neutral-50 px-3 py-2 text-xs">
+        <p class="truncate font-medium text-neutral-800">{{ file.name }}</p>
+        <p class="text-neutral-500">{{ documentSize(file) }}</p>
+      </div>
+    }
+
+    @if (documentFileError()) {
+      <span class="text-xs text-rose-600">{{ documentFileError() }}</span>
+    }
+
+    <p class="text-xs text-neutral-500">
+      Formatos permitidos: PDF, JPG, JPEG, PNG y WEBP. Tamaño máximo: 10 MB.
+    </p>
+  </div>
+
+  <div dialog-footer class="flex justify-end gap-2">
+    <button pButton type="button" severity="secondary" (click)="documentDialogVisible.set(false)">
+      Cancelar
+    </button>
+    <button
+      pButton
+      type="button"
+      [loading]="store.documentUploading()"
+      [disabled]="!selectedDocumentFile()"
+      (click)="uploadDocument()"
+    >
+      Cargar
+    </button>
+  </div>
+</app-form-dialog>
+
+<app-form-dialog
+  [visible]="confirmVisible()"
+  (visibleChange)="onConfirmVisibleChange($event)"
+  [header]="confirmState()?.title || ''"
+  width="26rem"
+>
+  <p class="text-sm text-neutral-600">{{ confirmState()?.message }}</p>
+
+  <div dialog-footer class="flex justify-end gap-2">
+    <button pButton type="button" severity="secondary" (click)="closeConfirm()">Volver</button>
+    <button
+      pButton
+      type="button"
+      [severity]="confirmState()?.danger ? 'danger' : 'primary'"
+      [loading]="confirmLoading()"
+      (click)="runConfirm()"
+    >
+      {{ confirmState()?.confirmLabel || 'Confirmar' }}
+    </button>
+  </div>
+</app-form-dialog>

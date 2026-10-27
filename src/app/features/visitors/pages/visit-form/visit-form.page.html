@@ -1,0 +1,346 @@
+<div class="flex flex-col gap-4">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div class="flex flex-col gap-1">
+      <div class="flex flex-wrap items-center gap-2">
+        <h1 class="text-lg font-semibold text-neutral-900">
+          {{ isEditing() ? 'Editar visita' : 'Nueva visita' }}
+        </h1>
+        @if (store.detail(); as detail) {
+          <app-visit-status-tag [status]="detail.status" />
+        }
+      </div>
+      <p class="max-w-2xl text-sm text-neutral-600">
+        Captura los datos de la visita, programa el acceso o registra una entrada inmediata.
+      </p>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button pButton type="button" severity="secondary" (click)="cancel()">Volver</button>
+      @if (canEdit()) {
+        <button pButton type="button" [loading]="store.saving()" (click)="save()">Guardar</button>
+      }
+    </div>
+  </div>
+
+  @if (isEditing() && store.detailLoading() && !store.detail()) {
+    <div class="space-y-3">
+      <div class="h-40 animate-pulse rounded-lg bg-neutral-100"></div>
+      <div class="h-56 animate-pulse rounded-lg bg-neutral-100"></div>
+    </div>
+  } @else if (isEditing() && store.detailNotFound()) {
+    <div
+      class="flex flex-col items-center justify-center rounded-lg bg-white px-4 py-12 text-center"
+    >
+      <h2 class="text-base font-semibold text-neutral-800">Visita no encontrada</h2>
+      <p class="mt-1 text-sm text-neutral-500">La visita solicitada no existe o fue eliminada.</p>
+      <button pButton type="button" severity="secondary" class="mt-4" (click)="cancel()">
+        Volver al listado
+      </button>
+    </div>
+  } @else if (isEditing() && store.detailError() && !store.detail()) {
+    <div
+      class="flex flex-col items-center justify-center rounded-lg border border-rose-200 bg-rose-50 px-4 py-12 text-center"
+    >
+      <p class="text-sm text-rose-700">{{ store.detailError() }}</p>
+      <div class="mt-4 flex gap-2">
+        <button pButton type="button" severity="secondary" (click)="cancel()">Volver</button>
+        <button pButton type="button" (click)="retryLoad()">Reintentar</button>
+      </div>
+    </div>
+  } @else if (isEditing() && !canEdit()) {
+    <div
+      class="flex flex-col items-center justify-center rounded-lg border border-amber-200 bg-amber-50 px-4 py-12 text-center"
+    >
+      <h2 class="text-base font-semibold text-amber-900">Visita no editable</h2>
+      <p class="mt-1 max-w-lg text-sm text-amber-800">
+        Solo las visitas programadas se pueden editar. Consulta el detalle para revisar la
+        información, visitantes, equipos y documentos.
+      </p>
+      <button pButton type="button" class="mt-4" (click)="openDetail()">Ir al detalle</button>
+    </div>
+  } @else {
+    <form [formGroup]="form" class="flex flex-col gap-4" (ngSubmit)="save()">
+      <section class="flex flex-col gap-4 rounded-lg bg-white p-4">
+        <div>
+          <h2 class="text-sm font-semibold text-neutral-800">Datos de la visita</h2>
+          <p class="text-xs text-neutral-500">
+            La empresa, el motivo, la unidad de negocio y el departamento son obligatorios.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div class="flex flex-col gap-1.5">
+            <app-form-label required>Empresa</app-form-label>
+            <input
+              pInputText
+              formControlName="companyName"
+              maxlength="200"
+              class="w-full"
+              placeholder="Nombre de la empresa"
+              [invalid]="showError(form.controls.companyName)"
+            />
+            @if (showError(form.controls.companyName)) {
+              <span class="text-xs text-rose-600">
+                La empresa es obligatoria y debe tener máximo 200 caracteres.
+              </span>
+            }
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <app-form-label required>Motivo de la visita</app-form-label>
+            <input
+              pInputText
+              formControlName="reason"
+              maxlength="500"
+              class="w-full"
+              placeholder="Describe el motivo"
+              [invalid]="showError(form.controls.reason)"
+            />
+            @if (showError(form.controls.reason)) {
+              <span class="text-xs text-rose-600">
+                El motivo es obligatorio y debe tener máximo 500 caracteres.
+              </span>
+            }
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <app-form-label>Observaciones</app-form-label>
+          <textarea
+            pTextarea
+            formControlName="observations"
+            rows="3"
+            maxlength="2000"
+            class="w-full"
+            placeholder="Información adicional de la visita"
+          ></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div class="flex flex-col gap-1.5">
+            <app-form-label required>Unidad de negocio</app-form-label>
+            <p-select
+              formControlName="businessUnitId"
+              [options]="businessUnitStore.activeItems()"
+              optionLabel="name"
+              optionValue="id"
+              placeholder="Selecciona una unidad"
+              [filter]="true"
+              filterBy="name"
+              filterPlaceholder="Buscar unidad..."
+              appendTo="body"
+              class="w-full"
+              [invalid]="showError(form.controls.businessUnitId)"
+            />
+            @if (showError(form.controls.businessUnitId)) {
+              <span class="text-xs text-rose-600">Selecciona una unidad de negocio.</span>
+            }
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <app-form-label required>Departamento</app-form-label>
+            <p-select
+              formControlName="departmentId"
+              [options]="departmentStore.departments()"
+              optionLabel="name"
+              optionValue="id"
+              placeholder="Selecciona un departamento"
+              [filter]="true"
+              filterBy="name"
+              filterPlaceholder="Buscar departamento..."
+              appendTo="body"
+              class="w-full"
+              [invalid]="showError(form.controls.departmentId)"
+            />
+            @if (showError(form.controls.departmentId)) {
+              <span class="text-xs text-rose-600">Selecciona un departamento.</span>
+            }
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <app-form-label>Anfitrión</app-form-label>
+          <p-select
+            formControlName="employeeId"
+            [options]="employeeOptions()"
+            optionLabel="label"
+            optionValue="id"
+            placeholder="Selecciona al empleado que recibe"
+            [filter]="true"
+            filterBy="label,employeeNumber"
+            filterPlaceholder="Buscar empleado..."
+            [showClear]="true"
+            appendTo="body"
+            class="w-full"
+          >
+            <ng-template #selectedItem let-selectedOption>
+              <span>{{ selectedOption.label }}</span>
+            </ng-template>
+            <ng-template #item let-option>
+              <div class="flex flex-col">
+                <span>{{ option.label }}</span>
+                <span class="text-xs text-neutral-400">{{ option.employeeNumber }}</span>
+              </div>
+            </ng-template>
+          </p-select>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div
+            class="flex items-center justify-between gap-4 rounded-lg bg-neutral-50 p-3"
+          >
+            <div>
+              <p class="text-sm font-medium text-neutral-800">Actividad de alto riesgo</p>
+              <p class="mt-0.5 text-xs text-neutral-500">
+                Marca si la visita implica alguna actividad de riesgo.
+              </p>
+            </div>
+            <p-toggleswitch formControlName="highRiskActivity" />
+          </div>
+
+          <div
+            class="flex items-center justify-between gap-4 rounded-lg bg-neutral-50 p-3"
+          >
+            <div>
+              <p class="text-sm font-medium text-neutral-800">Visita walk-in</p>
+              <p class="mt-0.5 text-xs text-neutral-500">
+                @if (isEditing()) {
+                  No modificable en una visita programada.
+                } @else {
+                  Registra la entrada de inmediato, sin programación previa.
+                }
+              </p>
+            </div>
+            <p-toggleswitch formControlName="isWalkIn" [disabled]="isEditing()" />
+          </div>
+        </div>
+
+        @if (!isWalkIn()) {
+          <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div class="flex flex-col gap-1.5">
+              <app-form-label required>Inicio programado</app-form-label>
+              <p-datepicker
+                formControlName="scheduledStartAt"
+                [minDate]="today"
+                [showTime]="true"
+                hourFormat="24"
+                dateFormat="dd/mm/yy"
+                appendTo="body"
+                class="w-full"
+                [invalid]="showScheduleError()"
+              />
+              @if (showScheduleError()) {
+                <span class="text-xs text-rose-600"> Selecciona la fecha y hora de inicio. </span>
+              }
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+              <app-form-label>Fin programado</app-form-label>
+              <p-datepicker
+                formControlName="scheduledEndAt"
+                [minDate]="today"
+                [showTime]="true"
+                hourFormat="24"
+                dateFormat="dd/mm/yy"
+                appendTo="body"
+                class="w-full"
+                [invalid]="showEndError()"
+              />
+              @if (showEndError()) {
+                <span class="text-xs text-rose-600">
+                  La fecha de fin debe ser posterior a la fecha de inicio.
+                </span>
+              } @else {
+                <span class="text-xs text-neutral-500">Opcional.</span>
+              }
+            </div>
+          </div>
+        } @else {
+          <div
+            class="rounded-md border border-brand-200 bg-brand-50 px-3 py-2 text-xs text-brand-800"
+          >
+            La visita walk-in se registrará como iniciada al guardar y no requiere fechas
+            programadas.
+          </div>
+        }
+      </section>
+
+      <section class="flex flex-col gap-4 rounded-lg bg-white p-4">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h2 class="text-sm font-semibold text-neutral-800">Visitantes</h2>
+            <p class="text-xs text-neutral-500">
+              Registra al menos un visitante. Todos se crearán con acceso pendiente.
+            </p>
+          </div>
+          @if (!isEditing()) {
+            <button pButton type="button" severity="secondary" (click)="addVisitor()">
+              <span class="flex items-center gap-2">
+                <svg [pIcon]="'plus'" [size]="14"></svg>
+                Agregar visitante
+              </span>
+            </button>
+          }
+        </div>
+
+        @if (isEditing()) {
+          <div
+            class="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-neutral-50 p-3"
+          >
+            <p class="text-sm text-neutral-600">
+              Los visitantes, equipos y documentos se administran desde el detalle de la visita.
+            </p>
+            <button pButton type="button" severity="secondary" (click)="openDetail()">
+              Ir al detalle
+            </button>
+          </div>
+        } @else {
+          <div formArrayName="visitors" class="flex flex-col gap-2">
+            @for (control of visitors.controls; track control; let i = $index) {
+              <div class="flex items-start gap-2">
+                <div class="flex-1">
+                  <input
+                    pInputText
+                    [formControlName]="i"
+                    maxlength="200"
+                    class="w-full"
+                    [placeholder]="'Nombre completo del visitante ' + (i + 1)"
+                    [invalid]="showError(control)"
+                  />
+                  @if (showError(control)) {
+                    <span class="mt-1 block text-xs text-rose-600">
+                      El nombre del visitante es obligatorio.
+                    </span>
+                  }
+                </div>
+                <button
+                  pButton
+                  type="button"
+                  severity="danger"
+                  text
+                  [disabled]="visitors.length <= 1"
+                  aria-label="Eliminar visitante"
+                  (click)="removeVisitor(i)"
+                >
+                  <svg [pIcon]="'times'" [size]="16"></svg>
+                </button>
+              </div>
+            }
+          </div>
+          @if (showVisitorError()) {
+            <span class="text-xs text-rose-600">
+              Captura al menos un visitante con nombre completo.
+            </span>
+          }
+        }
+      </section>
+
+      <div class="flex flex-wrap items-center justify-end gap-2">
+        <button pButton type="button" severity="secondary" (click)="cancel()">Cancelar</button>
+        @if (canEdit()) {
+          <button pButton type="submit" [loading]="store.saving()">Guardar visita</button>
+        }
+      </div>
+    </form>
+  }
+</div>

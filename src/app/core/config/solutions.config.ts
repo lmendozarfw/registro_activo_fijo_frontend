@@ -33,14 +33,13 @@ export const SOLUTIONS: SolutionConfig[] = [
     description: 'Controla el ingreso y salida de visitantes con un registro claro y seguro.',
     icon: 'id-card',
     permission: SOLUTION_PERMISSIONS.visitantes,
-    route: '/soluciones/visitantes',
+    route: '/visitantes/visitas',
     theme: {
       tone: 'bg-neutral-100 text-neutral-700',
       gradient: 'from-neutral-950 via-neutral-800 to-neutral-600',
       accentText: 'text-neutral-300',
       accentSoft: 'bg-neutral-500/10 border-neutral-400/20',
     },
-    preview: true,
   },
   {
     code: 'salas',

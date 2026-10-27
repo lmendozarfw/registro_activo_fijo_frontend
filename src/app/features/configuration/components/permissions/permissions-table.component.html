@@ -10,7 +10,7 @@
 
     @if (store.permissions().length > 0) {
     <p-table [value]="store.permissions()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '900px' }">
+        [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '900px' }">
         <ng-template #header>
             <tr>
                 <th style="width: 200px">Módulo</th>

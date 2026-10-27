@@ -96,6 +96,6 @@ export const VISITOR_MENU: MenuItem[] = [
     key: 'visitas',
     label: 'Visitas',
     icon: 'users',
-    route: '/visitantes/visitas'
-  }
+    route: '/visitantes/visitas',
+  },
 ];

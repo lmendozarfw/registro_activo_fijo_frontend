@@ -59,7 +59,6 @@
     <p-table
       [value]="viewItems()"
       [loading]="store.loading()"
-      showGridlines
       [tableStyle]="{ 'min-width': '1180px' }"
     >
       <ng-template #header>
@@ -81,7 +80,7 @@
               <img
                 [src]="news.coverImage?.url"
                 [alt]="news.coverImage?.originalFileName || news.title"
-                class="h-10 w-16 rounded-md border border-neutral-200 object-cover"
+                class="h-10 w-16 rounded-md object-cover"
               />
             } @else {
               <span

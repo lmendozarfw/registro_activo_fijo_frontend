@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-4">
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <div class="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white p-4">
+        <div class="flex items-center gap-3 rounded-xl bg-white p-4">
             <span class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
                 <svg [pIcon]="'list-check'" [size]="20"></svg>
             </span>
@@ -9,7 +9,7 @@
                 <span class="text-xs text-neutral-500">Recursos con historial</span>
             </div>
         </div>
-        <div class="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white p-4">
+        <div class="flex items-center gap-3 rounded-xl bg-white p-4">
             <span class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-700">
                 <svg [pIcon]="'history'" [size]="20"></svg>
             </span>
@@ -18,7 +18,7 @@
                 <span class="text-xs text-neutral-500">Asignaciones registradas</span>
             </div>
         </div>
-        <div class="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white p-4">
+        <div class="flex items-center gap-3 rounded-xl bg-white p-4">
             <span class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
                 <svg [pIcon]="'user'" [size]="20"></svg>
             </span>
@@ -30,7 +30,7 @@
     </div>
 
     @if (store.loading() && groups().length === 0) {
-    <div class="flex flex-col gap-3 rounded-xl border border-neutral-200 bg-white p-4">
+    <div class="flex flex-col gap-3 rounded-xl bg-white p-4">
         @for (row of [1,2,3]; track row) {
         <div class="flex items-center gap-3">
             <p-skeleton shape="circle" size="2.5rem" />
@@ -76,7 +76,7 @@
                 @if (resources().length > 0) {
                 <div class="flex flex-col gap-3">
                     @for (resource of resources(); track resource.resourceId) {
-                    <article class="overflow-hidden rounded-xl border border-neutral-200 bg-white">
+                    <article class="overflow-hidden rounded-xl bg-white">
                         <button type="button"
                             class="flex w-full items-center gap-3 p-4 text-left transition-colors hover:bg-neutral-50"
                             (click)="toggle(resource.resourceId)">
@@ -149,7 +149,7 @@
                                     </div>
 
                                     <div class="flex-1" [class.pb-4]="!last">
-                                        <div class="rounded-lg border border-neutral-200 bg-white p-3">
+                                        <div class="rounded-lg bg-white p-3">
                                             <div class="flex flex-wrap items-center justify-between gap-2">
                                                 <div class="flex flex-wrap items-center gap-2">
                                                     <span class="text-sm font-semibold text-neutral-800">{{

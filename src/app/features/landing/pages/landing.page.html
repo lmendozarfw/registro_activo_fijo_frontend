@@ -29,7 +29,7 @@
 
     <a
       href="#acceso"
-      class="ml-auto hidden items-center gap-2 rounded-xl bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 active:scale-[0.99] sm:inline-flex lg:ml-3"
+      class="ml-auto hidden items-center gap-2 rounded-xl bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700 active:scale-[0.99] sm:inline-flex lg:ml-3"
     >
       <svg [pIcon]="'sign-in'" [size]="15"></svg>
       Iniciar sesión
@@ -37,7 +37,7 @@
 
     <button
       type="button"
-      class="ml-auto flex size-10 items-center justify-center rounded-lg border border-neutral-200 text-neutral-600 transition hover:bg-neutral-50 sm:hidden"
+      class="ml-auto flex size-10 items-center justify-center rounded-lg text-neutral-600 transition hover:bg-neutral-50 sm:hidden"
       (click)="toggleMenu()"
       [attr.aria-label]="menuOpen() ? 'Cerrar menú' : 'Abrir menú'"
       [attr.aria-expanded]="menuOpen()"
@@ -294,7 +294,7 @@
                 </div>
               } @else {
                 <div
-                  class="flex items-start gap-2 rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2.5 text-xs text-neutral-700"
+                  class="flex items-start gap-2 rounded-xl bg-neutral-50 px-3 py-2.5 text-xs text-neutral-700"
                 >
                   <svg [pIcon]="'info-circle'" [size]="16"></svg>
                   <span
@@ -340,7 +340,7 @@
             (click)="openSolution($event, solution)"
             class="
          cursor-pointer group flex min-h-56 flex-col
-         rounded-2xl border border-neutral-200 bg-white p-6
+         rounded-2xl bg-white p-6
          shadow-sm transition duration-200
          hover:-translate-y-1 hover:border-brand-200
          hover:shadow-xl hover:shadow-brand-900/5"
@@ -403,7 +403,7 @@
         </div>
         <a
           routerLink="/noticias"
-          class="inline-flex items-center gap-2 rounded-xl border border-neutral-200 px-4 py-2.5 text-sm font-semibold text-neutral-700 transition hover:border-brand-300 hover:text-brand-700"
+          class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-neutral-700 transition hover:border-brand-300 hover:text-brand-700"
         >
           Ver todas las noticias
           <svg [pIcon]="'arrow-right'" [size]="14"></svg>
@@ -414,7 +414,7 @@
         <div class="mt-10 grid grid-cols-12 gap-4">
           @for (item of [1, 2, 3]; track item) {
             <div
-              class="col-span-12 overflow-hidden rounded-2xl border border-neutral-200 bg-white md:col-span-6 lg:col-span-4"
+              class="col-span-12 overflow-hidden rounded-2xl bg-white md:col-span-6 lg:col-span-4"
             >
               <div class="aspect-[16/9] animate-pulse bg-neutral-100"></div>
               <div class="space-y-3 p-5">
@@ -438,7 +438,7 @@
         </div>
       } @else {
         <div
-          class="mt-10 rounded-2xl border border-neutral-200 bg-neutral-50 px-6 py-10 text-center"
+          class="mt-10 rounded-2xl bg-neutral-50 px-6 py-10 text-center"
         >
           <p class="text-sm text-neutral-500">Aún no hay noticias publicadas.</p>
           <a
@@ -454,11 +454,11 @@
   </section>
 
   <section id="menu" class="scroll-mt-20 bg-neutral-50 py-20 sm:py-24">
-    <div 
+    <div
     appAnimateOnScroll="fadeInLeft"
     class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div
-        class="grid overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-sm lg:grid-cols-[0.85fr_1.15fr]"
+        class="grid overflow-hidden rounded-3xl bg-white shadow-sm lg:grid-cols-[0.85fr_1.15fr]"
       >
         <div class="flex flex-col justify-center p-7 sm:p-10 lg:p-12">
           <span
@@ -477,15 +477,15 @@
 
           <div class="mt-6 flex flex-wrap gap-2">
             <span
-              class="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-600"
+              class="rounded-full bg-white px-3 py-1.5 text-xs font-medium text-neutral-600"
               >Lunes a viernes</span
             >
             <span
-              class="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-600"
+              class="rounded-full bg-white px-3 py-1.5 text-xs font-medium text-neutral-600"
               >Comida corrida</span
             >
             <span
-              class="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-600"
+              class="rounded-full bg-white px-3 py-1.5 text-xs font-medium text-neutral-600"
               >Opciones balanceadas</span
             >
           </div>
@@ -570,9 +570,9 @@
       </article>
 
       <div class="mt-5 grid gap-5 lg:grid-cols-2">
-        <article 
+        <article
         appAnimateOnScroll="fadeInLeft"
-        class="rounded-3xl border border-neutral-200 bg-neutral-50 p-7 sm:p-9">
+        class="rounded-3xl bg-neutral-50 p-7 sm:p-9">
           <span
             class="flex size-12 items-center justify-center rounded-xl bg-brand-100 text-brand-700"
           >
@@ -594,9 +594,9 @@
           </p>
         </article>
 
-        <article 
+        <article
         appAnimateOnScroll="fadeInRight"
-        class="rounded-3xl border border-neutral-200 bg-neutral-50 p-7 sm:p-9">
+        class="rounded-3xl bg-neutral-50 p-7 sm:p-9">
           <span class="flex size-12 items-center justify-center rounded-xl bg-neutral-200 text-neutral-700">
             <svg [pIcon]="'eye'" [size]="23"></svg>
           </span>

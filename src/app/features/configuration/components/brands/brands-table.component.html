@@ -16,7 +16,7 @@
 
     @if (store.brands().length > 0) {
     <p-table [value]="store.brands()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-        [rowsPerPageOptions]="[10, 20]" showGridlines [tableStyle]="{ 'min-width': '1000px' }">
+        [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '1000px' }">
         <ng-template #header>
             <tr>
                 <th>Nombre</th>

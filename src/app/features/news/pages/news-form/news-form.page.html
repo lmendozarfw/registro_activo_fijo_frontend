@@ -38,7 +38,7 @@
     </div>
   } @else if (isEditing() && store.detailNotFound()) {
     <div
-      class="flex flex-col items-center justify-center rounded-lg border border-neutral-200 bg-white px-4 py-12 text-center"
+      class="flex flex-col items-center justify-center rounded-lg bg-white px-4 py-12 text-center"
     >
       <h2 class="text-base font-semibold text-neutral-800">Noticia no encontrada</h2>
       <p class="mt-1 text-sm text-neutral-500">
@@ -75,7 +75,7 @@
         </div>
       }
 
-      <section class="flex flex-col gap-4 rounded-lg border border-neutral-200 bg-white p-4">
+      <section class="flex flex-col gap-4 rounded-lg bg-white p-4">
         <div>
           <h2 class="text-sm font-semibold text-neutral-800">Contenido</h2>
           <p class="text-xs text-neutral-500">
@@ -168,7 +168,7 @@
         </div>
       </section>
 
-      <section class="flex flex-col gap-4 rounded-lg border border-neutral-200 bg-white p-4">
+      <section class="flex flex-col gap-4 rounded-lg bg-white p-4">
         @if (isEditing() && store.detail()) {
           <app-news-image-manager
             [images]="store.detail()?.images ?? []"

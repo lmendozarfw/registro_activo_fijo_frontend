@@ -80,7 +80,7 @@ export interface NewsImageUploadRequest {
         <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
           @for (image of images(); track image.id) {
             <article
-              class="group relative overflow-hidden rounded-lg border border-neutral-200 bg-white"
+              class="group relative overflow-hidden rounded-lg bg-white"
             >
               <div class="relative aspect-video bg-neutral-100">
                 @if (image.url) {
