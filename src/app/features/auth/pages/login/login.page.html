@@ -1,14 +1,14 @@
-<div class="w-full min-w-[360px] max-w-md bg-white rounded-xl shadow-card border border-slate-100 p-8">
+<div class="w-full min-w-[360px] max-w-md bg-white rounded-xl shadow-card border border-neutral-100 p-8">
     <div class="flex flex-col items-center mb-6">
         <span
-            class="flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-[#052e16] to-[#22c55e] text-white mb-4">
+            class="flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-neutral-950 to-brand-500 text-white mb-4">
             <svg [pIcon]="'check-circle'" [size]="24"></svg>
         </span>
-        <h2 class="text-2xl font-bold text-slate-800 mb-1 text-center">Bienvenido de nuevo</h2>
+        <h2 class="text-2xl font-bold text-neutral-800 mb-1 text-center">Bienvenido de nuevo</h2>
         @if (mode() === 'qr') {
-        <p class="text-slate-500 text-sm text-center">Escanea el QR de tu gafete para iniciar sesión</p>
+        <p class="text-neutral-500 text-sm text-center">Escanea el QR de tu gafete para iniciar sesión</p>
         } @else {
-        <p class="text-slate-500 text-sm text-center">Ingresa tus credenciales para acceder al sistema</p>
+        <p class="text-neutral-500 text-sm text-center">Ingresa tus credenciales para acceder al sistema</p>
         }
     </div>
 
@@ -19,14 +19,14 @@
             hint="Apunta el QR de tu gafete" (scanned)="onBadgeScanned($event)" />
 
         @if (badgeUser() && !authStore.loading()) {
-        <div class="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-700">
+        <div class="flex items-center gap-2 rounded-xl border border-brand-200 bg-brand-50 px-3 py-2 text-xs text-brand-700">
             <svg [pIcon]="'user'" [size]="16"></svg>
             <span class="min-w-0 flex-1 truncate">
                 Sesión iniciada como <b>{{ badgeUser() }}</b>
             </span>
         </div>
         } @else {
-        <div class="flex items-start gap-2 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2.5 text-xs text-blue-800">
+        <div class="flex items-start gap-2 rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2.5 text-xs text-neutral-700">
             <svg [pIcon]="'info-circle'" [size]="16"></svg>
             <span>El gafete trae tu usuario y contraseña en el QR, así que el acceso es automático.</span>
         </div>
@@ -51,7 +51,7 @@
                     placeholder="••••••••••" [invalid]="!!passwordError" />
                 <button type="button" (click)="togglePasswordMask()"
                     [attr.aria-label]="passwordMask() ? 'Mostrar contraseña' : 'Ocultar contraseña'"
-                    class="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-slate-400 transition hover:text-slate-600">
+                    class="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-neutral-400 transition hover:text-neutral-600">
                     @if (passwordMask()) {
                     <svg [pIcon]="'eye'" [size]="16"></svg>
                     } @else {
@@ -65,7 +65,7 @@
         </div>
 
         <button pButton type="submit" [loading]="authStore.loading()"
-            class="mt-2 w-full bg-[#16a34a]! hover:bg-[#15803d]! border-transparent! text-white!">
+            class="mt-2 w-full bg-brand-500! hover:bg-brand-700! border-transparent! text-white!">
             <span class="flex items-center justify-center gap-2">
                 @if (authStore.loading()) {
                 <svg [pIcon]="'spinner'" [spin]="true" [size]="16"></svg>
@@ -79,7 +79,7 @@
     }
 
     <button type="button"
-        class="mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 py-2.5 text-sm font-semibold text-slate-600 transition hover:border-[#16a34a] hover:text-[#16a34a] active:scale-[0.99]"
+        class="mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-200 py-2.5 text-sm font-semibold text-neutral-600 transition hover:border-brand-500 hover:text-brand-600 active:scale-[0.99]"
         (click)="toggleMode()">
         @if (mode() === 'qr') {
         <svg [pIcon]="'pencil'" [size]="16"></svg>
@@ -90,7 +90,7 @@
     </button>
 
     <a routerLink="/"
-        class="mt-6 flex items-center justify-center gap-2 text-sm font-medium text-slate-500 transition hover:text-slate-800">
+        class="mt-6 flex items-center justify-center gap-2 text-sm font-medium text-neutral-500 transition hover:text-neutral-800">
         <svg [pIcon]="'arrow-left'" [size]="14"></svg>
         Volver al inicio
     </a>

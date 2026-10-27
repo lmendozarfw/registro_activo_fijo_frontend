@@ -1,4 +1,4 @@
-<div class="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12">
+<div class="flex min-h-screen items-center justify-center bg-neutral-950 px-4 py-12">
   <div
     class="pointer-events-none fixed -left-24 top-1/4 size-96 rounded-full bg-rose-500/10 blur-3xl"
   ></div>
@@ -18,30 +18,30 @@
     <p class="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-rose-600">
       Acceso restringido
     </p>
-    <h1 class="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+    <h1 class="mt-2 text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">
       No tienes permiso para entrar
     </h1>
 
     @if (solution(); as current) {
-      <p class="mt-4 text-sm leading-7 text-slate-600">
+      <p class="mt-4 text-sm leading-7 text-neutral-600">
         Tu sesión es válida, pero el módulo
-        <strong class="font-semibold text-slate-900">{{ current.name }}</strong> requiere un permiso
+        <strong class="font-semibold text-neutral-900">{{ current.name }}</strong> requiere un permiso
         adicional.
       </p>
     } @else {
-      <p class="mt-4 text-sm leading-7 text-slate-600">
+      <p class="mt-4 text-sm leading-7 text-neutral-600">
         Tu sesión es válida, pero no cuentas con el permiso necesario para acceder a esta sección.
       </p>
     }
 
-    <p class="mt-5 text-sm leading-6 text-slate-500">
+    <p class="mt-5 text-sm leading-6 text-neutral-500">
       Solicita la asignación de este permiso al área de Sistemas y vuelve a intentarlo.
     </p>
 
     <div class="mt-7 flex flex-col gap-2 sm:flex-row">
       <a
         routerLink="/hub"
-        class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+        class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-neutral-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-neutral-800"
       >
         <svg [pIcon]="'layout-grid'" [size]="15"></svg>
         Ir al hub
@@ -50,7 +50,7 @@
       @if (returnUrl(); as url) {
         <a
           [routerLink]="url"
-          class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+          class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-neutral-200 px-4 py-2.5 text-sm font-semibold text-neutral-700 transition hover:border-neutral-300 hover:bg-neutral-50"
         >
           Reintentar
           <svg [pIcon]="'refresh'" [size]="14"></svg>

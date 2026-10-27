@@ -1,6 +1,6 @@
 <div>
     <div class="mb-4 flex items-start justify-between gap-4">
-        <p class="text-sm text-slate-600 max-w-[70%]">Un departamento agrupa a los empleados de la institución, por
+        <p class="text-sm text-neutral-600 max-w-[70%]">Un departamento agrupa a los empleados de la institución, por
             ejemplo Contabilidad, Recursos Humanos o Sistemas. Aquí se dan de alta para asignarlos a los empleados.</p>
         <button pButton type="button" (click)="openCreate()">
             <span class="flex items-center gap-2">
@@ -68,7 +68,7 @@
     </app-form-dialog>
 
     <app-form-dialog [(visible)]="deleteDialogVisible" header="Eliminar departamento" width="24rem">
-        <p class="text-sm text-slate-600">
+        <p class="text-sm text-neutral-600">
             ¿Seguro que deseas eliminar el departamento <strong>{{ departmentToDelete?.name }}</strong>? Esta acción no
             se puede deshacer.
         </p>

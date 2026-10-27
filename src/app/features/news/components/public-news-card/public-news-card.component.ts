@@ -12,9 +12,9 @@ import { NewsDatePipe } from '../../pipes/news-date.pipe';
   template: `
     <a
       [routerLink]="['/noticias', news().id]"
-      class="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:border-teal-200 hover:shadow-xl hover:shadow-teal-900/5"
+      class="group flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:border-brand-200 hover:shadow-xl hover:shadow-brand-900/5"
     >
-      <div class="relative aspect-[16/9] overflow-hidden bg-slate-100">
+      <div class="relative aspect-[16/9] overflow-hidden bg-neutral-100">
         <img
           [src]="coverUrl()"
           [alt]="news().title"
@@ -25,25 +25,25 @@ import { NewsDatePipe } from '../../pipes/news-date.pipe';
 
       <div class="flex flex-1 flex-col p-5">
         <div
-          class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-teal-700"
+          class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-brand-700"
         >
           <span>Noticia</span>
-          <span class="size-1 rounded-full bg-teal-300"></span>
-          <span class="text-slate-400">
+          <span class="size-1 rounded-full bg-brand-300"></span>
+          <span class="text-neutral-400">
             {{ news().publishedAt | newsDate }}
           </span>
         </div>
 
-        <h3 class="mt-2 line-clamp-2 text-base font-bold leading-snug text-slate-900">
+        <h3 class="mt-2 line-clamp-2 text-base font-bold leading-snug text-neutral-900">
           {{ news().title }}
         </h3>
 
-        <p class="mt-2 line-clamp-2 text-sm leading-6 text-slate-500">
+        <p class="mt-2 line-clamp-2 text-sm leading-6 text-neutral-500">
           Consulta la información completa en el portal de Comunicación Interna.
         </p>
 
         <span
-          class="mt-auto inline-flex items-center gap-2 pt-3 text-sm font-semibold text-slate-700 transition group-hover:text-teal-700"
+          class="mt-auto inline-flex items-center gap-2 pt-3 text-sm font-semibold text-neutral-700 transition group-hover:text-brand-700"
         >
           Leer nota
           <svg [pIcon]="'arrow-right'" [size]="14"></svg>

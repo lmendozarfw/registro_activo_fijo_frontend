@@ -1,6 +1,6 @@
 <div>
     <div class="mb-4 flex items-start justify-between gap-4">
-        <p class="text-sm text-slate-600 max-w-[80%]">Gestiona las asignaciones de recursos a empleados.</p>
+        <p class="text-sm text-neutral-600 max-w-[80%]">Gestiona las asignaciones de recursos a empleados.</p>
         <button pButton type="button" (click)="openCreate()">
             <span class="flex items-center gap-2">
                 <svg [pIcon]="'plus'" [size]="18"></svg>
@@ -32,7 +32,7 @@
         </ng-template>
         <ng-template #body let-a>
             <tr>
-                <td><span class="inline-block rounded-md bg-slate-100 px-2 py-1 font-mono text-xs">{{ a.assetCode
+                <td><span class="inline-block rounded-md bg-neutral-100 px-2 py-1 font-mono text-xs">{{ a.assetCode
                         }}</span></td>
                 <td>{{ a.resourceName }}</td>
                 <td>{{ a.brandName }} / {{ a.modelName }}</td>
@@ -72,7 +72,7 @@
                 <p-select formControlName="employeeId" [options]="availableEmployees()" optionLabel="label"
                     optionValue="id" [filter]="true" filterBy="label" filterPlaceholder="Buscar empleado..."
                     placeholder="Selecciona un empleado" appendTo="body" class="w-full" />
-                <span class="text-xs text-slate-500">Solo se muestran empleados activos sin asignación activa.</span>
+                <span class="text-xs text-neutral-500">Solo se muestran empleados activos sin asignación activa.</span>
             </div>
 
             <div class="flex flex-col gap-1.5">
@@ -85,28 +85,28 @@
                         <div class="flex items-center gap-2">
                             <span>{{ selectedOption.name }}</span>
                             @if (selectedOption.metadata?.['name']) {
-                            <span class="text-xs text-surface-500">{{ selectedOption.metadata['name'] }}</span>
+                            <span class="text-xs text-neutral-500">{{ selectedOption.metadata['name'] }}</span>
                             }
                         </div>
                     </ng-template>
                     <ng-template #group let-group>
-                        <div class="px-2 py-1 text-xs font-semibold uppercase text-surface-500">{{ group.name }}</div>
+                        <div class="px-2 py-1 text-xs font-semibold uppercase text-neutral-500">{{ group.name }}</div>
                     </ng-template>
                     <ng-template let-member #item>
                         <div class="w-full flex items-center gap-3 py-1">
                             <span
-                                class="inline-block rounded-md bg-slate-200 px-2 py-1 font-mono text-xs flex-1 max-w-max">{{member.assetCode
+                                class="inline-block rounded-md bg-neutral-200 px-2 py-1 font-mono text-xs flex-1 max-w-max">{{member.assetCode
                                 }}</span>
                             <div class="flex-auto flex flex-col">
                                 <span class="font-medium">{{ member.name }}</span>
                                 @if (member.metadata?.['name']) {
-                                <span class="text-xs text-surface-500">{{ member.metadata['name'] }}</span>
+                                <span class="text-xs text-neutral-500">{{ member.metadata['name'] }}</span>
                                 }
                             </div>
                         </div>
                     </ng-template>
                 </p-select>
-                <span class="text-xs text-slate-500">Solo se muestran recursos disponibles.</span>
+                <span class="text-xs text-neutral-500">Solo se muestran recursos disponibles.</span>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
@@ -133,8 +133,8 @@
     </app-form-dialog>
 
     <app-form-dialog [(visible)]="dialogReturnVisible" [header]="'Devolver recurso'" width="400px">
-        <div class="p-2 rounded-md bg-slate-100">
-            <span class="text-xs text-slate-500">El sistema registrará el usuario que va a realizar esta
+        <div class="p-2 rounded-md bg-neutral-100">
+            <span class="text-xs text-neutral-500">El sistema registrará el usuario que va a realizar esta
                 acción.</span>
         </div>
         <form [formGroup]="formReturn" class="flex flex-col gap-4" (ngSubmit)="returnResource()">
@@ -153,17 +153,17 @@
 
     <app-form-dialog [(visible)]="dialogRenewVisible" [header]="'Renovar asignación'" width="54rem">
         @if (selectedAssignment) {
-        <div class="grid grid-cols-2 gap-4 rounded-md border border-slate-200 bg-slate-50 p-3">
+        <div class="grid grid-cols-2 gap-4 rounded-md border border-neutral-200 bg-neutral-50 p-3">
             <div class="flex flex-col">
-                <span class="text-xs uppercase text-slate-500">Empleado</span>
+                <span class="text-xs uppercase text-neutral-500">Empleado</span>
                 <span class="text-sm font-medium">{{ selectedAssignment.employeeName }}</span>
             </div>
             <div class="flex flex-col">
-                <span class="text-xs uppercase text-slate-500">Recurso actual</span>
+                <span class="text-xs uppercase text-neutral-500">Recurso actual</span>
                 <span class="text-sm font-medium">{{ selectedAssignment.assetCode }} · {{
                     selectedAssignment.resourceName
                     }}</span>
-                <span class="text-xs text-slate-500">{{ selectedAssignment.brandName }} / {{
+                <span class="text-xs text-neutral-500">{{ selectedAssignment.brandName }} / {{
                     selectedAssignment.modelName
                     }}</span>
             </div>
@@ -175,7 +175,7 @@
                 <app-form-label required>Tipo de renovación</app-form-label>
                 <p-selectbutton formControlName="option" [options]="renewOptions" optionLabel="label"
                     optionValue="value" [allowEmpty]="false" />
-                <span class="text-xs text-slate-500">Selecciona un celular existente disponible o registra uno
+                <span class="text-xs text-neutral-500">Selecciona un celular existente disponible o registra uno
                     nuevo.</span>
             </div>
 
@@ -191,7 +191,7 @@
                         <div class="flex items-center gap-2">
                             <span>{{ selectedOption.name }}</span>
                             @if (selectedOption.brandName || selectedOption.modelName) {
-                            <span class="text-xs text-surface-500">{{ selectedOption.brandName }} /
+                            <span class="text-xs text-neutral-500">{{ selectedOption.brandName }} /
                                 {{ selectedOption.modelName }}</span>
                             }
                         </div>
@@ -199,23 +199,23 @@
                     <ng-template #item let-member>
                         <div class="w-full flex items-center gap-3 py-1">
                             <span
-                                class="inline-block rounded-md bg-slate-200 px-2 py-1 font-mono text-xs flex-1 max-w-max">{{member.assetCode
+                                class="inline-block rounded-md bg-neutral-200 px-2 py-1 font-mono text-xs flex-1 max-w-max">{{member.assetCode
                                 }}</span>
                             <div class="flex-auto flex flex-col">
                                 <span class="font-medium">{{ member.name }}</span>
                                 @if (member.brandName || member.modelName) {
-                                <span class="text-xs text-surface-500">{{ member.brandName }} / {{ member.modelName}} / {{ member.activeLinePhoneNumber ? member.activeLinePhoneNumber : 'Sin línea' }}</span>
+                                <span class="text-xs text-neutral-500">{{ member.brandName }} / {{ member.modelName}} / {{ member.activeLinePhoneNumber ? member.activeLinePhoneNumber : 'Sin línea' }}</span>
                                 }
                             </div>
                         </div>
                     </ng-template>
                 </p-select>
-                <span class="text-xs text-slate-500">Solo se muestran celulares disponibles.</span>
+                <span class="text-xs text-neutral-500">Solo se muestran celulares disponibles.</span>
             </div>
             }
 
             @if (renewForm.controls.option.value === renewDeviceOption.NewDevice) {
-            <div class="rounded-md bg-slate-50 p-3 flex flex-col gap-4">
+            <div class="rounded-md bg-neutral-50 p-3 flex flex-col gap-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="flex flex-col gap-1.5">
                         <app-form-label required>Modelo (Celulares)</app-form-label>

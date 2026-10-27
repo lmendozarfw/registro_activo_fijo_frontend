@@ -1,6 +1,6 @@
 <div>
     <div class="mb-4 flex items-start justify-between gap-4">
-        <p class="text-sm text-slate-600 max-w-[70%]">Un sistema es una aplicación o plataforma donde la institución
+        <p class="text-sm text-neutral-600 max-w-[70%]">Un sistema es una aplicación o plataforma donde la institución
             tiene cuentas, por ejemplo el ERP, Gmail, Outlook o Trello. Aquí se dan de alta para luego asignarlos a los
             empleados junto con su credencial.</p>
         <button pButton type="button" (click)="openCreate()">
@@ -31,7 +31,7 @@
         <ng-template #body let-system>
             <tr>
                 <td>
-                    <span class="inline-block rounded-md bg-slate-100 px-2 py-1 font-mono text-xs">{{ system.code
+                    <span class="inline-block rounded-md bg-neutral-100 px-2 py-1 font-mono text-xs">{{ system.code
                         }}</span>
                 </td>
                 <td>{{ system.name }}</td>
@@ -72,12 +72,12 @@
                 <app-form-label required>Código</app-form-label>
                 <div class="flex flex-col gap-2">
                     <input pInputText formControlName="code"
-                        class="w-full disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
+                        class="w-full disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:text-neutral-500"
                         placeholder="Código único (ej. GMAIL)" [attr.disabled]="autoCode ? true : null"
                         [invalid]="form.controls.code.invalid && form.controls.code.touched" />
                     <div class="flex items-center justify-between w-full gap-2">
                         @if (autoCode) {
-                        <span class="text-xs text-slate-500">Se genera automáticamente a partir del nombre.</span>
+                        <span class="text-xs text-neutral-500">Se genera automáticamente a partir del nombre.</span>
                         }
                         <button pButton type="button" severity="secondary" text size="small" (click)="toggleCodeMode()">
                             <span class="flex items-center gap-1.5">
@@ -117,7 +117,7 @@
     </app-form-dialog>
 
     <app-form-dialog [(visible)]="deleteDialogVisible" header="Eliminar sistema" width="24rem">
-        <p class="text-sm text-slate-600">
+        <p class="text-sm text-neutral-600">
             ¿Seguro que deseas eliminar el sistema <strong>{{ systemToDelete?.name }}</strong>? Esta acción no se puede
             deshacer.
         </p>

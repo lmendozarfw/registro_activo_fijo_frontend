@@ -10,12 +10,12 @@ import { LoaderService } from '../../../core/services/loader.service';
   template: `
     @if (loader.loading()) {
       <div
-        class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm"
+        class="fixed inset-0 z-[9999] flex items-center justify-center bg-neutral-900/40 backdrop-blur-sm"
       >
         <div
           class="flex flex-col items-center gap-3 rounded-xl px-6 py-4"
         >
-          <svg [pIcon]="'spinner'" [spin]="true" [size]="50" class="text-emerald-600"></svg>
+          <svg [pIcon]="'spinner'" [spin]="true" [size]="50" class="text-brand-600"></svg>
           <span class="text-sm font-medium text-white">{{ message() }}</span>
         </div>
       </div>

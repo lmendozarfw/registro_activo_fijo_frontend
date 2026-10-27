@@ -7,11 +7,11 @@ import { CheckCircle, Qrcode, ChartBar } from '@primeicons/angular';
   imports: [RouterOutlet, CheckCircle, Qrcode, ChartBar],
   styles: [],
   template: `
-    <div class="auth-layout min-h-screen flex bg-slate-50">
+    <div class="auth-layout min-h-screen flex bg-neutral-50">
       <!-- Panel izquierdo: Branding -->
       <div
         class="auth-brand hidden lg:flex w-1/2 relative overflow-hidden items-center justify-center
-                bg-gradient-to-br from-[#052e16] via-[#15803d] to-[#22c55e] text-white p-12"
+                bg-gradient-to-br from-neutral-950 via-brand-700 to-brand-500 text-white p-12"
       >
         <div class="auth-decor auth-decor-1"></div>
         <div class="auth-decor auth-decor-2"></div>

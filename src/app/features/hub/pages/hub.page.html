@@ -1,5 +1,5 @@
-<div class="min-h-screen bg-slate-50">
-  <header class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
+<div class="min-h-screen bg-neutral-50">
+  <header class="sticky top-0 z-50 border-b border-neutral-200/80 bg-white/90 backdrop-blur-xl">
     <div class="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4 sm:px-6 lg:px-8">
       <a routerLink="/" class="flex shrink-0 items-center" aria-label="Raudal Footwear, inicio">
         <img src="assets/images/sinergyHub.jpg" alt="Raudal Footwear" class="h-8 w-auto" />
@@ -7,14 +7,14 @@
 
       <div class="ml-auto flex items-center gap-4">
         <div class="hidden text-right sm:block">
-          <p class="text-sm font-medium text-slate-900">{{ authStore.user()?.fullName }}</p>
+          <p class="text-sm font-medium text-neutral-900">{{ authStore.user()?.fullName }}</p>
         </div>
         <button
           pButton
           type="button"
           text
           size="small"
-          class="text-slate-600!"
+          class="text-neutral-600!"
           aria-label="Cerrar sesión"
           (click)="logout()"
         >
@@ -28,20 +28,20 @@
   <main class="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
     <div class="flex flex-wrap items-end justify-between gap-4">
       <div>
-        <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
+        <p class="text-xs font-semibold uppercase tracking-[0.14em] text-neutral-400">
           Hub de acceso
         </p>
-        <h1 class="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+        <h1 class="mt-2 text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl">
           Hola, {{ firstName() }}
         </h1>
-        <p class="mt-2 max-w-xl text-sm leading-6 text-slate-500">
+        <p class="mt-2 max-w-xl text-sm leading-6 text-neutral-500">
           Selecciona un sistema para comenzar. Solo verás aquellos para los que tienes acceso.
         </p>
       </div>
 
       @if (accessibleSolutions().length) {
         <span
-          class="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600"
+          class="rounded-full border border-neutral-200 bg-white px-3 py-1 text-xs font-medium text-neutral-600"
         >
           {{ accessibleSolutions().length }}
           {{ accessibleSolutions().length === 1 ? 'sistema' : 'sistemas' }}
@@ -57,15 +57,15 @@
       </div>
     } @else {
       <div
-        class="mt-8 rounded-xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center"
+        class="mt-8 rounded-xl border border-dashed border-neutral-300 bg-white px-6 py-16 text-center"
       >
         <span
-          class="mx-auto flex size-11 items-center justify-center rounded-full bg-slate-100 text-slate-500"
+          class="mx-auto flex size-11 items-center justify-center rounded-full bg-neutral-100 text-neutral-500"
         >
           <svg [pIcon]="'lock'" [size]="20"></svg>
         </span>
-        <h2 class="mt-4 text-base font-semibold text-slate-900">Sin permisos de acceso</h2>
-        <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+        <h2 class="mt-4 text-base font-semibold text-neutral-900">Sin permisos de acceso</h2>
+        <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-neutral-500">
           Aún no cuentas con permisos asignados. Solicita permisos al área de Sistemas para poder
           tener acceso.
         </p>

@@ -6,13 +6,13 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   template: `
     <div class="flex w-full flex-col items-center justify-center py-10 text-center">
       <span
-        class="rounded-md bg-slate-100 px-3 py-1.5 font-mono text-xs text-slate-500"
+        class="rounded-md bg-neutral-100 px-3 py-1.5 font-mono text-xs text-neutral-500"
       >
         {{ message() }}
       </span>
 
       @if (description()) {
-        <p class="mt-2 max-w-md text-sm text-slate-400">
+        <p class="mt-2 max-w-md text-sm text-neutral-400">
           {{ description() }}
         </p>
       }

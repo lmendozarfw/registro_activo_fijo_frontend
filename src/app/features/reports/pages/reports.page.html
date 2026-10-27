@@ -1,47 +1,47 @@
 <div class="flex flex-col gap-4">
     <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-            <h1 class="text-lg font-semibold text-slate-800">Reportes</h1>
-            <p class="text-sm text-slate-500">Consulta y descarga los reportes del sistema</p>
+            <h1 class="text-lg font-semibold text-neutral-800">Reportes</h1>
+            <p class="text-sm text-neutral-500">Consulta y descarga los reportes del sistema</p>
         </div>
     </div>
 
     <div class="flex flex-col gap-3">
         @for (report of reports; track report.key) {
-        <section class="rounded-xl border border-slate-200 bg-white overflow-hidden">
+        <section class="rounded-xl border border-neutral-200 bg-white overflow-hidden">
             <button type="button"
-                class="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-slate-50"
+                class="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-neutral-50"
                 (click)="toggle(report.key)">
                 <span class="flex size-10 items-center justify-center rounded-lg" [class]="toneClass(report.tone)">
                     <svg [pIcon]="report.icon" [size]="18"></svg>
                 </span>
                 <div class="flex min-w-0 flex-1 flex-col">
-                    <span class="text-sm font-semibold text-slate-800">{{ report.title }}</span>
-                    <span class="text-xs text-slate-500">{{ report.description }}</span>
+                    <span class="text-sm font-semibold text-neutral-800">{{ report.title }}</span>
+                    <span class="text-xs text-neutral-500">{{ report.description }}</span>
                 </div>
                 <div class="flex items-center gap-2">
                     @if (report.key === 'inventory') {
-                    <span class="hidden rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 sm:inline-flex">
+                    <span class="hidden rounded-full bg-neutral-100 px-2 py-0.5 text-xs text-neutral-600 sm:inline-flex">
                         {{ inventoryCount() }} registros · {{ formatCurrency(inventoryTotalValue()) }}
                     </span>
                     } @else if (report.key === 'mobile-phones') {
-                    <span class="hidden rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 sm:inline-flex">
+                    <span class="hidden rounded-full bg-neutral-100 px-2 py-0.5 text-xs text-neutral-600 sm:inline-flex">
                         {{ mobilePhonesCount() }} registros
                     </span>
                     } @else if (report.key === 'available-mobile-phones') {
-                    <span class="hidden rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 sm:inline-flex">
+                    <span class="hidden rounded-full bg-neutral-100 px-2 py-0.5 text-xs text-neutral-600 sm:inline-flex">
                         {{ availableMobilePhonesCount() }} registros
                     </span>
                     }
                     <svg [pIcon]="isExpanded(report.key) ? 'chevron-up' : 'chevron-down'" [size]="16"
-                        class="text-slate-400"></svg>
+                        class="text-neutral-400"></svg>
                 </div>
             </button>
 
             @if (isExpanded(report.key)) {
-            <div class="border-t border-slate-200">
+            <div class="border-t border-neutral-200">
                 <div class="flex flex-wrap items-center justify-between gap-2 px-4 py-2">
-                    <div class="flex items-center gap-2 text-xs text-slate-500">
+                    <div class="flex items-center gap-2 text-xs text-neutral-500">
                         {{ report.key }}
                         <span>Datos obtenidos al cargar este reporte</span>
                     </div>
@@ -69,11 +69,11 @@
                 </div>
                 } @else if (getItems(report.key).length === 0) {
                 <div class="flex flex-col items-center justify-center gap-2 px-4 py-8 text-center">
-                    <span class="flex size-10 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+                    <span class="flex size-10 items-center justify-center rounded-full bg-neutral-100 text-neutral-400">
                         <svg [pIcon]="'inbox'" [size]="18"></svg>
                     </span>
-                    <p class="text-sm font-medium text-slate-700">Sin información</p>
-                    <p class="text-xs text-slate-500">No hay datos para este reporte.</p>
+                    <p class="text-sm font-medium text-neutral-700">Sin información</p>
+                    <p class="text-xs text-neutral-500">No hay datos para este reporte.</p>
                 </div>
                 } @else {
                 <div class="overflow-x-auto">
@@ -103,13 +103,13 @@
                         </ng-template>
                         <ng-template #body let-item>
                             <tr>
-                                <td class="whitespace-nowrap font-medium text-slate-700">{{ item.assetCode }}</td>
-                                <td class="max-w-xs truncate text-slate-700" [title]="item.name">{{ item.name }}</td>
-                                <td class="whitespace-nowrap text-slate-500">{{ item.serialNumber || '-' }}</td>
-                                <td class="whitespace-nowrap text-slate-600">{{ item.brandName }}</td>
-                                <td class="whitespace-nowrap text-slate-600">{{ item.modelName }}</td>
-                                <td class="whitespace-nowrap text-slate-600">{{ typeLabel(item.type) }}</td>
-                                <td class="whitespace-nowrap text-right font-medium text-slate-700">
+                                <td class="whitespace-nowrap font-medium text-neutral-700">{{ item.assetCode }}</td>
+                                <td class="max-w-xs truncate text-neutral-700" [title]="item.name">{{ item.name }}</td>
+                                <td class="whitespace-nowrap text-neutral-500">{{ item.serialNumber || '-' }}</td>
+                                <td class="whitespace-nowrap text-neutral-600">{{ item.brandName }}</td>
+                                <td class="whitespace-nowrap text-neutral-600">{{ item.modelName }}</td>
+                                <td class="whitespace-nowrap text-neutral-600">{{ typeLabel(item.type) }}</td>
+                                <td class="whitespace-nowrap text-right font-medium text-neutral-700">
                                     {{ item.price | currency : 'MXN' : 'symbol-narrow' : '1.0-0' }}
                                 </td>
                                 <td class="whitespace-nowrap">
@@ -118,17 +118,17 @@
                                         {{ statusLabel(item.status) }}
                                     </span>
                                 </td>
-                                <td class="whitespace-nowrap text-slate-600">{{ item.active ? 'Sí' : 'No' }}</td>
-                                <td class="max-w-xs truncate text-slate-500" [title]="item.observations">{{
+                                <td class="whitespace-nowrap text-neutral-600">{{ item.active ? 'Sí' : 'No' }}</td>
+                                <td class="max-w-xs truncate text-neutral-500" [title]="item.observations">{{
                                     item.observations || '-' }}</td>
-                                <td class="whitespace-nowrap text-slate-500">{{ formatDate(item.createdAt) }}</td>
-                                <td class="whitespace-nowrap text-slate-500">{{ formatDate(item.updatedAt) }}</td>
-                                <td class="whitespace-nowrap text-slate-500">{{ item.imei || '-' }}</td>
-                                <td class="whitespace-nowrap text-slate-500">{{ item.imei2 || '-' }}</td>
-                                <td class="whitespace-nowrap text-slate-600">{{ item.phoneNumber || '-' }}</td>
-                                <td class="whitespace-nowrap text-slate-600">{{ item.operator || '-' }}</td>
-                                <td class="whitespace-nowrap text-slate-600">{{ item.plan || '-' }}</td>
-                                <td class="whitespace-nowrap text-slate-500">{{ formatDate(item.lineAssignedAt) }}</td>
+                                <td class="whitespace-nowrap text-neutral-500">{{ formatDate(item.createdAt) }}</td>
+                                <td class="whitespace-nowrap text-neutral-500">{{ formatDate(item.updatedAt) }}</td>
+                                <td class="whitespace-nowrap text-neutral-500">{{ item.imei || '-' }}</td>
+                                <td class="whitespace-nowrap text-neutral-500">{{ item.imei2 || '-' }}</td>
+                                <td class="whitespace-nowrap text-neutral-600">{{ item.phoneNumber || '-' }}</td>
+                                <td class="whitespace-nowrap text-neutral-600">{{ item.operator || '-' }}</td>
+                                <td class="whitespace-nowrap text-neutral-600">{{ item.plan || '-' }}</td>
+                                <td class="whitespace-nowrap text-neutral-500">{{ formatDate(item.lineAssignedAt) }}</td>
                             </tr>
                         </ng-template>
                     </p-table>

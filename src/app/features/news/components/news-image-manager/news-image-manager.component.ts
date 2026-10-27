@@ -29,17 +29,17 @@ export interface NewsImageUploadRequest {
     <section class="flex flex-col gap-3">
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h3 class="text-sm font-semibold text-slate-800">Imágenes</h3>
-          <p class="text-xs text-slate-500">
+          <h3 class="text-sm font-semibold text-neutral-800">Imágenes</h3>
+          <p class="text-xs text-neutral-500">
             JPG, PNG, GIF, WEBP o BMP. Tamaño máximo por archivo: 10 MB.
           </p>
         </div>
 
         <div class="flex flex-wrap items-center gap-3">
-          <label class="flex cursor-pointer items-center gap-2 text-xs text-slate-600">
+          <label class="flex cursor-pointer items-center gap-2 text-xs text-neutral-600">
             <input
               type="checkbox"
-              class="size-4 rounded border-slate-300 text-primary focus:ring-primary"
+              class="size-4 rounded border-neutral-300 text-brand-500 focus:ring-brand-500"
               [checked]="isCover()"
               [disabled]="uploading()"
               (change)="onCoverChange($event)"
@@ -80,9 +80,9 @@ export interface NewsImageUploadRequest {
         <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
           @for (image of images(); track image.id) {
             <article
-              class="group relative overflow-hidden rounded-lg border border-slate-200 bg-white"
+              class="group relative overflow-hidden rounded-lg border border-neutral-200 bg-white"
             >
-              <div class="relative aspect-video bg-slate-100">
+              <div class="relative aspect-video bg-neutral-100">
                 @if (image.url) {
                   <img
                     [src]="image.url"
@@ -90,14 +90,14 @@ export interface NewsImageUploadRequest {
                     class="h-full w-full object-cover"
                   />
                 } @else {
-                  <div class="flex h-full items-center justify-center text-slate-400">
+                  <div class="flex h-full items-center justify-center text-neutral-400">
                     <svg [pIcon]="'image'" [size]="28"></svg>
                   </div>
                 }
 
                 @if (image.isCover) {
                   <span
-                    class="absolute left-2 top-2 rounded bg-emerald-600 px-1.5 py-0.5 text-[10px] font-semibold text-white"
+                    class="absolute left-2 top-2 rounded bg-brand-600 px-1.5 py-0.5 text-[10px] font-semibold text-white"
                   >
                     Portada
                   </span>
@@ -105,7 +105,7 @@ export interface NewsImageUploadRequest {
               </div>
 
               <div class="flex items-center gap-1 px-3 py-2">
-                <p class="min-w-0 flex-1 truncate text-xs text-slate-600" [title]="image.originalFileName">
+                <p class="min-w-0 flex-1 truncate text-xs text-neutral-600" [title]="image.originalFileName">
                   {{ image.originalFileName }}
                 </p>
 
@@ -144,10 +144,10 @@ export interface NewsImageUploadRequest {
         </div>
       } @else {
         <div
-          class="flex flex-col items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center"
+          class="flex flex-col items-center justify-center rounded-lg border border-dashed border-neutral-300 bg-neutral-50 px-4 py-8 text-center"
         >
-          <svg [pIcon]="'image'" [size]="28" class="text-slate-400"></svg>
-          <p class="mt-2 text-sm text-slate-500">Esta noticia todavía no tiene imágenes.</p>
+          <svg [pIcon]="'image'" [size]="28" class="text-neutral-400"></svg>
+          <p class="mt-2 text-sm text-neutral-500">Esta noticia todavía no tiene imágenes.</p>
         </div>
       }
     </section>

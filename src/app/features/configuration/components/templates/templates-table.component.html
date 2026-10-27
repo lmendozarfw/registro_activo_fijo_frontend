@@ -1,6 +1,6 @@
 <div>
     <div class="mb-4 flex items-start justify-between gap-4">
-        <p class="text-sm text-slate-600 max-w-[70%]">Una plantilla de permisos es un conjunto de permisos predefinidos
+        <p class="text-sm text-neutral-600 max-w-[70%]">Una plantilla de permisos es un conjunto de permisos predefinidos
             que pueden ser asignados a usuarios dentro del sistema.</p>
         <button pButton type="button" (click)="openCreate()">
             <span class="flex items-center gap-2">
@@ -32,7 +32,7 @@
                 <td>{{ template.name }}</td>
                 <td>{{ template.description || '—' }}</td>
                 <td>
-                    <span class="inline-block rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600">
+                    <span class="inline-block rounded-md bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-600">
                         {{ template.permissions.length }}
                     </span>
                 </td>
@@ -76,9 +76,9 @@
                         placeholder="Descripción opcional..."></textarea>
                 </div>
 
-                <div class="flex items-center justify-between gap-2 rounded-md bg-slate-50 px-3 py-2">
-                    <span class="text-xs text-slate-500">Permisos seleccionados</span>
-                    <span class="rounded-md bg-white px-2 py-1 text-xs font-semibold text-slate-700">
+                <div class="flex items-center justify-between gap-2 rounded-md bg-neutral-50 px-3 py-2">
+                    <span class="text-xs text-neutral-500">Permisos seleccionados</span>
+                    <span class="rounded-md bg-white px-2 py-1 text-xs font-semibold text-neutral-700">
                         {{ selectedCount() }} / {{ totalPermissions() }}
                     </span>
                 </div>
@@ -86,54 +86,54 @@
 
             <div class="flex flex-col gap-3 lg:col-span-2">
                 <div
-                    class="flex items-center justify-between gap-3 rounded-md border border-slate-200 bg-slate-50 px-3 py-2">
+                    class="flex items-center justify-between gap-3 rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2">
                     <div class="flex items-center gap-2">
                         <p-checkbox [binary]="true" [inputId]="'select-all-permissions'"
                             [indeterminate]="someSelected() && !allSelected()" [ngModel]="allSelected()"
                             [ngModelOptions]="{ standalone: true }" (ngModelChange)="toggleAll($event)" />
-                        <label for="select-all-permissions" class="cursor-pointer text-sm font-medium text-slate-700">
+                        <label for="select-all-permissions" class="cursor-pointer text-sm font-medium text-neutral-700">
                             Seleccionar todos los permisos
                         </label>
                     </div>
-                    <span class="text-xs text-slate-500">{{ selectedCount() }} de {{ totalPermissions() }}</span>
+                    <span class="text-xs text-neutral-500">{{ selectedCount() }} de {{ totalPermissions() }}</span>
                 </div>
 
                 @if (store.permissionsLoading()) {
-                <div class="flex items-center justify-center rounded-md border border-slate-200 py-10">
+                <div class="flex items-center justify-center rounded-md border border-neutral-200 py-10">
                     <svg data-p-icon="spinner" [spin]="true" [size]="24"></svg>
                 </div>
                 } @else {
                 <div class="flex flex-col gap-3 overflow-y-auto pr-1">
                     @for (module of store.permissionGroups(); track module.moduleName; let i = $index) {
-                    <div class="overflow-hidden rounded-md border border-slate-200 bg-white">
-                        <div class="flex items-center gap-2 border-b border-slate-100 bg-slate-50 px-3 py-2">
+                    <div class="overflow-hidden rounded-md border border-neutral-200 bg-white">
+                        <div class="flex items-center gap-2 border-b border-neutral-100 bg-neutral-50 px-3 py-2">
                             <p-checkbox [binary]="true" [inputId]="'module-' + i"
                                 [indeterminate]="moduleState(module) === 'some'" [ngModel]="moduleState(module) === 'all'"
                                 [ngModelOptions]="{ standalone: true }" (ngModelChange)="toggleModule(module, $event)" />
-                            <label [for]="'module-' + i" class="cursor-pointer text-sm font-semibold text-slate-700">
+                            <label [for]="'module-' + i" class="cursor-pointer text-sm font-semibold text-neutral-700">
                                 {{ module.moduleName }}
                             </label>
-                            <span class="ml-auto rounded-md bg-white px-2 py-0.5 text-xs font-medium text-slate-500">
+                            <span class="ml-auto rounded-md bg-white px-2 py-0.5 text-xs font-medium text-neutral-500">
                                 {{ moduleSelectedCount(module) }}/{{ module.permissions.length }}
                             </span>
                         </div>
                         <div class="grid grid-cols-1 gap-0.5 p-2 md:grid-cols-2">
                             @for (permission of module.permissions; track permission.id) {
-                            <div class="flex items-start gap-2 rounded-md px-2 py-1.5 hover:bg-slate-50">
+                            <div class="flex items-start gap-2 rounded-md px-2 py-1.5 hover:bg-neutral-50">
                                 <p-checkbox [binary]="true" [inputId]="'permission-' + permission.id"
                                     [ngModel]="isPermissionSelected(permission.id)"
                                     [ngModelOptions]="{ standalone: true }"
                                     (ngModelChange)="togglePermission(permission.id, $event)" />
                                 <label [for]="'permission-' + permission.id" class="flex cursor-pointer flex-col">
-                                    <span class="text-sm text-slate-700">{{ permission.name }}</span>
-                                    <span class="font-mono text-[11px] text-slate-400">{{ permission.code }}</span>
+                                    <span class="text-sm text-neutral-700">{{ permission.name }}</span>
+                                    <span class="font-mono text-[11px] text-neutral-400">{{ permission.code }}</span>
                                 </label>
                             </div>
                             }
                         </div>
                     </div>
                     } @empty {
-                    <p class="py-4 text-center text-sm text-slate-400">No hay permisos disponibles.</p>
+                    <p class="py-4 text-center text-sm text-neutral-400">No hay permisos disponibles.</p>
                     }
                 </div>
                 }
@@ -147,7 +147,7 @@
     </app-form-dialog>
 
     <app-form-dialog [(visible)]="deleteDialogVisible" header="Eliminar plantilla" width="24rem">
-        <p class="text-sm text-slate-600">
+        <p class="text-sm text-neutral-600">
             ¿Seguro que deseas eliminar la plantilla <strong>{{ templateToDelete?.name }}</strong>? Esta acción no se
             puede deshacer.
         </p>

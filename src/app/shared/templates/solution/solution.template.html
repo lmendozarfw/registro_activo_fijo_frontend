@@ -1,15 +1,15 @@
-<div class="min-h-screen bg-slate-50">
-  <header class="border-b border-slate-200 bg-white">
+<div class="min-h-screen bg-neutral-50">
+  <header class="border-b border-neutral-200 bg-white">
     <div class="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:px-6 lg:px-8">
       <a
         routerLink="/hub"
-        class="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm font-semibold text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+        class="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm font-semibold text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-900"
       >
         <svg [pIcon]="'arrow-left'" [size]="15"></svg>
         <span class="hidden sm:inline">Hub</span>
       </a>
 
-      <span class="h-6 w-px bg-slate-200"></span>
+      <span class="h-6 w-px bg-neutral-200"></span>
 
       @if (solution(); as current) {
         <div class="flex min-w-0 items-center gap-3">
@@ -21,8 +21,8 @@
             <svg [pIcon]="current.icon" [size]="20"></svg>
           </span>
           <div class="min-w-0">
-            <p class="truncate text-sm font-bold text-slate-900">{{ current.name }}</p>
-            <p class="text-[11px] font-medium uppercase tracking-wider text-slate-400">
+            <p class="truncate text-sm font-bold text-neutral-900">{{ current.name }}</p>
+            <p class="text-[11px] font-medium uppercase tracking-wider text-neutral-400">
               Solución corporativa
             </p>
           </div>
@@ -30,7 +30,7 @@
       }
 
       <div class="ml-auto flex items-center gap-3">
-        <span class="hidden text-sm font-medium text-slate-600 sm:block">
+        <span class="hidden text-sm font-medium text-neutral-600 sm:block">
           {{ authStore.user()?.fullName }}
         </span>
         <button
@@ -38,7 +38,7 @@
           type="button"
           text
           size="small"
-          class="text-slate-600!"
+          class="text-neutral-600!"
           aria-label="Cerrar sesión"
           (click)="logout()"
         >

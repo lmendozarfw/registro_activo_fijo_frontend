@@ -1,6 +1,6 @@
 <div>
     <div class="mb-4 flex items-start justify-between gap-4">
-        <p class="text-sm text-slate-600 max-w-[70%]">Un usuario es la cuenta con la que una persona accede al
+        <p class="text-sm text-neutral-600 max-w-[70%]">Un usuario es la cuenta con la que una persona accede al
             sistema. Se asocia a un empleado y se le asignan permisos, ya sea desde una plantilla o de forma
             personalizada.</p>
         <button pButton type="button" (click)="openCreate()">
@@ -29,7 +29,7 @@
         <ng-template #body let-user>
             <tr>
                 <td>
-                    <span class="inline-block rounded-md bg-slate-100 px-2 py-1 font-mono text-xs">{{
+                    <span class="inline-block rounded-md bg-neutral-100 px-2 py-1 font-mono text-xs">{{
                         user.username }}</span>
                 </td>
                 <td>{{ user.employeeFullName || '—' }}</td>
@@ -82,13 +82,13 @@
                 <p-select formControlName="employeeId" [options]="employeeOptions()" optionLabel="label"
                     optionValue="id" [filter]="true" filterBy="label" [showClear]="true"
                     placeholder="Selecciona un empleado" appendTo="body" class="w-full" />
-                <span class="text-xs text-slate-500">Opcional. Vincula el usuario a un empleado del sistema.</span>
+                <span class="text-xs text-neutral-500">Opcional. Vincula el usuario a un empleado del sistema.</span>
             </div>
 
-            <div class="flex flex-col gap-3 rounded-lg border border-slate-200 p-3">
+            <div class="flex flex-col gap-3 rounded-lg border border-neutral-200 p-3">
                 <div class="flex flex-col gap-0.5">
-                    <span class="text-sm font-medium text-slate-700">Permisos</span>
-                    <span class="text-xs text-slate-500">Selecciona una plantilla para precargar los permisos y luego
+                    <span class="text-sm font-medium text-neutral-700">Permisos</span>
+                    <span class="text-xs text-neutral-500">Selecciona una plantilla para precargar los permisos y luego
                         ajústalos si lo necesitas.</span>
                 </div>
 
@@ -101,7 +101,7 @@
                 </div>
 
                 <div class="flex items-center justify-between gap-2">
-                    <span class="text-xs text-slate-500">
+                    <span class="text-xs text-neutral-500">
                         {{ selectedCount() }} de {{ totalPermissions() }} permisos seleccionados
                         @if (templateLoading()) { · cargando plantilla… }
                     </span>
@@ -115,39 +115,39 @@
                 </div>
 
                 @if (permissionsExpanded) {
-                <div class="flex flex-col gap-3 overflow-y-auto rounded-lg bg-slate-50 p-3">
+                <div class="flex flex-col gap-3 overflow-y-auto rounded-lg bg-neutral-50 p-3">
                     @for (module of store.permissionGroups(); track module.moduleName; let i = $index) {
-                    <div class="overflow-hidden rounded-md border border-slate-200 bg-white">
-                        <div class="flex items-center gap-2 border-b border-slate-100 px-3 py-2">
+                    <div class="overflow-hidden rounded-md border border-neutral-200 bg-white">
+                        <div class="flex items-center gap-2 border-b border-neutral-100 px-3 py-2">
                             <p-checkbox [binary]="true" [inputId]="'module-' + i"
                                 [indeterminate]="moduleState(module) === 'some'"
                                 [ngModel]="moduleState(module) === 'all'"
                                 [ngModelOptions]="{ standalone: true }"
                                 (ngModelChange)="toggleModule(module, $event)" />
-                            <label [for]="'module-' + i" class="cursor-pointer text-sm font-semibold text-slate-700">
+                            <label [for]="'module-' + i" class="cursor-pointer text-sm font-semibold text-neutral-700">
                                 {{ module.moduleName }}
                             </label>
-                            <span class="ml-auto rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">
+                            <span class="ml-auto rounded-md bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-500">
                                 {{ moduleSelectedCount(module) }}/{{ module.permissions.length }}
                             </span>
                         </div>
                         <div class="flex flex-col p-1.5">
                             @for (permission of module.permissions; track permission.id) {
-                            <div class="flex items-start gap-2 rounded-md px-2 py-1.5 hover:bg-slate-50">
+                            <div class="flex items-start gap-2 rounded-md px-2 py-1.5 hover:bg-neutral-50">
                                 <p-checkbox [binary]="true" [inputId]="'permission-' + permission.id"
                                     [ngModel]="isPermissionSelected(permission.id)"
                                     [ngModelOptions]="{ standalone: true }"
                                     (ngModelChange)="togglePermission(permission.id, $event)" />
                                 <label [for]="'permission-' + permission.id" class="flex cursor-pointer flex-col">
-                                    <span class="text-sm text-slate-700">{{ permission.name }}</span>
-                                    <span class="font-mono text-[11px] text-slate-400">{{ permission.code }}</span>
+                                    <span class="text-sm text-neutral-700">{{ permission.name }}</span>
+                                    <span class="font-mono text-[11px] text-neutral-400">{{ permission.code }}</span>
                                 </label>
                             </div>
                             }
                         </div>
                     </div>
                     } @empty {
-                    <p class="py-4 text-center text-sm text-slate-400">No hay permisos disponibles.</p>
+                    <p class="py-4 text-center text-sm text-neutral-400">No hay permisos disponibles.</p>
                     }
                 </div>
                 }
@@ -161,7 +161,7 @@
     </app-form-dialog>
 
     <app-form-dialog [(visible)]="deleteDialogVisible" header="Eliminar usuario" width="24rem">
-        <p class="text-sm text-slate-600">
+        <p class="text-sm text-neutral-600">
             ¿Seguro que deseas eliminar al usuario <strong>{{ userToDelete?.username }}</strong>? Esta acción no se
             puede deshacer.
         </p>

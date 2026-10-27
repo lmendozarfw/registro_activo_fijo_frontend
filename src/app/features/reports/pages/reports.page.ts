@@ -42,9 +42,8 @@ const STATUS_STYLES: Record<StatusResourceEnum, string> = {
 };
 
 const TONE_STYLES: Record<string, string> = {
-    emerald: 'bg-emerald-50 text-emerald-600',
-    sky: 'bg-sky-50 text-sky-600',
-    violet: 'bg-violet-50 text-violet-600',
+    brand: 'bg-brand-50 text-brand-600',
+    neutral: 'bg-neutral-100 text-neutral-600',
 };
 
 @Component({
@@ -62,21 +61,21 @@ export class ReportsPage implements OnInit {
             title: 'Inventario general',
             description: 'Todos los recursos registrados con sus datos completos.',
             icon: 'box',
-            tone: 'emerald',
+            tone: 'brand',
         },
         {
             key: 'mobile-phones',
             title: 'Celulares',
             description: 'Reporte detallado de celulares con línea, IMEI y asignación.',
             icon: 'mobile',
-            tone: 'sky',
+            tone: 'neutral',
         },
         {
             key: 'available-mobile-phones',
             title: 'Celulares disponibles',
             description: 'Celulares sin línea asignada, listos para asignar.',
             icon: 'mobile',
-            tone: 'violet',
+            tone: 'brand',
         },
     ];
 
@@ -171,7 +170,7 @@ export class ReportsPage implements OnInit {
     }
 
     protected toneClass(tone: string): string {
-        return TONE_STYLES[tone] ?? 'bg-slate-100 text-slate-600';
+        return TONE_STYLES[tone] ?? 'bg-neutral-100 text-neutral-600';
     }
 
     protected typeLabel(type: ResourceTypeEnum): string {
@@ -183,7 +182,7 @@ export class ReportsPage implements OnInit {
     }
 
     protected statusClass(status: StatusResourceEnum): string {
-        return STATUS_STYLES[status] ?? 'bg-slate-100 text-slate-600';
+        return STATUS_STYLES[status] ?? 'bg-neutral-100 text-neutral-600';
     }
 
     protected formatCurrency(value: number): string {

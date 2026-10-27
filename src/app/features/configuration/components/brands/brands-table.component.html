@@ -1,6 +1,6 @@
 <div>
     <div class="mb-4 flex items-start justify-between gap-4">
-        <p class="text-sm text-slate-600 max-w-[70%]">Una marca identifica al fabricante de un recurso de activo fijo,
+        <p class="text-sm text-neutral-600 max-w-[70%]">Una marca identifica al fabricante de un recurso de activo fijo,
             por ejemplo HP, Lenovo o Dell. Aquí se dan de alta para asignarlas a los modelos.</p>
         <button pButton type="button" (click)="openCreate()">
             <span class="flex items-center gap-2">
@@ -68,7 +68,7 @@
     </app-form-dialog>
 
     <app-form-dialog [(visible)]="deleteDialogVisible" header="Eliminar marca" width="24rem">
-        <p class="text-sm text-slate-600">
+        <p class="text-sm text-neutral-600">
             ¿Seguro que deseas eliminar la marca <strong>{{ brandToDelete?.name }}</strong>? Esta acción no se puede
             deshacer.
         </p>

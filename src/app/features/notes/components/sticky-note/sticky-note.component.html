@@ -1,5 +1,5 @@
 <div
-    class="pointer-events-auto absolute flex w-[300px] flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl"
+    class="pointer-events-auto absolute flex w-[300px] flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-xl"
     [style.left.px]="x()"
     [style.top.px]="y()"
     [style.z-index]="zIndex()"
@@ -16,15 +16,15 @@
         (pointerup)="onHeaderPointerUp($event)"
         (pointercancel)="onHeaderPointerUp($event)"
     >
-        <svg [pIcon]="'note-sticky'" [size]="15" class="shrink-0 text-slate-700/80"></svg>
-        <span class="min-w-0 flex-1 truncate text-sm font-semibold text-slate-800" [title]="title()">
+        <svg [pIcon]="'note-sticky'" [size]="15" class="shrink-0 text-neutral-700/80"></svg>
+        <span class="min-w-0 flex-1 truncate text-sm font-semibold text-neutral-800" [title]="title()">
             {{ title() }}
         </span>
 
         @if (isOwner()) {
             <button
                 type="button"
-                class="rounded-md p-1 text-slate-700/80 transition hover:bg-black/10"
+                class="rounded-md p-1 text-neutral-700/80 transition hover:bg-black/10"
                 pTooltip="Ajustes"
                 tooltipPosition="top"
                 aria-label="Ajustes de la nota"
@@ -36,7 +36,7 @@
 
         <button
             type="button"
-            class="rounded-md p-1 text-slate-700/80 transition hover:bg-black/10"
+            class="rounded-md p-1 text-neutral-700/80 transition hover:bg-black/10"
             [pTooltip]="collapsed() ? 'Expandir' : 'Contraer'"
             tooltipPosition="top"
             aria-label="Contraer nota"
@@ -51,7 +51,7 @@
 
         <button
             type="button"
-            class="rounded-md p-1 text-slate-700/80 transition hover:bg-black/10"
+            class="rounded-md p-1 text-neutral-700/80 transition hover:bg-black/10"
             pTooltip="Cerrar"
             tooltipPosition="top"
             aria-label="Cerrar nota"
@@ -66,13 +66,13 @@
             @if (isOwner() || detail()?.isShared || detail()?.isArchived) {
                 <div class="flex flex-wrap items-center gap-1 px-3 pt-2">
                     @if (isOwner()) {
-                        <span class="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-600">Tu nota</span>
+                        <span class="rounded bg-neutral-100 px-1.5 py-0.5 text-[10px] font-medium text-neutral-600">Tu nota</span>
                     }
                     @if (detail()?.isShared) {
                         <span class="rounded bg-sky-50 px-1.5 py-0.5 text-[10px] font-medium text-sky-700">Compartida</span>
                     }
                     @if (detail()?.isShared && detail()?.canEdit) {
-                        <span class="rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700">Editable</span>
+                        <span class="rounded bg-brand-50 px-1.5 py-0.5 text-[10px] font-medium text-brand-700">Editable</span>
                     }
                     @if (detail()?.isArchived) {
                         <span class="rounded bg-amber-50 px-1.5 py-0.5 text-[10px] font-medium text-amber-700">Archivada</span>
@@ -95,7 +95,7 @@
             } @else if (settingsOpen()) {
                 <div class="flex flex-col gap-3 p-3">
                     <label class="flex flex-col gap-1">
-                        <span class="text-xs font-medium text-slate-600">Título</span>
+                        <span class="text-xs font-medium text-neutral-600">Título</span>
                         <input
                             pInputText
                             type="text"
@@ -108,15 +108,15 @@
                     </label>
 
                     <div class="flex items-center justify-between gap-2">
-                        <span class="text-xs text-slate-600">Compartir con otros usuarios</span>
+                        <span class="text-xs text-neutral-600">Compartir con otros usuarios</span>
                         <button
                             type="button"
                             role="switch"
                             aria-label="Compartir nota"
                             [attr.aria-checked]="settingsShared()"
                             class="relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors"
-                            [class.bg-emerald-500]="settingsShared()"
-                            [class.bg-slate-300]="!settingsShared()"
+                            [class.bg-brand-500]="settingsShared()"
+                            [class.bg-neutral-300]="!settingsShared()"
                             (click)="settingsShared.set(!settingsShared())"
                         >
                             <span
@@ -128,15 +128,15 @@
                     </div>
 
                     <div class="flex items-center justify-between gap-2">
-                        <span class="text-xs text-slate-600">Permitir edición</span>
+                        <span class="text-xs text-neutral-600">Permitir edición</span>
                         <button
                             type="button"
                             role="switch"
                             aria-label="Permitir edición"
                             [attr.aria-checked]="settingsCanEdit()"
                             class="relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors"
-                            [class.bg-emerald-500]="settingsCanEdit()"
-                            [class.bg-slate-300]="!settingsCanEdit()"
+                            [class.bg-brand-500]="settingsCanEdit()"
+                            [class.bg-neutral-300]="!settingsCanEdit()"
                             (click)="settingsCanEdit.set(!settingsCanEdit())"
                         >
                             <span
@@ -148,7 +148,7 @@
                     </div>
 
                     <div class="flex items-center justify-between gap-2">
-                        <span class="text-xs text-slate-600">Archivar</span>
+                        <span class="text-xs text-neutral-600">Archivar</span>
                         <button
                             type="button"
                             role="switch"
@@ -156,7 +156,7 @@
                             [attr.aria-checked]="settingsArchived()"
                             class="relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors"
                             [class.bg-amber-500]="settingsArchived()"
-                            [class.bg-slate-300]="!settingsArchived()"
+                            [class.bg-neutral-300]="!settingsArchived()"
                             (click)="settingsArchived.set(!settingsArchived())"
                         >
                             <span
@@ -192,28 +192,28 @@
                 </div>
             } @else {
                 @if (loading()) {
-                    <div class="flex items-center justify-center gap-2 py-8 text-xs text-slate-400">
+                    <div class="flex items-center justify-center gap-2 py-8 text-xs text-neutral-400">
                         <svg [pIcon]="'spinner'" [spin]="true" [size]="16"></svg>
                         Cargando...
                     </div>
                 } @else {
                     <div class="flex max-h-72 flex-col gap-2 overflow-y-auto px-3 py-2">
                         @for (text of texts(); track text.id) {
-                            <div class="rounded-lg bg-slate-50 px-2.5 py-2">
+                            <div class="rounded-lg bg-neutral-50 px-2.5 py-2">
                                 <div class="flex items-center justify-between gap-2">
-                                    <span class="truncate text-xs font-medium text-slate-600">{{ text.authorUsername }}</span>
-                                    <span class="shrink-0 text-[10px] text-slate-400">{{ formatDate(text.createdAt) }}</span>
+                                    <span class="truncate text-xs font-medium text-neutral-600">{{ text.authorUsername }}</span>
+                                    <span class="shrink-0 text-[10px] text-neutral-400">{{ formatDate(text.createdAt) }}</span>
                                 </div>
-                                <p class="mt-1 whitespace-pre-wrap break-words text-sm text-slate-700">{{ text.content }}</p>
+                                <p class="mt-1 whitespace-pre-wrap break-words text-sm text-neutral-700">{{ text.content }}</p>
                             </div>
                         } @empty {
-                            <p class="py-2 text-center text-xs text-slate-400">Esta nota aún no tiene textos.</p>
+                            <p class="py-2 text-center text-xs text-neutral-400">Esta nota aún no tiene textos.</p>
                         }
                     </div>
                 }
 
                 @if (canAddText()) {
-                    <div class="border-t border-slate-100 p-2">
+                    <div class="border-t border-neutral-100 p-2">
                         <textarea
                             pTextarea
                             rows="2"
@@ -227,7 +227,7 @@
                             <span
                                 class="text-[10px]"
                                 [class.text-red-500]="draft().length >= contentMax"
-                                [class.text-slate-400]="draft().length < contentMax"
+                                [class.text-neutral-400]="draft().length < contentMax"
                             >
                                 {{ draft().length }}/{{ contentMax }}
                             </span>
@@ -238,12 +238,12 @@
                         </div>
                     </div>
                 } @else if (detail()?.isArchived) {
-                    <p class="flex items-center gap-1.5 border-t border-slate-100 px-3 py-2 text-xs text-amber-600">
+                    <p class="flex items-center gap-1.5 border-t border-neutral-100 px-3 py-2 text-xs text-amber-600">
                         <svg [pIcon]="'lock'" [size]="13"></svg>
                         Nota archivada: no se pueden agregar textos.
                     </p>
                 } @else if (isReadOnly()) {
-                    <p class="flex items-center gap-1.5 border-t border-slate-100 px-3 py-2 text-xs text-slate-500">
+                    <p class="flex items-center gap-1.5 border-t border-neutral-100 px-3 py-2 text-xs text-neutral-500">
                         <svg [pIcon]="'lock'" [size]="13"></svg>
                         Solo lectura.
                     </p>

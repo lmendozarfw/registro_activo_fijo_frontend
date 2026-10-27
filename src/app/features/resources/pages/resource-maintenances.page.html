@@ -2,10 +2,10 @@
   <div class="mb-4 flex flex-col gap-2">
     <div class="flex items-center justify-between gap-4">
       <div>
-        <h2 class="text-lg font-semibold text-slate-800">Mantenimiento del recurso</h2>
-        <p class="text-sm text-slate-600">
+        <h2 class="text-lg font-semibold text-neutral-800">Mantenimiento del recurso</h2>
+        <p class="text-sm text-neutral-600">
           @if (resourceCode()) {
-          <span class="mr-2 inline-block rounded-md bg-slate-100 px-2 py-0.5 font-mono text-xs">{{ resourceCode() }}</span>
+          <span class="mr-2 inline-block rounded-md bg-neutral-100 px-2 py-0.5 font-mono text-xs">{{ resourceCode() }}</span>
           }
           {{ resourceName() || resourceId() }}
         </p>
@@ -39,9 +39,9 @@
     </div>
   </div>
 
-  <div class="mb-4 rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+  <div class="mb-4 rounded-md border border-neutral-200 bg-white p-4 shadow-sm">
     <div class="mb-3 flex items-center justify-between">
-      <h3 class="text-sm font-semibold text-slate-800">Planes de mantenimiento (activos)</h3>
+      <h3 class="text-sm font-semibold text-neutral-800">Planes de mantenimiento (activos)</h3>
     </div>
     @if (planStore.loading()) {
       <div class="flex items-center justify-center py-6">
@@ -49,9 +49,9 @@
       </div>
     } @else if (activePlans().length > 0) {
       <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-slate-200 text-sm">
+        <table class="min-w-full divide-y divide-neutral-200 text-sm">
           <thead>
-            <tr class="text-left text-xs uppercase tracking-wide text-slate-500">
+            <tr class="text-left text-xs uppercase tracking-wide text-neutral-500">
               <th class="px-3 py-2">Nombre</th>
               <th class="px-3 py-2">Tipo</th>
               <th class="px-3 py-2">Frecuencia</th>
@@ -62,10 +62,10 @@
               <th class="px-3 py-2 text-right">Acciones</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100">
+          <tbody class="divide-y divide-neutral-100">
             @for (plan of activePlans(); track plan.id) {
               <tr>
-                <td class="px-3 py-2 font-medium text-slate-800">{{ plan.name }}</td>
+                <td class="px-3 py-2 font-medium text-neutral-800">{{ plan.name }}</td>
                 <td class="px-3 py-2">{{ maintenanceTypeLabel(plan.maintenanceType) }}</td>
                 <td class="px-3 py-2">{{ plan.frequencyValue }} {{ frequencyUnitLabel(plan.frequencyUnit) }}</td>
                 <td class="px-3 py-2">{{ formatDate(plan.startDate) }}</td>
@@ -78,8 +78,8 @@
                     [class.text-yellow-700]="getIndicator(plan).color === 'yellow'"
                     [class.bg-red-50]="getIndicator(plan).color === 'red'"
                     [class.text-red-700]="getIndicator(plan).color === 'red'"
-                    [class.bg-slate-100]="getIndicator(plan).color === 'slate'"
-                    [class.text-slate-600]="getIndicator(plan).color === 'slate'">
+                    [class.bg-neutral-100]="getIndicator(plan).color === 'slate'"
+                    [class.text-neutral-600]="getIndicator(plan).color === 'slate'">
                     {{ getIndicator(plan).label }}
                   </span>
                 </td>
@@ -110,10 +110,10 @@
   </div>
 
   <div class="grid gap-4 lg:grid-cols-2">
-    <div class="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+    <div class="rounded-md border border-neutral-200 bg-white p-4 shadow-sm">
       <div class="mb-3 flex items-center justify-between">
-        <h3 class="text-sm font-semibold text-slate-800">Órdenes de mantenimiento (historial)</h3>
-        <span class="text-xs text-slate-500">{{ orderStore.orders().length }} registros</span>
+        <h3 class="text-sm font-semibold text-neutral-800">Órdenes de mantenimiento (historial)</h3>
+        <span class="text-xs text-neutral-500">{{ orderStore.orders().length }} registros</span>
       </div>
       @if (orderStore.loading()) {
         <div class="flex items-center justify-center py-6">
@@ -151,11 +151,11 @@
       }
     </div>
 
-    <div class="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+    <div class="rounded-md border border-neutral-200 bg-white p-4 shadow-sm">
       <div class="mb-3 flex items-center justify-between">
-        <h3 class="text-sm font-semibold text-slate-800">Órdenes por plan seleccionado</h3>
+        <h3 class="text-sm font-semibold text-neutral-800">Órdenes por plan seleccionado</h3>
         @if (selectedPlanId()) {
-          <span class="text-xs text-slate-500">Plan: {{ selectedPlanId() }}</span>
+          <span class="text-xs text-neutral-500">Plan: {{ selectedPlanId() }}</span>
         }
       </div>
       @if (selectedPlanId()) {

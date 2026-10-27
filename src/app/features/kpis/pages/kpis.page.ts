@@ -31,20 +31,20 @@ interface DonutSegment {
     color: string;
 }
 
-const AXIS_TEXT = '#64748b';
-const AXIS_LINE = '#e2e8f0';
-const SPLIT_LINE = '#f1f5f9';
+const AXIS_TEXT = '#666667';
+const AXIS_LINE = '#d9d9d8';
+const SPLIT_LINE = '#efefef';
 
-const TYPE_COLORS = ['#059669', '#0ea5e9', '#6366f1', '#f59e0b', '#ec4899', '#14b8a6', '#8b5cf6', '#f43f5e', '#64748b'];
+const TYPE_COLORS = ['#f33a20', '#151111', '#666667', '#ababab', '#bd2d19', '#4c4c4d', '#d9d9d8', '#852012', '#efefef'];
 
 const STATUS_COLORS: Record<string, string> = {
-    disponible: '#10b981',
-    disponibles: '#10b981',
-    asignado: '#0ea5e9',
-    asignados: '#0ea5e9',
+    disponible: '#4c4c4d',
+    disponibles: '#4c4c4d',
+    asignado: '#ababab',
+    asignados: '#ababab',
     mantenimiento: '#f59e0b',
-    perdido: '#f43f5e',
-    perdidos: '#f43f5e',
+    perdido: '#f33a20',
+    perdidos: '#f33a20',
 };
 
 @Component({
@@ -64,12 +64,8 @@ export class KpisPage implements OnInit {
     });
 
     protected readonly toneClasses: Record<string, string> = {
-        emerald: 'bg-emerald-50 text-emerald-600',
-        sky: 'bg-sky-50 text-sky-600',
-        amber: 'bg-amber-50 text-amber-600',
-        violet: 'bg-violet-50 text-violet-600',
-        rose: 'bg-rose-50 text-rose-600',
-        slate: 'bg-slate-100 text-slate-600',
+        brand: 'bg-brand-50 text-brand-600',
+        neutral: 'bg-neutral-100 text-neutral-600',
     };
 
     protected readonly kpis = computed<DashboardKpisDto | null>(() => this.store.dashboard()?.kpis ?? null);
@@ -118,28 +114,28 @@ export class KpisPage implements OnInit {
             label: 'Activos registrados',
             value: this.formatNumber(this.totalAssets()),
             icon: 'box',
-            tone: 'emerald',
+            tone: 'brand',
             hint: `${this.formatNumber(this.availableCount())} disponibles`,
         },
         {
             label: 'Valor del inventario',
             value: this.formatCurrency(this.inventoryValue()),
             icon: 'tag',
-            tone: 'sky',
+            tone: 'neutral',
             hint: `Promedio ${this.formatCurrency(this.averageValue())}`,
         },
         {
             label: 'Asignaciones activas',
             value: this.formatNumber(this.activeAssignments()),
             icon: 'list-check',
-            tone: 'amber',
+            tone: 'brand',
             hint: `${this.formatNumber(this.historicalAssignments())} históricas`,
         },
         {
             label: 'Tasa de utilización',
             value: `${this.utilization()}%`,
             icon: 'chart-bar',
-            tone: 'violet',
+            tone: 'neutral',
             hint: `${this.formatNumber(this.assignedCount())} de ${this.formatNumber(this.assignmentTotalAssets())} asignados`,
         },
     ]);
@@ -149,28 +145,28 @@ export class KpisPage implements OnInit {
             label: 'Empleados con activos',
             value: `${this.formatNumber(this.employeesWithAssets())}/${this.formatNumber(this.employeesTotal())}`,
             icon: 'users',
-            tone: 'sky',
+            tone: 'neutral',
             hint: `${this.coverage()}% de cobertura`,
         },
         {
             label: 'Credenciales',
             value: this.formatNumber(this.credentialsTotal()),
             icon: 'key',
-            tone: 'violet',
+            tone: 'brand',
             hint: `${this.formatNumber(this.systemsTotal())} sistemas`,
         },
         {
             label: 'Líneas activas',
             value: this.formatNumber(this.activeLines()),
             icon: 'phone',
-            tone: 'emerald',
+            tone: 'neutral',
             hint: 'Telefonía móvil',
         },
         {
             label: 'Celulares con línea',
             value: `${this.formatNumber(this.mobileWithLine())}/${this.formatNumber(this.mobileTotal())}`,
             icon: 'mobile',
-            tone: 'rose',
+            tone: 'brand',
             hint: `${this.mobileCoverage()}% con línea activa`,
         },
     ]);
@@ -238,7 +234,7 @@ export class KpisPage implements OnInit {
     }
 
     protected toneClass(tone: string): string {
-        return this.toneClasses[tone] ?? this.toneClasses['slate'];
+        return this.toneClasses[tone] ?? this.toneClasses['neutral'];
     }
 
     private statusColor(label: string, index: number): string {
@@ -254,7 +250,7 @@ export class KpisPage implements OnInit {
                 type: 'value',
                 minInterval: 1,
                 splitLine: { lineStyle: { color: SPLIT_LINE } },
-                axisLabel: { color: '#94a3b8' },
+                axisLabel: { color: AXIS_TEXT },
             },
             yAxis: {
                 type: 'category',
@@ -262,7 +258,7 @@ export class KpisPage implements OnInit {
                 data: labels,
                 axisLine: { lineStyle: { color: AXIS_LINE } },
                 axisTick: { show: false },
-                axisLabel: { color: '#475569' },
+                axisLabel: { color: AXIS_TEXT },
             },
             series: [
                 {
@@ -273,7 +269,7 @@ export class KpisPage implements OnInit {
                     })),
                     barWidth: 14,
                     itemStyle: isPalette ? { borderRadius: [0, 4, 4, 0] } : { borderRadius: [0, 4, 4, 0], color },
-                    label: { show: true, position: 'right', color: '#475569' },
+                    label: { show: true, position: 'right', color: AXIS_TEXT },
                 },
             ],
         };
