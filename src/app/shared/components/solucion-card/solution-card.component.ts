@@ -10,7 +10,7 @@ import { SolutionConfig } from "../../../core/config/solutions.config";
             [attr.target]="solution().external ? '_blank' : null"
             [attr.rel]="solution().external ? 'noopener noreferrer' : null"
             (click)="onOpenSolution($event)"
-            class="group flex min-h-56 cursor-pointer flex-col rounded-2xl bg-white p-6 transition duration-200 hover:-translate-y-1 hover:border-brand-200 hover:shadow-xl hover:shadow-brand-900/5"
+            class="group border border-neutral-200 flex min-h-56 cursor-pointer flex-col rounded-2xl bg-white p-6 transition duration-200 hover:-translate-y-1 hover:border-brand-200 hover:shadow-xl hover:shadow-brand-900/5"
           >
             <div class="flex items-start justify-between gap-3">
               <span

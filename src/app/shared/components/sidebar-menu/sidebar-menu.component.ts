@@ -22,7 +22,7 @@ interface MenuItemView extends MenuItem {
   imports: [SidebarModule, RouterLink, PIcon],
   template: `
     <p-sidebar-group>
-      <p-sidebar-group-label>{{ label() }}</p-sidebar-group-label>
+      <p-sidebar-group-label class="px-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-neutral-400">{{ label() }}</p-sidebar-group-label>
       <p-sidebar-group-content>
         <p-sidebar-menu>
           @for (item of viewItems(); track item.key) {
@@ -32,9 +32,11 @@ interface MenuItemView extends MenuItem {
                 [open]="item.open"
                 (openChange)="setGroupOpen(item.key, $event)"
               >
-                <button type="button" pSidebarMenuButton [isActive]="item.active">
-                  <svg [pIcon]="item.icon || ''"></svg>
-                  <span>{{ item.label }}</span>
+                <button type="button" pSidebarMenuButton [isActive]="item.active" class="group">
+                  <span class="flex size-7 items-center justify-center rounded-lg bg-neutral-50 text-neutral-500 transition group-hover:bg-brand-50 group-hover:text-brand-700">
+                    <svg [pIcon]="item.icon || ''" [size]="16"></svg>
+                  </span>
+                  <span class="font-medium">{{ item.label }}</span>
                   <svg
                     pIcon="chevron-right"
                     class="ml-auto transition-transform duration-200"
@@ -49,11 +51,16 @@ interface MenuItemView extends MenuItem {
                         [routerLink]="child.route"
                         [isActive]="child.active"
                         (click)="navigated.emit()"
+                        class="group"
                       >
                         @if (child.icon) {
-                          <svg [pIcon]="child.icon"></svg>
+                          <span class="flex size-6 items-center justify-center rounded-md text-neutral-400 transition group-hover:text-brand-700">
+                            <svg [pIcon]="child.icon" [size]="15"></svg>
+                          </span>
+                        } @else {
+                          <span class="size-1.5 rounded-full bg-neutral-300 transition group-hover:bg-brand-500"></span>
                         }
-                        <span>{{ child.label }}</span>
+                        <span class="text-sm">{{ child.label }}</span>
                       </a>
                     </p-sidebar-menu-sub-item>
                   }
@@ -66,9 +73,12 @@ interface MenuItemView extends MenuItem {
                   [routerLink]="item.route"
                   [isActive]="item.active"
                   (click)="navigated.emit()"
+                  class="group"
                 >
-                  <svg [pIcon]="item.icon || ''"></svg>
-                  <span>{{ item.label }}</span>
+                  <span class="flex size-7 items-center justify-center rounded-lg bg-neutral-50 text-neutral-500 transition group-hover:bg-brand-50 group-hover:text-brand-700">
+                    <svg [pIcon]="item.icon || ''" [size]="16"></svg>
+                  </span>
+                  <span class="font-medium">{{ item.label }}</span>
                 </a>
               </p-sidebar-menu-item>
             }

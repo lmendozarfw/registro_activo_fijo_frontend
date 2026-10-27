@@ -5,6 +5,7 @@ export const SOLUTION_PERMISSIONS = {
   activoFijo: 'activo_fijo.acceso',
   mesaAyuda: 'mesa_ayuda.acceso',
   comunicacion: 'comunicacion.acceso',
+  mantenimiento: 'mantenimiento.acceso'
 } as const;
 
 export interface SolutionTheme {
@@ -107,6 +108,21 @@ export const SOLUTIONS: SolutionConfig[] = [
     icon: 'comments',
     permission: SOLUTION_PERMISSIONS.comunicacion,
     route: '/comunicacion/noticias',
+    theme: {
+      tone: 'bg-brand-50 text-brand-700',
+      gradient: 'from-brand-950 via-brand-900 to-brand-700',
+      accentText: 'text-brand-300',
+      accentSoft: 'bg-brand-500/10 border-brand-400/20',
+    },
+  },
+  {
+    code: 'mantenimiento',
+    name: 'Mantenimiento',
+    description: 'Gestiona los procesos de mantenimiento dentro de la organización.',
+    icon: 'wrench',
+    permission: SOLUTION_PERMISSIONS.mantenimiento,
+    route: 'http://192.168.1.210:8081/Login.jsp',
+    external: true,
     theme: {
       tone: 'bg-brand-50 text-brand-700',
       gradient: 'from-brand-950 via-brand-900 to-brand-700',

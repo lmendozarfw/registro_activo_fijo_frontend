@@ -5,6 +5,7 @@ import { ButtonDirective } from 'primeng/button';
 import { SOLUTIONS, SolutionConfig } from '../../../core/config/solutions.config';
 import { AuthStore } from '../../auth/stores/auth.store';
 import { SolutionCardComponent } from '../../../shared/components/solucion-card/solution-card.component';
+import { ParticlesCanvasComponent } from '../../../shared/components/particles/particles-canvas.component';
 
 const HUB_PERMISSIONS: Record<string, string> = {
   visitantes: 'registro_visitantes.acceso',
@@ -18,7 +19,7 @@ const HUB_PERMISSIONS: Record<string, string> = {
 @Component({
   selector: 'app-hub-page',
   templateUrl: './hub.page.html',
-  imports: [RouterLink, PIcon, ButtonDirective, SolutionCardComponent],
+  imports: [RouterLink, PIcon, ButtonDirective, SolutionCardComponent, ParticlesCanvasComponent],
 })
 export class HubPage {
   protected readonly authStore = inject(AuthStore);

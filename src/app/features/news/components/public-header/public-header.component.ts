@@ -9,36 +9,37 @@ import { AuthStore } from '../../../auth/stores/auth.store';
   imports: [RouterLink, RouterLinkActive],
   template: `
     <header
-      class="sticky top-0 z-50 border-b border-neutral-200/80 bg-white/90 backdrop-blur-xl"
+      class="sticky top-0 z-50 border-b border-neutral-200 bg-white/95 backdrop-blur-xl"
     >
       <div
         class="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8"
       >
         <a
           routerLink="/"
-          class="flex shrink-0 items-center"
+          class="flex shrink-0 items-center gap-3"
           aria-label="Raudal Footwear, inicio"
         >
           <img
             src="assets/images/sinergyHub.jpg"
             alt="Raudal Footwear"
-            class="h-9 w-auto sm:h-10"
+            class="h-9 w-auto rounded-md sm:h-10"
           />
+          <span class="hidden text-sm font-semibold tracking-wide text-neutral-900 sm:block">RAUDAL</span>
         </a>
 
         <nav class="ml-auto hidden items-center gap-1 sm:flex">
           <a
             routerLink="/"
-            routerLinkActive="bg-neutral-100 text-neutral-900"
+            routerLinkActive="text-neutral-900"
             [routerLinkActiveOptions]="{ exact: true }"
-            class="rounded-lg px-3 py-2 text-sm font-medium text-neutral-600 transition hover:bg-neutral-100 hover:text-neutral-900"
+            class="rounded-lg px-3 py-2 text-sm font-medium text-neutral-600 transition hover:text-neutral-900"
           >
             Inicio
           </a>
           <a
             routerLink="/noticias"
-            routerLinkActive="bg-neutral-100 text-neutral-900"
-            class="rounded-lg px-3 py-2 text-sm font-medium text-neutral-600 transition hover:bg-neutral-100 hover:text-neutral-900"
+            routerLinkActive="text-neutral-900"
+            class="rounded-lg px-3 py-2 text-sm font-medium text-neutral-600 transition hover:text-neutral-900"
           >
             Noticias
           </a>
@@ -55,7 +56,7 @@ import { AuthStore } from '../../../auth/stores/auth.store';
           <a
             [routerLink]="['/']"
             [queryParams]="{ returnUrl: returnUrl }"
-            class="ml-auto inline-flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 active:scale-[0.99]"
+            class="ml-auto inline-flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-600 active:scale-[0.99]"
           >
             Iniciar sesión
           </a>

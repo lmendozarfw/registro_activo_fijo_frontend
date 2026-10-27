@@ -1,39 +1,40 @@
 <div class="h-dvh overflow-hidden">
-  <p-sidebar-layout class="relative! h-full min-h-full!">
-    @if (isMobile()) {
-      <p-sidebar-backdrop class="absolute!" />
-    }
+<p-sidebar-layout class="relative! h-full min-h-full!">
+  @if (isMobile()) {
+    <p-sidebar-backdrop class="absolute!" />
+  }
 
-    <p-sidebar
-      id="comunicacion-nav"
-      [collapsible]="isMobile() ? 'offcanvas' : 'icon'"
-      [overlay]="isMobile()"
-      [open]="sidebarOpen()"
-      (openChange)="mobileNavOpen.set($event)"
-      width="14rem"
-    >
-      <p-sidebar-spacer />
+  <p-sidebar
+    id="comunicacion-nav"
+    [collapsible]="isMobile() ? 'offcanvas' : 'icon'"
+    [overlay]="isMobile()"
+    [open]="sidebarOpen()"
+    (openChange)="mobileNavOpen.set($event)"
+    width="14rem"
+  >
+    <p-sidebar-spacer />
       <p-sidebar-aside>
-        <p-sidebar-panel>
-          <p-sidebar-header>
+        <p-sidebar-panel class="bg-white">
+          <p-sidebar-header class="border-b border-neutral-100">
             <p-sidebar-menu>
               <p-sidebar-menu-item>
-                <button pSidebarMenuButton class="p-1!">
+                <a routerLink="/hub" class="flex items-center gap-2 px-2 py-1">
                   <img
-                    src="assets/images/sinergyHubName.png"
+                    src="assets/images/sinergyHub.jpg"
                     alt="Raudal Footwear"
-                    class="w-full h-full object-contain"
+                    class="h-9 w-auto rounded-md"
                   />
-                </button>
+                  <span class="text-sm font-semibold text-neutral-900">RAUDAL</span>
+                </a>
               </p-sidebar-menu-item>
             </p-sidebar-menu>
           </p-sidebar-header>
 
-          <p-sidebar-content>
+          <p-sidebar-content class="bg-white">
             <app-sidebar-menu [items]="menuItems" (navigated)="closeNav()" />
           </p-sidebar-content>
 
-          <p-sidebar-footer>
+          <p-sidebar-footer class="border-t border-neutral-100 bg-white">
             <p-sidebar-menu>
               <p-sidebar-menu-item>
                 <button
@@ -41,7 +42,7 @@
                   class="p-1!"
                   (click)="userMenu.toggle($event)"
                 >
-                  <span>{{ authStore.user()?.fullName ?? 'Usuario' }}</span>
+                  <span class="truncate">{{ authStore.user()?.fullName ?? 'Usuario' }}</span>
                   <svg data-p-icon="chevron-down" class="ml-auto"></svg>
                 </button>
                 <p-menu #userMenu [model]="userItems" [popup]="true" appendTo="body">
@@ -59,8 +60,8 @@
       </p-sidebar-aside>
     </p-sidebar>
 
-    <p-sidebar-main class="min-w-0 overflow-hidden">
-      <header class="flex h-12 shrink-0 items-center gap-2 border-b border-neutral-200 px-4">
+    <p-sidebar-main class="min-w-0 overflow-hidden bg-neutral-50">
+      <header class="flex h-14 shrink-0 items-center gap-2 border-b border-neutral-200 bg-white px-4">
         <button
           pButton
           pSidebarTrigger
@@ -74,13 +75,13 @@
         <app-header-title />
         <div class="ml-auto flex items-center gap-2">
           <span
-            class="h-7.5 flex items-center rounded-md bg-neutral-100 px-2 py-1 text-xs text-neutral-900"
+            class="flex items-center rounded-full border border-neutral-200 px-2.5 py-1 text-[11px] font-medium text-neutral-600"
           >
-            {{ 'V.0.1' }}
+            V.0.1
           </span>
         </div>
       </header>
-      <div class="flex min-h-0 flex-1 flex-col overflow-x-auto overflow-y-auto p-4">
+      <div class="flex min-h-0 flex-1 flex-col overflow-x-auto overflow-y-auto p-4 sm:p-6">
         <router-outlet />
       </div>
     </p-sidebar-main>

@@ -7,60 +7,62 @@ import { CheckCircle, Qrcode, ChartBar } from '@primeicons/angular';
   imports: [RouterOutlet, CheckCircle, Qrcode, ChartBar],
   styles: [],
   template: `
-    <div class="auth-layout min-h-screen flex bg-neutral-50">
+    <div class="auth-layout min-h-screen flex bg-white">
       <!-- Panel izquierdo: Branding -->
       <div
         class="auth-brand hidden lg:flex w-1/2 relative overflow-hidden items-center justify-center
-                bg-gradient-to-br from-neutral-950 via-brand-700 to-brand-500 text-white p-12"
+                bg-neutral-950 text-white p-12"
       >
-        <div class="auth-decor auth-decor-1"></div>
-        <div class="auth-decor auth-decor-2"></div>
-        <div class="auth-decor auth-decor-3"></div>
+        <div class="absolute -left-40 top-10 size-80 rounded-full bg-brand-600/25 blur-[120px]"></div>
+        <div class="absolute -right-32 bottom-[-10rem] size-96 rounded-full bg-rose-700/18 blur-[140px]"></div>
+        <div
+          class="absolute inset-0 opacity-[0.08]"
+          style="
+            background-image:
+              linear-gradient(rgba(243, 58, 32, 0.4) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(243, 58, 32, 0.25) 1px, transparent 1px);
+            background-size: 72px 72px;
+          "
+        ></div>
 
         <div class="relative z-10 max-w-md">
           <div class="flex justify-center mb-8">
-            <div
-              class="bg-white rounded-xl shadow-lg p-4 w-36 h-24 flex items-center justify-center"
-            >
-              <img
-                src="assets/images/raudal-logo.svg"
-                alt="Raudal Footwear"
-                class="w-full h-full object-contain"
-              />
+            <div class="rounded-xl bg-white p-3 shadow-2xl shadow-black/40">
+              <img src="assets/images/raudal-logo.png" alt="Raudal Footwear" class="h-12 w-auto" />
             </div>
           </div>
 
           <h1 class="text-3xl font-bold text-center leading-tight text-white">
-            Gestión de Activos Fijos
+            Plataforma Integral Raudal
           </h1>
-          <p class="text-center text-white/80 mt-3 mb-10">
-            Administra y controla cada activo de la empresa en un solo lugar.
+          <p class="text-center text-neutral-300 mt-3 mb-10">
+            Un solo acceso para gestionar, informar y conectar a todo el equipo.
           </p>
 
           <div class="space-y-4">
             <div class="flex items-center gap-3">
               <span
-                class="flex items-center justify-center w-9 h-9 rounded-lg bg-white/10 backdrop-blur-sm shrink-0"
+                class="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-brand-500/30 to-rose-600/30 text-brand-300 ring-1 ring-brand-500/40 shrink-0"
               >
                 <svg data-p-icon="check-circle" [size]="20"></svg>
               </span>
-              <p class="m-0 text-sm">Inventario de activos fijos claro y trazable</p>
+              <p class="m-0 text-sm text-neutral-200">Acceso centralizado y seguro</p>
             </div>
             <div class="flex items-center gap-3">
               <span
-                class="flex items-center justify-center w-9 h-9 rounded-lg bg-white/10 backdrop-blur-sm shrink-0"
+                class="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-brand-500/30 to-rose-600/30 text-brand-300 ring-1 ring-brand-500/40 shrink-0"
               >
                 <svg data-p-icon="qrcode" [size]="20"></svg>
               </span>
-              <p class="m-0 text-sm">Identificación por código QR para un registro ágil</p>
+              <p class="m-0 text-sm text-neutral-200">Ingreso con gafete QR o credenciales</p>
             </div>
             <div class="flex items-center gap-3">
               <span
-                class="flex items-center justify-center w-9 h-9 rounded-lg bg-white/10 backdrop-blur-sm shrink-0"
+                class="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-brand-500/30 to-rose-600/30 text-brand-300 ring-1 ring-brand-500/40 shrink-0"
               >
                 <svg data-p-icon="chart-bar" [size]="20"></svg>
               </span>
-              <p class="m-0 text-sm">Reportes y valorización de activos al alcance de un clic</p>
+              <p class="m-0 text-sm text-neutral-200">Información y herramientas al alcance</p>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { ChevronDown, Sidebar } from '@primeicons/angular';
 import { PIcon } from '@primeicons/angular/p-icon';
 import { MenuItem } from 'primeng/api';
@@ -23,6 +23,7 @@ import { SidebarMenuComponent } from '../components/sidebar-menu/sidebar-menu.co
     Menu,
     MenuModule,
     RouterOutlet,
+    RouterLink,
     HeaderTitleComponent,
     SidebarMenuComponent,
   ],
