@@ -22,9 +22,9 @@ interface MenuItemView extends MenuItem {
   imports: [SidebarModule, RouterLink, PIcon],
   template: `
     <p-sidebar-group>
-      <p-sidebar-group-label class="px-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-neutral-400">{{ label() }}</p-sidebar-group-label>
+      <p-sidebar-group-label class="px-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-neutral-500">{{ label() }}</p-sidebar-group-label>
       <p-sidebar-group-content>
-        <p-sidebar-menu>
+        <p-sidebar-menu class="space-y-1.5">
           @for (item of viewItems(); track item.key) {
             @if (item.children.length) {
               <p-sidebar-menu-item
@@ -32,18 +32,24 @@ interface MenuItemView extends MenuItem {
                 [open]="item.open"
                 (openChange)="setGroupOpen(item.key, $event)"
               >
-                <button type="button" pSidebarMenuButton [isActive]="item.active" class="group">
-                  <span class="flex size-7 items-center justify-center rounded-lg bg-neutral-50 text-neutral-500 transition group-hover:bg-brand-50 group-hover:text-brand-700">
-                    <svg [pIcon]="item.icon || ''" [size]="16"></svg>
+                <button
+                  type="button"
+                  pSidebarMenuButton
+                  [isActive]="item.active"
+                  class="group relative overflow-hidden rounded-2xl px-2 py-2 transition-all duration-300 hover:translate-x-0.5 hover:bg-white/6 data-[active=true]:translate-x-0.5 data-[active=true]:bg-gradient-to-r data-[active=true]:from-brand-500/40 data-[active=true]:via-brand-600/25 data-[active=true]:to-transparent data-[active=true]:text-white data-[active=true]:shadow-[inset_4px_0_0_0_rgb(243,58,32),0_18px_60px_-30px_rgba(243,58,32,0.9)]"
+                >
+                  <span class="absolute inset-0 opacity-0 transition group-hover:opacity-100 bg-[radial-gradient(80%_80%_at_0%_50%,rgba(243,58,32,0.16)_0%,transparent_70%)]"></span>
+                  <span class="relative flex size-8 items-center justify-center rounded-xl bg-white/6 text-neutral-400 transition group-hover:text-white group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.08)] data-[active=true]:bg-gradient-to-br data-[active=true]:from-brand-500 data-[active=true]:to-rose-600 data-[active=true]:text-white data-[active=true]:shadow-[0_10px_40px_-12px_rgba(243,58,32,0.95)]">
+                    <svg [pIcon]="item.icon || ''" [size]="17"></svg>
                   </span>
-                  <span class="font-medium">{{ item.label }}</span>
+                  <span class="relative font-medium text-neutral-300 transition group-hover:text-white data-[active=true]:text-white">{{ item.label }}</span>
                   <svg
                     pIcon="chevron-right"
-                    class="ml-auto transition-transform duration-200"
+                    class="relative ml-auto text-neutral-500 transition-transform duration-300 group-hover:text-white data-[active=true]:text-brand-200"
                     [class.rotate-90]="item.open"
                   ></svg>
                 </button>
-                <p-sidebar-menu-sub>
+                <p-sidebar-menu-sub class="ml-3 mt-1.5 border-l border-white/8 pl-3">
                   @for (child of item.children; track child.key) {
                     <p-sidebar-menu-sub-item>
                       <a
@@ -51,16 +57,16 @@ interface MenuItemView extends MenuItem {
                         [routerLink]="child.route"
                         [isActive]="child.active"
                         (click)="navigated.emit()"
-                        class="group"
+                        class="group relative rounded-xl px-2 py-1.5 transition-all duration-200 hover:translate-x-0.5 hover:bg-white/6 data-[active=true]:translate-x-0.5 data-[active=true]:bg-gradient-to-r data-[active=true]:from-brand-500/30 data-[active=true]:to-transparent data-[active=true]:text-white data-[active=true]:shadow-[inset_3px_0_0_0_rgb(243,58,32)]"
                       >
                         @if (child.icon) {
-                          <span class="flex size-6 items-center justify-center rounded-md text-neutral-400 transition group-hover:text-brand-700">
+                          <span class="flex size-6 items-center justify-center rounded-lg text-neutral-500 transition group-hover:text-brand-200 data-[active=true]:text-brand-200">
                             <svg [pIcon]="child.icon" [size]="15"></svg>
                           </span>
                         } @else {
-                          <span class="size-1.5 rounded-full bg-neutral-300 transition group-hover:bg-brand-500"></span>
+                          <span class="size-1.5 rounded-full bg-neutral-600 transition group-hover:bg-brand-400 data-[active=true]:bg-brand-500 data-[active=true]:shadow-[0_0_0_4px_rgba(243,58,32,0.18)]"></span>
                         }
-                        <span class="text-sm">{{ child.label }}</span>
+                        <span class="text-sm text-neutral-400 transition group-hover:text-white data-[active=true]:text-white">{{ child.label }}</span>
                       </a>
                     </p-sidebar-menu-sub-item>
                   }
@@ -73,12 +79,13 @@ interface MenuItemView extends MenuItem {
                   [routerLink]="item.route"
                   [isActive]="item.active"
                   (click)="navigated.emit()"
-                  class="group"
+                  class="group relative overflow-hidden rounded-2xl px-2 py-2 transition-all duration-300 hover:translate-x-0.5 hover:bg-white/6 data-[active=true]:translate-x-0.5 data-[active=true]:bg-gradient-to-r data-[active=true]:from-brand-500/40 data-[active=true]:via-brand-600/25 data-[active=true]:to-transparent data-[active=true]:text-white data-[active=true]:shadow-[inset_4px_0_0_0_rgb(243,58,32),0_18px_60px_-30px_rgba(243,58,32,0.9)]"
                 >
-                  <span class="flex size-7 items-center justify-center rounded-lg bg-neutral-50 text-neutral-500 transition group-hover:bg-brand-50 group-hover:text-brand-700">
-                    <svg [pIcon]="item.icon || ''" [size]="16"></svg>
+                  <span class="absolute inset-0 opacity-0 transition group-hover:opacity-100 bg-[radial-gradient(80%_80%_at_0%_50%,rgba(243,58,32,0.16)_0%,transparent_70%)]"></span>
+                  <span class="relative flex size-8 items-center justify-center rounded-xl bg-white/6 text-neutral-400 transition group-hover:text-white group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.08)] data-[active=true]:bg-gradient-to-br data-[active=true]:from-brand-500 data-[active=true]:to-rose-600 data-[active=true]:text-white data-[active=true]:shadow-[0_10px_40px_-12px_rgba(243,58,32,0.95)]">
+                    <svg [pIcon]="item.icon || ''" [size]="17"></svg>
                   </span>
-                  <span class="font-medium">{{ item.label }}</span>
+                  <span class="relative font-medium text-neutral-300 transition group-hover:text-white data-[active=true]:text-white">{{ item.label }}</span>
                 </a>
               </p-sidebar-menu-item>
             }

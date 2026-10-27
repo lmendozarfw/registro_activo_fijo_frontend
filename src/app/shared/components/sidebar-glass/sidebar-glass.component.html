@@ -1,0 +1,267 @@
+<nav
+  class="sidebar-glass"
+  [class.sidebar-glass--collapsed]="collapsed()"
+  [attr.aria-label]="'Sidebar navigation'"
+>
+  <div class="sidebar-glass__window-bar" *ngIf="showWindowDots()">
+    <span class="dot dot--red" aria-hidden="true"></span>
+    <span class="dot dot--yellow" aria-hidden="true"></span>
+    <span class="dot dot--green" aria-hidden="true"></span>
+  </div>
+
+  <header class="sidebar-glass__header">
+    <div class="sidebar-glass__user">
+      <p-avatar
+        [image]="displayUser().avatarUrl || undefined"
+        shape="circle"
+        size="normal"
+        styleClass="sidebar-glass__avatar"
+        [label]="!displayUser().avatarUrl ? (displayUser().name | slice:0:2).toUpperCase() : undefined"
+      ></p-avatar>
+      <div class="sidebar-glass__user-info" *ngIf="!collapsed()">
+        <span class="sidebar-glass__greeting">
+          {{ displayUser().greeting || 'Good Day' }} 👋
+        </span>
+        <span class="sidebar-glass__name">{{ displayUser().name }}</span>
+      </div>
+    </div>
+  </header>
+
+  <button
+    type="button"
+    class="sidebar-glass__toggle"
+    (click)="toggleCollapsed()"
+    [attr.aria-label]="collapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+    [pTooltip]="collapsed() ? 'Expand' : 'Collapse'"
+    tooltipPosition="right"
+  >
+    <i
+      class="pi"
+      [ngClass]="collapsed() ? 'pi-angle-right' : 'pi-angle-left'"
+      aria-hidden="true"
+    ></i>
+  </button>
+
+  <p-divider styleClass="sidebar-glass__divider"></p-divider>
+
+  <section class="sidebar-glass__section">
+    <div class="sidebar-glass__section-header" *ngIf="!collapsed()">
+      <span class="sidebar-glass__section-label">
+        {{ menuLabel() }}:
+        <span class="sidebar-glass__section-count">{{ menuCount() }}</span>
+      </span>
+    </div>
+    <ul class="sidebar-glass__menu">
+      <li
+        *ngFor="let item of displayMenuItems(); trackBy: trackById"
+        class="sidebar-glass__menu-item"
+          [class.sidebar-glass__menu-item--active]="item.route ? routerLinkActive.isActive : false"
+          [class.sidebar-glass__menu-item--disabled]="item.disabled"
+          routerLinkActive
+          #routerLinkActive="routerLinkActive"
+          [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+        >
+          <a
+            class="sidebar-glass__menu-link"
+            [routerLink]="item.route ? [item.route] : ['./']"
+            [attr.aria-current]="item.route && routerLinkActive.isActive ? 'page' : null"
+            [attr.aria-label]="item.label"
+            [pTooltip]="collapsed() && item.label ? item.label : undefined"
+            tooltipPosition="right"
+          >
+          <span class="sidebar-glass__menu-indicator" *ngIf="item.route && routerLinkActive.isActive && !collapsed()"></span>
+          <span class="sidebar-glass__menu-icon-wrap">
+            <span
+              *ngIf="collapsed() && item.hasNotificationDot"
+              class="p-overlay-badge"
+            >
+              <i class="pi {{ item.icon }}" aria-hidden="true"></i>
+              <span class="p-badge p-badge-danger sidebar-glass__dot-badge"></span>
+            </span>
+            <span
+              *ngIf="collapsed() && item.mailBadgeCount && item.mailBadgeCount > 0 && !item.hasNotificationDot"
+              class="p-overlay-badge"
+            >
+              <i class="pi {{ item.icon }}" aria-hidden="true"></i>
+              <span class="p-badge p-badge-danger sidebar-glass__dot-badge"></span>
+            </span>
+            <i
+              *ngIf="!(collapsed() && (item.hasNotificationDot || (item.mailBadgeCount && item.mailBadgeCount > 0)))"
+              class="pi {{ item.icon }}"
+              aria-hidden="true"
+            ></i>
+          </span>
+          <span class="sidebar-glass__menu-label" *ngIf="!collapsed()">{{ item.label }}</span>
+          <span class="sidebar-glass__menu-extra" *ngIf="!collapsed()">
+            <i
+              *ngIf="item.showSettingsIcon"
+              class="pi pi-sliders-h sidebar-glass__menu-extra-icon"
+              aria-hidden="true"
+            ></i>
+            <button
+              *ngIf="item.showAddButton"
+              pButton
+              type="button"
+              icon="pi pi-plus"
+              [rounded]="true"
+              [text]="true"
+              size="small"
+              class="sidebar-glass__add-btn"
+              [attr.aria-label]="'Add ' + item.label"
+            ></button>
+            <div class="sidebar-glass__mail-group" *ngIf="item.mailAvatars && item.mailAvatars.length > 0">
+              <p-avatar
+                *ngFor="let av of item.mailAvatars | slice:0:3; let i = index"
+                [image]="av"
+                shape="circle"
+                size="normal"
+                styleClass="sidebar-glass__mail-avatar"
+                [ngStyle]="{ 'margin-left': i === 0 ? '0' : '-8px' }"
+              ></p-avatar>
+              <p-avatar
+                *ngIf="(item.mailAvatars.length || 0) > 3"
+                [label]="'+' + ((item.mailAvatars.length || 0) - 3)"
+                shape="circle"
+                size="normal"
+                styleClass="sidebar-glass__mail-avatar sidebar-glass__mail-avatar--more"
+                [ngStyle]="{ 'margin-left': (item.mailAvatars.length > 3 ? '-8px' : '0') }"
+              ></p-avatar>
+            </div>
+            <p-badge
+              *ngIf="item.mailBadgeCount && item.mailBadgeCount > 0 && item.mailAvatars && item.mailAvatars.length > 0"
+              [value]="item.mailBadgeCount"
+              severity="danger"
+              styleClass="sidebar-glass__mail-badge"
+            ></p-badge>
+          </span>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <p-divider styleClass="sidebar-glass__divider"></p-divider>
+
+  <section class="sidebar-glass__section">
+    <div class="sidebar-glass__section-header" *ngIf="!collapsed()">
+      <span class="sidebar-glass__section-label">{{ serviceLabel() }}: {{ services().length }}</span>
+      <button
+        type="button"
+        class="sidebar-glass__section-action"
+        aria-label="Edit services"
+        pTooltip="Edit"
+        tooltipPosition="left"
+      >
+        <i class="pi pi-pencil" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="sidebar-glass__card" [class.sidebar-glass__card--collapsed]="collapsed()">
+      <ul class="sidebar-glass__service-list">
+        <li
+          *ngFor="let svc of displayServices(); trackBy: trackById"
+          class="sidebar-glass__service-item"
+          [class.sidebar-glass__service-item--add]="svc.isAdd"
+          [pTooltip]="collapsed() ? svc.label : undefined"
+          tooltipPosition="right"
+        >
+          <span class="sidebar-glass__service-icon-wrap">
+            <img *ngIf="svc.logo" [src]="svc.logo" [alt]="svc.label" class="sidebar-glass__service-logo" />
+            <i *ngIf="!svc.logo && svc.icon && !svc.isAdd" class="pi {{ svc.icon }}" aria-hidden="true"></i>
+            <i *ngIf="svc.isAdd" class="pi pi-plus" aria-hidden="true"></i>
+          </span>
+          <span class="sidebar-glass__service-label" *ngIf="!collapsed()">{{ svc.label }}</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sidebar-glass__section">
+    <div class="sidebar-glass__section-header" *ngIf="!collapsed()">
+      <span class="sidebar-glass__section-label">{{ settingsLabel() }}: {{ settings().length }}</span>
+      <button
+        type="button"
+        class="sidebar-glass__section-action"
+        aria-label="Edit settings"
+        pTooltip="Edit"
+        tooltipPosition="left"
+      >
+        <i class="pi pi-pencil" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="sidebar-glass__card" [class.sidebar-glass__card--collapsed]="collapsed()">
+      <div class="sidebar-glass__settings-pill" *ngIf="!collapsed()">
+        <button
+          *ngFor="let st of displaySettings(); trackBy: trackById"
+          type="button"
+          class="sidebar-glass__settings-btn"
+          [class.sidebar-glass__settings-btn--active]="settingsSelected() === st.id"
+          (click)="selectSetting(st.id)"
+          [attr.aria-label]="st.icon"
+        >
+          <i class="pi {{ st.icon }}" aria-hidden="true"></i>
+          <p-badge
+            *ngIf="st.badge"
+            [value]="st.badge"
+            severity="danger"
+            styleClass="sidebar-glass__settings-badge"
+          ></p-badge>
+        </button>
+      </div>
+      <div class="sidebar-glass__settings-collapsed" *ngIf="collapsed()">
+        <button
+          *ngFor="let st of collapsedDisplaySettings(); trackBy: trackById"
+          type="button"
+          class="sidebar-glass__settings-btn sidebar-glass__settings-btn--compact"
+          [class.sidebar-glass__settings-btn--active]="settingsSelected() === st.id"
+          (click)="selectSetting(st.id)"
+          [attr.aria-label]="st.icon"
+          [pTooltip]="st.icon"
+          tooltipPosition="right"
+        >
+          <i class="pi {{ st.icon }}" aria-hidden="true"></i>
+          <p-badge
+            *ngIf="st.badge"
+            [value]="''"
+            severity="danger"
+            styleClass="sidebar-glass__dot-badge sidebar-glass__dot-badge--settings"
+          ></p-badge>
+        </button>
+        <button
+          *ngIf="hasMoreSettings()"
+          type="button"
+          class="sidebar-glass__settings-more"
+          aria-label="More settings"
+          [pTooltip]="'More'"
+          tooltipPosition="right"
+        >
+          <i class="pi pi-angle-down" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div class="sidebar-glass__spacer"></div>
+
+  <section class="sidebar-glass__action-card">
+    <button
+      type="button"
+      class="sidebar-glass__create-btn"
+      (click)="onCreateTask()"
+      [attr.aria-label]="createTaskLabel()"
+      [pTooltip]="collapsed() ? createTaskLabel() : undefined"
+      tooltipPosition="right"
+    >
+      <span class="sidebar-glass__create-btn-inner">
+        <i class="pi pi-plus" aria-hidden="true"></i>
+      </span>
+    </button>
+    <div class="sidebar-glass__action-text" *ngIf="!collapsed()">
+      <span class="sidebar-glass__action-title">{{ createTaskLabel() }}</span>
+      <span class="sidebar-glass__action-subtitle">
+        Or use
+        <button type="button" class="sidebar-glass__invite-link" (click)="onInviteLink()">
+          {{ inviteLinkLabel() }}
+        </button>
+      </span>
+    </div>
+  </section>
+</nav>

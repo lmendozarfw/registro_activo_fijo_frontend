@@ -61,14 +61,14 @@ export class ParticlesCanvasComponent implements AfterViewInit, OnDestroy {
   private createParticle(w: number, h: number) {
     const maxLife = 200 + Math.random() * 400;
     const variant = this.variant;
-    const speed = variant === 'hero' ? 0.3 : variant === 'dining' ? 0.25 : 0.2;
+    const speed = variant === 'hero' ? 0.35 : variant === 'dining' ? 0.28 : 0.24;
     return {
       x: Math.random() * w,
       y: Math.random() * h,
       vx: (Math.random() - 0.5) * speed,
       vy: (Math.random() - 0.5) * speed,
-      r: variant === 'hero' ? 1.2 + Math.random() * 1.6 : 0.8 + Math.random() * 1.2,
-      alpha: 0.4 + Math.random() * 0.4,
+      r: variant === 'hero' ? 1.6 + Math.random() * 2.2 : 1.0 + Math.random() * 1.6,
+      alpha: 0.5 + Math.random() * 0.5,
       life: Math.random() * maxLife,
       maxLife,
     };
@@ -110,14 +110,14 @@ export class ParticlesCanvasComponent implements AfterViewInit, OnDestroy {
         const dx = this.mouse.x - p.x;
         const dy = this.mouse.y - p.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 120) {
-          p.vx += (dx / dist) * 0.002;
-          p.vy += (dy / dist) * 0.002;
+        if (dist < 160) {
+          p.vx += (dx / dist) * 0.004;
+          p.vy += (dy / dist) * 0.004;
         }
       }
 
-      p.vx *= 0.98;
-      p.vy *= 0.98;
+      p.vx *= 0.985;
+      p.vy *= 0.985;
       p.x += p.vx;
       p.y += p.vy;
 
@@ -154,7 +154,7 @@ export class ParticlesCanvasComponent implements AfterViewInit, OnDestroy {
   }
 
   private drawConnections(w: number, h: number): void {
-    const maxDist = this.variant === 'hero' ? 140 : 100;
+    const maxDist = this.variant === 'hero' ? 180 : 130;
     for (let i = 0; i < this.particles.length; i++) {
       for (let j = i + 1; j < this.particles.length; j++) {
         const p1 = this.particles[i];
@@ -163,9 +163,9 @@ export class ParticlesCanvasComponent implements AfterViewInit, OnDestroy {
         const dy = p1.y - p2.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < maxDist) {
-          this.ctx.globalAlpha = (1 - dist / maxDist) * 0.15;
-          this.ctx.strokeStyle = this.variant === 'hero' ? 'rgba(243, 58, 32, 0.6)' : 'rgba(243, 58, 32, 0.4)';
-          this.ctx.lineWidth = 0.8;
+          this.ctx.globalAlpha = (1 - dist / maxDist) * 0.22;
+          this.ctx.strokeStyle = this.variant === 'hero' ? 'rgba(243, 58, 32, 0.7)' : 'rgba(243, 58, 32, 0.5)';
+          this.ctx.lineWidth = 1.0;
           this.ctx.beginPath();
           this.ctx.moveTo(p1.x, p1.y);
           this.ctx.lineTo(p2.x, p2.y);
