@@ -15,6 +15,7 @@ import { AuthStore } from '../../auth/stores/auth.store';
 import { PublicNewsCardComponent } from '../../news/components/public-news-card/public-news-card.component';
 import { PublicNewsStore } from '../../news/stores/public-news.store';
 import { AnimateOnScrollDirective } from '../../../core/directives/animate-on-scroll.directive';
+import { ParticlesCanvasComponent } from '../../../shared/components/particles/particles-canvas.component';
 
 @Component({
   selector: 'app-landing-page',
@@ -29,7 +30,8 @@ import { AnimateOnScrollDirective } from '../../../core/directives/animate-on-sc
     FormLabelComponent,
     QrScannerComponent,
     PublicNewsCardComponent,
-    AnimateOnScrollDirective
+    AnimateOnScrollDirective,
+    ParticlesCanvasComponent
 ],
 })
 export class LandingPage implements OnInit {
