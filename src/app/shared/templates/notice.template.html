@@ -10,22 +10,21 @@
     [overlay]="isMobile()"
     [open]="sidebarOpen()"
     (openChange)="mobileNavOpen.set($event)"
-    width="14rem"
+    width="17rem"
   >
     <p-sidebar-spacer />
       <p-sidebar-aside>
         <p-sidebar-panel class="bg-white">
-          <p-sidebar-header class="border-b border-neutral-100">
+          <p-sidebar-header>
             <p-sidebar-menu>
               <p-sidebar-menu-item>
-                <a routerLink="/hub" class="flex items-center gap-2 px-2 py-1">
-                  <img
-                    src="assets/images/sinergyHub.jpg"
-                    alt="Raudal Footwear"
-                    class="h-9 w-auto rounded-md"
-                  />
-                  <span class="text-sm font-semibold text-neutral-900">RAUDAL</span>
-                </a>
+                <div class="flex items-center gap-2">
+                  <div class="w-10 h-10 rounded-lg px-1 flex items-center justify-center bg-brand/20">
+                    <img src="assets/images/isotipo-sinergy-r.png" alt="Raudal Footwear"
+                      class="w-full h-full object-contain" />
+                  </div>
+                  <p class="text-neutral-50 text-xl font-bold">Sinergy<span class="text-brand">Hub</span></p>
+                </div>
               </p-sidebar-menu-item>
             </p-sidebar-menu>
           </p-sidebar-header>
@@ -34,17 +33,24 @@
             <app-sidebar-menu [items]="menuItems" (navigated)="closeNav()" />
           </p-sidebar-content>
 
-          <p-sidebar-footer class="border-t border-neutral-100 bg-white">
+          <p-sidebar-footer>
             <p-sidebar-menu>
               <p-sidebar-menu-item>
                 <button
-                  pSidebarMenuButton
-                  class="p-1!"
-                  (click)="userMenu.toggle($event)"
-                >
-                  <span class="truncate">{{ authStore.user()?.fullName ?? 'Usuario' }}</span>
-                  <svg data-p-icon="chevron-down" class="ml-auto"></svg>
-                </button>
+                      pSidebarMenuButton
+                      class="group relative w-full overflow-hidden rounded-2xl px-1! py-2 transition h-10!"
+                      (click)="userMenu.toggle($event)"
+                    >
+                      <div class="flex items-center gap-2">
+                        <div class="w-8! h-8! rounded-lg px-1 flex items-center justify-center bg-brand">
+                          <span>{{ authStore.user()?.fullName ? authStore.user()?.fullName[0] : 'U' }}</span>
+                        </div>
+                        <span class="relative flex items-center gap-2 truncate mr-4">
+                          {{authStore.user()?.fullName ?? 'Usuario'}}
+                        </span>
+                      </div>
+                      <svg data-p-icon="chevron-down" class="relative ml-auto text-neutral-400 transition group-hover:text-white"></svg>
+                    </button>
                 <p-menu #userMenu [model]="userItems" [popup]="true" appendTo="body">
                   <ng-template #item let-item>
                     <a class="flex items-center gap-2">

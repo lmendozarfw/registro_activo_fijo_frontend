@@ -65,6 +65,6 @@ export class VisitorTemplate {
 
   private logout(): void {
     this.authStore.logout();
-    void this.router.navigate(['/auth/login']);
+    void this.router.navigate(['/']);
   }
 }
