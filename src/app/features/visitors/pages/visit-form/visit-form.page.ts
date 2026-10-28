@@ -4,6 +4,7 @@ import {
   DestroyRef,
   OnInit,
   computed,
+  effect,
   inject,
   signal,
 } from '@angular/core';
@@ -132,6 +133,19 @@ export class VisitFormPage implements OnInit {
 
   protected readonly isWalkIn = computed(() => this.isWalkInValue() === true);
 
+  constructor() {
+    effect(() => {
+      const isEditing = this.isEditing();
+      if (isEditing) {
+        // quitar validacion de visitantes
+        this.form.controls.visitors.controls.forEach(c => {
+          c.clearValidators();
+          c.updateValueAndValidity();
+        });
+      }
+    });
+  }
+
   ngOnInit(): void {
     this.form.controls.isWalkIn.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -224,7 +238,8 @@ export class VisitFormPage implements OnInit {
 
   protected async save(): Promise<void> {
     this.submitted.set(true);
-
+    console.log({form: this.form});
+    console.log('es invalido ?', this.form.invalid);
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -285,7 +300,7 @@ export class VisitFormPage implements OnInit {
   private createVisitorControl(): FormControl<string> {
     return new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.pattern(/\S/), Validators.maxLength(200)],
+      validators: this.isEditing() ? [] : [Validators.required, Validators.pattern(/\S/), Validators.maxLength(200)],
     });
   }
 
