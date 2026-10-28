@@ -41,13 +41,16 @@ import { NotesBoardComponent } from '../../features/notes/components/notes-board
               <p-sidebar-header class="border-b border-white/5">
                 <p-sidebar-menu>
                   <p-sidebar-menu-item>
-                    <button pSidebarMenuButton class="p-1!">
+                    <div class="flex items-center gap-2">
+                      <div class="w-10 h-10 rounded-lg px-1 flex items-center justify-center bg-brand">
                       <img
-                        src="assets/images/sinergyHubName.png"
+                        src="assets/images/sinergyHub.jpg"
                         alt="Raudal Footwear"
-                        class="w-full h-full object-contain brightness-0 invert"
+                        class="w-full h-full object-contain"
                       />
-                    </button>
+                    </div>
+                    <p class="text-neutral-50 text-xl font-bold">Sinergy<span class="text-brand">Hub</span></p>
+                    </div>
                   </p-sidebar-menu-item>
                 </p-sidebar-menu>
               </p-sidebar-header>
