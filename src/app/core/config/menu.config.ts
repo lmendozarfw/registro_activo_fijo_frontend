@@ -57,6 +57,12 @@ export const ACTIVO_FIJO_MENU: MenuItem[] = [
     route: '/app/credentials',
   },
   {
+    key: 'sharepoint-accesses',
+    label: 'Accesos SharePoint',
+    icon: 'microsoft',
+    route: '/app/sharepoint-accesses',
+  },
+  {
     key: 'users',
     label: 'Usuarios',
     icon: 'user',

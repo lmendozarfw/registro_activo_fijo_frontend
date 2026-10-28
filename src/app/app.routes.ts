@@ -187,6 +187,13 @@ export const routes: Routes = [
           import('./features/credentials/pages/credentials.page').then((p) => p.CredentialsPage),
       },
       {
+        path: 'sharepoint-accesses',
+        loadComponent: () =>
+          import('./features/sharepoint/pages/sharepoint-accesses.page').then(
+            (p) => p.SharePointAccessesPage,
+          ),
+      },
+      {
         path: 'users',
         loadComponent: () => import('./features/users/pages/users.page').then((p) => p.UsersPage),
       },

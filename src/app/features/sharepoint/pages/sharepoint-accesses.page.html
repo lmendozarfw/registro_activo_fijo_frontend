@@ -1,0 +1,367 @@
+<div class="flex flex-col gap-4">
+  <section
+    class="relative overflow-hidden rounded-2xl bg-[linear-gradient(135deg,#09090b_0%,#121214_58%,#3a0d08_100%)] px-5 py-5 text-white shadow-sm"
+  >
+    <div
+      class="pointer-events-none absolute -right-16 -top-20 size-56 rounded-full bg-brand-500/25 blur-3xl"
+    ></div>
+    <div
+      class="pointer-events-none absolute -bottom-24 left-1/3 size-56 rounded-full bg-rose-500/10 blur-3xl"
+    ></div>
+
+    <div class="relative flex flex-col gap-5">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div class="max-w-2xl">
+          <span
+            class="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-200"
+          >
+            <span class="size-1.5 rounded-full bg-brand-400"></span>
+            Administración
+          </span>
+          <h1 class="mt-3 text-xl font-semibold tracking-tight">Accesos a SharePoint</h1>
+          <p class="mt-1.5 text-sm leading-relaxed text-white/60">
+            Centraliza los enlaces corporativos que se muestran en el landing. Mantén la información
+            actualizada y controla qué accesos están disponibles para el equipo.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-neutral-900 shadow-sm transition hover:bg-brand-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-300"
+          (click)="openCreate()"
+        >
+          <svg [pIcon]="'plus'" [size]="16"></svg>
+          Nuevo acceso
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="overflow-hidden rounded-2xl border border-neutral-200/80 bg-white shadow-sm">
+    <div class="flex flex-wrap items-center gap-3 border-b border-neutral-100 p-4">
+      <div class="min-w-56 flex-1">
+        <app-search-input
+          placeholder="Buscar por nombre, descripción o URL..."
+          (searched)="onSearch($event)"
+        />
+      </div>
+
+      <p-select
+        [formControl]="statusControl"
+        [options]="statusOptions"
+        optionLabel="label"
+        optionValue="value"
+        appendTo="body"
+        class="w-40"
+        aria-label="Filtrar por estado"
+      />
+
+      <button
+        pButton
+        type="button"
+        severity="secondary"
+        text
+        [loading]="store.loading()"
+        (click)="retry()"
+      >
+        <span class="flex items-center gap-2">
+          <svg [pIcon]="'refresh'" [size]="15"></svg>
+          Actualizar
+        </span>
+      </button>
+    </div>
+
+    @if (store.listError() && store.items().length > 0) {
+      <div
+        class="mx-4 mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700"
+      >
+        <span>{{ store.listError() }}</span>
+        <button pButton type="button" severity="danger" text (click)="retry()">Reintentar</button>
+      </div>
+    }
+
+    @if (store.loading() && store.items().length === 0) {
+      <div class="space-y-2 p-4">
+        @for (row of [1, 2, 3, 4, 5]; track row) {
+          <div class="h-14 animate-pulse rounded-xl bg-neutral-100"></div>
+        }
+      </div>
+    } @else if (store.listError() && store.items().length === 0) {
+      <div class="flex flex-col items-center justify-center px-4 py-12 text-center">
+        <p class="text-sm font-medium text-rose-700">
+          {{ store.listError() }}
+        </p>
+        <p class="mt-1 max-w-md text-sm text-neutral-500">
+          Verifica la conexión con el servidor e inténtalo de nuevo.
+        </p>
+        <button pButton type="button" severity="secondary" class="mt-4" (click)="retry()">
+          Reintentar
+        </button>
+      </div>
+    } @else if (filteredItems().length > 0) {
+      <p-table
+        [value]="filteredItems()"
+        [loading]="store.loading()"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        [tableStyle]="{ 'min-width': '1040px' }"
+      >
+        <ng-template #header>
+          <tr>
+            <th style="width: 360px">Acceso</th>
+            <th style="width: 320px">URL</th>
+            <th style="width: 120px">Estado</th>
+            <th style="width: 190px">Actualizado</th>
+            <th style="width: 120px">Acciones</th>
+          </tr>
+        </ng-template>
+
+        <ng-template #body let-item>
+          <tr>
+            <td>
+              <button
+                type="button"
+                class="group max-w-md cursor-pointer text-left"
+                (click)="openEdit(item)"
+              >
+                <span
+                  class="block text-sm font-semibold text-neutral-900 transition group-hover:text-brand-600"
+                >
+                  {{ item.name }}
+                </span>
+                <span class="mt-0.5 line-clamp-2 block text-xs leading-relaxed text-neutral-500">
+                  {{ item.description || 'Sin descripción' }}
+                </span>
+              </button>
+            </td>
+            <td>
+              @if (item.safeUrl) {
+                <a
+                  [href]="item.safeUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex max-w-[300px] items-center gap-1.5 text-sm text-brand-600 transition hover:text-brand-700 hover:underline"
+                  [title]="item.url"
+                >
+                  <span class="truncate">{{ item.url }}</span>
+                  <svg [pIcon]="'external-link'" [size]="13" class="shrink-0"></svg>
+                </a>
+              } @else {
+                <span
+                  class="block max-w-[300px] truncate text-sm text-neutral-500"
+                  [title]="item.url"
+                >
+                  {{ item.url }}
+                </span>
+              }
+            </td>
+            <td>
+              <p-tag
+                [value]="item.active ? 'Activo' : 'Inactivo'"
+                [severity]="item.active ? 'success' : 'danger'"
+              />
+            </td>
+            <td class="text-sm text-neutral-600">
+              {{ formatDate(item.updatedAt) }}
+            </td>
+            <td>
+              <div class="flex items-center gap-1">
+                <button
+                  pButton
+                  type="button"
+                  severity="secondary"
+                  text
+                  pTooltip="Editar"
+                  aria-label="Editar acceso"
+                  (click)="openEdit(item)"
+                >
+                  <svg [pIcon]="'pencil'" [size]="16"></svg>
+                </button>
+
+                <button
+                  pButton
+                  type="button"
+                  [severity]="item.active ? 'danger' : 'success'"
+                  text
+                  [pTooltip]="item.active ? 'Desactivar' : 'Activar'"
+                  [attr.aria-label]="item.active ? 'Desactivar acceso' : 'Activar acceso'"
+                  [disabled]="store.togglingId() === item.id"
+                  (click)="toggleActive(item)"
+                >
+                  @if (store.togglingId() === item.id) {
+                    <span
+                      class="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+                    ></span>
+                  } @else {
+                    <svg [pIcon]="item.active ? 'ban' : 'check-circle'" [size]="16"></svg>
+                  }
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    } @else {
+      <div class="p-4">
+        <app-empty-state
+          [message]="
+            hasFilters() ? 'No hay accesos que coincidan' : 'Aún no hay accesos registrados'
+          "
+          [description]="
+            hasFilters()
+              ? 'Ajusta la búsqueda o el filtro de estado para ver otros resultados.'
+              : 'Crea el primer acceso corporativo para mostrarlo en el landing.'
+          "
+        />
+      </div>
+    }
+  </section>
+</div>
+
+<app-form-dialog
+  [visible]="dialogVisible()"
+  (visibleChange)="onDialogVisibleChange($event)"
+  [header]="isEditing() ? 'Editar acceso' : 'Nuevo acceso'"
+  width="34rem"
+>
+  @if (isEditing() && store.detailLoading()) {
+    <div class="space-y-4">
+      <div class="h-10 animate-pulse rounded-lg bg-neutral-100"></div>
+      <div class="h-24 animate-pulse rounded-lg bg-neutral-100"></div>
+      <div class="h-10 animate-pulse rounded-lg bg-neutral-100"></div>
+      <div class="h-16 animate-pulse rounded-lg bg-neutral-100"></div>
+    </div>
+  } @else if (isEditing() && store.detailError()) {
+    <div
+      class="flex flex-col items-center justify-center rounded-xl border border-rose-200 bg-rose-50 px-4 py-8 text-center"
+    >
+      <p class="text-sm text-rose-700">{{ store.detailError() }}</p>
+      <button pButton type="button" severity="secondary" class="mt-3" (click)="retryDetail()">
+        Reintentar
+      </button>
+    </div>
+  } @else {
+    <form [formGroup]="form" class="flex flex-col gap-4" (ngSubmit)="save()">
+      <div class="flex flex-col gap-1.5">
+        <app-form-label required>Nombre</app-form-label>
+        <input
+          pInputText
+          formControlName="name"
+          maxlength="150"
+          class="w-full"
+          placeholder="Ej. Portal de Recursos Humanos"
+          [invalid]="form.controls.name.invalid && form.controls.name.touched"
+        />
+        <div class="flex items-start justify-between gap-3">
+          @if (nameError()) {
+            <span class="text-xs text-rose-600">{{ nameError() }}</span>
+          } @else {
+            <span class="text-xs text-neutral-500"> Nombre visible en el landing. </span>
+          }
+          <span class="shrink-0 text-xs text-neutral-400">
+            {{ form.controls.name.value.length }}/150
+          </span>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <app-form-label>Descripción</app-form-label>
+        <textarea
+          pTextarea
+          formControlName="description"
+          rows="3"
+          maxlength="300"
+          class="w-full resize-none"
+          placeholder="Describe brevemente qué encontrará el equipo en este acceso..."
+          [invalid]="form.controls.description.invalid && form.controls.description.touched"
+        ></textarea>
+        <div class="flex items-start justify-between gap-3">
+          @if (descriptionError()) {
+            <span class="text-xs text-rose-600">{{ descriptionError() }}</span>
+          } @else {
+            <span class="text-xs text-neutral-500"> Texto opcional de apoyo. </span>
+          }
+          <span class="shrink-0 text-xs text-neutral-400">
+            {{ form.controls.description.value.length }}/300
+          </span>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <app-form-label required>URL</app-form-label>
+        <input
+          pInputText
+          formControlName="url"
+          class="w-full"
+          placeholder="https://empresa.sharepoint.com/sites/..."
+          [invalid]="form.controls.url.invalid && form.controls.url.touched"
+        />
+        @if (urlError()) {
+          <span class="text-xs text-rose-600">{{ urlError() }}</span>
+        } @else {
+          <span class="text-xs text-neutral-500"> Debe iniciar con http:// o https://. </span>
+        }
+      </div>
+
+      <div class="flex items-start gap-3 rounded-xl border border-neutral-200 bg-neutral-50/70 p-3">
+        <p-checkbox formControlName="active" [binary]="true" inputId="sharepoint-active" />
+        <div>
+          <label
+            for="sharepoint-active"
+            class="cursor-pointer text-sm font-medium text-neutral-800"
+          >
+            Acceso activo
+          </label>
+          <p class="mt-0.5 text-xs text-neutral-500">
+            Solo los accesos activos se muestran en el landing corporativo.
+          </p>
+        </div>
+      </div>
+    </form>
+  }
+
+  <div dialog-footer class="flex justify-end gap-2">
+    <button pButton type="button" severity="secondary" (click)="onDialogVisibleChange(false)">
+      Cancelar
+    </button>
+    <button
+      pButton
+      type="button"
+      [loading]="store.saving()"
+      [disabled]="isEditing() && (store.detailLoading() || !!store.detailError())"
+      (click)="save()"
+    >
+      {{ isEditing() ? 'Guardar cambios' : 'Crear acceso' }}
+    </button>
+  </div>
+</app-form-dialog>
+
+<app-form-dialog
+  [visible]="deactivateDialogVisible()"
+  (visibleChange)="onDeactivateVisibleChange($event)"
+  header="Desactivar acceso"
+  width="28rem"
+>
+  <p class="text-sm text-neutral-600">
+    ¿Desactivar
+    <strong>{{ deactivateTarget()?.name }}</strong>
+    ? Dejará de mostrarse en el landing corporativo, pero podrás volver a activarlo cuando lo
+    necesites.
+  </p>
+
+  <div dialog-footer class="flex justify-end gap-2">
+    <button pButton type="button" severity="secondary" (click)="onDeactivateVisibleChange(false)">
+      Cancelar
+    </button>
+    <button
+      pButton
+      type="button"
+      severity="danger"
+      [loading]="store.togglingId() === deactivateTarget()?.id"
+      (click)="confirmDeactivate()"
+    >
+      Desactivar
+    </button>
+  </div>
+</app-form-dialog>

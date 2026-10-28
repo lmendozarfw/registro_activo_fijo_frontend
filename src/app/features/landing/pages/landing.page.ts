@@ -14,6 +14,7 @@ import { safeReturnUrl } from '../../../core/utils/navigation.utils';
 import { AuthStore } from '../../auth/stores/auth.store';
 import { PublicNewsCardComponent } from '../../news/components/public-news-card/public-news-card.component';
 import { PublicNewsStore } from '../../news/stores/public-news.store';
+import { SharePointAccessSectionComponent } from '../../sharepoint/components/sharepoint-access-section/sharepoint-access-section.component';
 import { AnimateOnScrollDirective } from '../../../core/directives/animate-on-scroll.directive';
 import { ParticlesCanvasComponent } from '../../../shared/components/particles/particles-canvas.component';
 
@@ -30,6 +31,7 @@ import { ParticlesCanvasComponent } from '../../../shared/components/particles/p
     FormLabelComponent,
     QrScannerComponent,
     PublicNewsCardComponent,
+    SharePointAccessSectionComponent,
     AnimateOnScrollDirective,
     ParticlesCanvasComponent
 ],

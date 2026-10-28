@@ -30,7 +30,7 @@ import { NotesBoardComponent } from '../../features/notes/components/notes-board
           [overlay]="isMobile()"
           [open]="sidebarOpen()"
           (openChange)="mobileNavOpen.set($event)"
-          width="14rem"
+          width="17rem"
           class="!border-0"
         >
           <p-sidebar-spacer />
@@ -42,9 +42,9 @@ import { NotesBoardComponent } from '../../features/notes/components/notes-board
                 <p-sidebar-menu>
                   <p-sidebar-menu-item>
                     <div class="flex items-center gap-2">
-                      <div class="w-10 h-10 rounded-lg px-1 flex items-center justify-center bg-brand">
+                      <div class="w-10 h-10 rounded-lg px-1 flex items-center justify-center bg-brand/20">
                       <img
-                        src="assets/images/sinergyHub.jpg"
+                        src="assets/images/isotipo-sinergy-r.png"
                         alt="Raudal Footwear"
                         class="w-full h-full object-contain"
                       />
@@ -62,18 +62,17 @@ import { NotesBoardComponent } from '../../features/notes/components/notes-board
                   <p-sidebar-menu-item>
                     <button
                       pSidebarMenuButton
-                      class="group relative w-full overflow-hidden rounded-2xl px-2 py-2 transition hover:scale-[1.01]"
+                      class="group relative w-full overflow-hidden rounded-2xl px-1! py-2 transition h-10!"
                       (click)="userMenu.toggle($event)"
                     >
-                      <span class="absolute inset-0 bg-gradient-to-r from-white/8 via-white/4 to-transparent"></span>
-                      <span class="relative flex items-center gap-2">
-                        <span class="flex min-w-0 flex-col">
-                          <span class="truncate text-sm font-semibold text-white">{{
-                            authStore.user()?.fullName ?? 'Usuario'
-                          }}</span>
-                          <span class="text-[11px] text-neutral-400">Sesión activa</span>
+                      <div class="flex items-center gap-2">
+                        <div class="w-8! h-8! rounded-lg px-1 flex items-center justify-center bg-brand">
+                          <span>{{ authStore.user()?.fullName ? authStore.user()?.fullName[0] : 'U' }}</span>
+                        </div>
+                        <span class="relative flex items-center gap-2 truncate mr-4">
+                          {{authStore.user()?.fullName ?? 'Usuario'}}
                         </span>
-                      </span>
+                      </div>
                       <svg data-p-icon="chevron-down" class="relative ml-auto text-neutral-400 transition group-hover:text-white"></svg>
                     </button>
                     <p-menu #userMenu [model]="userItems" [popup]="true" appendTo="body">
@@ -189,6 +188,6 @@ export class MainTemplate {
 
   private logout(): void {
     this.authStore.logout();
-    void this.router.navigate(['/auth/login']);
+    void this.router.navigate(['/']);
   }
 }
