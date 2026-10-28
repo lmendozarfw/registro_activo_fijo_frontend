@@ -5,6 +5,7 @@ import { PIcon } from '@primeicons/angular/p-icon';
 import { SidebarModule } from 'primeng/sidebar';
 import { filter, map } from 'rxjs';
 import { MenuItem } from '../../../core/config/menu.config';
+import { NgClass } from '@angular/common';
 
 interface MenuChildView extends MenuItem {
   active: boolean;
@@ -21,8 +22,11 @@ interface MenuItemView extends MenuItem {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SidebarModule, RouterLink, PIcon],
   template: `
-    <p-sidebar-group>
-      <p-sidebar-group-label class="px-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-neutral-500">{{ label() }}</p-sidebar-group-label>
+    <p-sidebar-group class="block">
+      <p-sidebar-group-label
+        class="px-2.5 pt-1 pb-2 text-[10px] font-semibold uppercase tracking-[0.42em] text-slate-500"
+        >{{ label() }}</p-sidebar-group-label
+      >
       <p-sidebar-group-content>
         <p-sidebar-menu class="space-y-1.5">
           @for (item of viewItems(); track item.key) {
@@ -36,20 +40,42 @@ interface MenuItemView extends MenuItem {
                   type="button"
                   pSidebarMenuButton
                   [isActive]="item.active"
-                  class="group relative overflow-hidden rounded-2xl px-2 py-2 transition-all duration-300 hover:translate-x-0.5 hover:bg-white/6 data-[active=true]:translate-x-0.5 data-[active=true]:bg-gradient-to-r data-[active=true]:from-brand-500/40 data-[active=true]:via-brand-600/25 data-[active=true]:to-transparent data-[active=true]:text-white data-[active=true]:shadow-[inset_4px_0_0_0_rgb(243,58,32),0_18px_60px_-30px_rgba(243,58,32,0.9)]"
+                  class="group relative flex items-center gap-3 px-3 py-2 transition-colors duration-300 hover:bg-red-500/5"
+                  [style.background]="item.active ? '#ff000014' : null"
+                  [style.border-radius]="item.active ? '4px' : null"
+                  [style.box-shadow]="item.active ? 'inset 0 0 10px rgba(255, 0, 0, 0.3)' : null"
                 >
-                  <span class="absolute inset-0 opacity-0 transition group-hover:opacity-100 bg-[radial-gradient(80%_80%_at_0%_50%,rgba(243,58,32,0.16)_0%,transparent_70%)]"></span>
-                  <span class="relative flex size-8 items-center justify-center rounded-xl bg-white/6 text-neutral-400 transition group-hover:text-white group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.08)] data-[active=true]:bg-gradient-to-br data-[active=true]:from-brand-500 data-[active=true]:to-rose-600 data-[active=true]:text-white data-[active=true]:shadow-[0_10px_40px_-12px_rgba(243,58,32,0.95)]">
-                    <svg [pIcon]="item.icon || ''" [size]="17"></svg>
-                  </span>
-                  <span class="relative font-medium text-neutral-300 transition group-hover:text-white data-[active=true]:text-white">{{ item.label }}</span>
+                  <span
+                    class="absolute"
+                    [style.border-radius]="'5px'"
+                    [class.opacity-0]="!item.active"
+                    [class.opacity-100]="item.active"
+                    [style.height]="item.active ? '15px' : null"
+                    [style.background]="item.active ? 'red' : null"
+                    [style.z-index]="item.active ? '100' : null"
+                    [style.left]="item.active ? '5px' : null"
+                    [style.width]="item.active ? '2px' : null"
+                    [style.box-shadow]="item.active ? 'none' : null"
+                  ></span>
+                  <svg
+                    [pIcon]="item.icon || ''"
+                    [size]="18"
+                    class="relative text-slate-300 transition-all duration-300 group-hover:text-red-400 group-hover:drop-shadow-[0_0_14px_rgba(248,113,113,0.9)] data-[active=true]:text-red-500 data-[active=true]:drop-shadow-[0_0_18px_rgba(239,68,68,1)]"
+                  ></svg>
+                  <span
+                    class="relative flex-1 text-sm text-slate-200 transition-all duration-300 group-hover:text-red-400 group-hover:drop-shadow-[0_0_12px_rgba(248,113,113,0.7)] data-[active=true]:text-red-500 data-[active=true]:drop-shadow-[0_0_16px_rgba(239,68,68,0.9)]"
+                    >{{ item.label }}</span
+                  >
                   <svg
                     pIcon="chevron-right"
-                    class="relative ml-auto text-neutral-500 transition-transform duration-300 group-hover:text-white data-[active=true]:text-brand-200"
+                    class="relative ml-auto text-slate-500 transition-all duration-300 group-hover:text-red-400 group-hover:drop-shadow-[0_0_12px_rgba(248,113,113,0.7)] data-[active=true]:text-red-500 data-[active=true]:drop-shadow-[0_0_16px_rgba(239,68,68,0.9)]"
                     [class.rotate-90]="item.open"
+                    [size]="16"
                   ></svg>
                 </button>
-                <p-sidebar-menu-sub class="ml-3 mt-1.5 border-l border-white/8 pl-3">
+                <p-sidebar-menu-sub
+                  class="relative ml-6 mt-1.5 space-y-1 border-l border-red-500/20 pl-3"
+                >
                   @for (child of item.children; track child.key) {
                     <p-sidebar-menu-sub-item>
                       <a
@@ -57,16 +83,37 @@ interface MenuItemView extends MenuItem {
                         [routerLink]="child.route"
                         [isActive]="child.active"
                         (click)="navigated.emit()"
-                        class="group relative rounded-xl px-2 py-1.5 transition-all duration-200 hover:translate-x-0.5 hover:bg-white/6 data-[active=true]:translate-x-0.5 data-[active=true]:bg-gradient-to-r data-[active=true]:from-brand-500/30 data-[active=true]:to-transparent data-[active=true]:text-white data-[active=true]:shadow-[inset_3px_0_0_0_rgb(243,58,32)]"
+                        class="group relative flex items-center gap-3 px-2.5 py-1.5 transition-colors duration-200 hover:bg-red-500/5"
+                        [style.background]="child.active ? '#ff000014' : null"
+                        [style.border-radius]="child.active ? '4px' : null"
+                        [style.box-shadow]="
+                          child.active ? 'inset 0 0 10px rgba(255, 0, 0, 0.3)' : null
+                        "
                       >
+                        <span
+                          class="absolute size-1 rounded-full bg-red-500 opacity-0 transition-all duration-200 group-hover:opacity-40 data-[active=true]:opacity-100"
+                          [style.height]="child.active ? '15px' : null"
+                          [style.background]="child.active ? 'red' : null"
+                          [style.z-index]="child.active ? '100' : null"
+                          [style.left]="child.active ? '5px' : null"
+                          [style.width]="child.active ? '2px' : null"
+                          [style.box-shadow]="child.active ? 'none' : null"
+                        ></span>
                         @if (child.icon) {
-                          <span class="flex size-6 items-center justify-center rounded-lg text-neutral-500 transition group-hover:text-brand-200 data-[active=true]:text-brand-200">
-                            <svg [pIcon]="child.icon" [size]="15"></svg>
-                          </span>
+                          <svg
+                            [pIcon]="child.icon"
+                            [size]="16"
+                            class="relative text-slate-400 transition-all duration-200 group-hover:text-red-400 group-hover:drop-shadow-[0_0_12px_rgba(248,113,113,0.8)] data-[active=true]:text-red-500 data-[active=true]:drop-shadow-[0_0_16px_rgba(239,68,68,0.9)]"
+                          ></svg>
                         } @else {
-                          <span class="size-1.5 rounded-full bg-neutral-600 transition group-hover:bg-brand-400 data-[active=true]:bg-brand-500 data-[active=true]:shadow-[0_0_0_4px_rgba(243,58,32,0.18)]"></span>
+                          <span
+                            class="relative size-1 rounded-full bg-slate-500 transition-all duration-200 group-hover:bg-red-400 group-hover:shadow-[0_0_0_3px_rgba(239,68,68,0.16),0_0_14px_rgba(239,68,68,0.9)] data-[active=true]:bg-red-500 data-[active=true]:shadow-[0_0_0_3px_rgba(239,68,68,0.18),0_0_18px_rgba(239,68,68,1)]"
+                          ></span>
                         }
-                        <span class="text-sm text-neutral-400 transition group-hover:text-white data-[active=true]:text-white">{{ child.label }}</span>
+                        <span
+                          class="relative text-sm text-slate-300 transition-all duration-200 group-hover:text-red-400 group-hover:drop-shadow-[0_0_10px_rgba(248,113,113,0.7)] data-[active=true]:text-red-500 data-[active=true]:drop-shadow-[0_0_14px_rgba(239,68,68,0.9)]"
+                          >{{ child.label }}</span
+                        >
                       </a>
                     </p-sidebar-menu-sub-item>
                   }
@@ -79,13 +126,31 @@ interface MenuItemView extends MenuItem {
                   [routerLink]="item.route"
                   [isActive]="item.active"
                   (click)="navigated.emit()"
-                  class="group relative overflow-hidden rounded-2xl px-2 py-2 transition-all duration-300 hover:translate-x-0.5 hover:bg-white/6 data-[active=true]:translate-x-0.5 data-[active=true]:bg-gradient-to-r data-[active=true]:from-brand-500/40 data-[active=true]:via-brand-600/25 data-[active=true]:to-transparent data-[active=true]:text-white data-[active=true]:shadow-[inset_4px_0_0_0_rgb(243,58,32),0_18px_60px_-30px_rgba(243,58,32,0.9)]"
+                  class="group relative flex items-center gap-3 px-3 py-2 transition-colors duration-300 hover:bg-red-500/5"
+                  [style.background]="item.active ? '#ff000014' : null"
+                  [style.border-radius]="item.active ? '4px' : null"
+                  [style.box-shadow]="item.active ? 'inset 0 0 10px rgba(255, 0, 0, 0.3)' : null"
                 >
-                  <span class="absolute inset-0 opacity-0 transition group-hover:opacity-100 bg-[radial-gradient(80%_80%_at_0%_50%,rgba(243,58,32,0.16)_0%,transparent_70%)]"></span>
-                  <span class="relative flex size-8 items-center justify-center rounded-xl bg-white/6 text-neutral-400 transition group-hover:text-white group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.08)] data-[active=true]:bg-gradient-to-br data-[active=true]:from-brand-500 data-[active=true]:to-rose-600 data-[active=true]:text-white data-[active=true]:shadow-[0_10px_40px_-12px_rgba(243,58,32,0.95)]">
-                    <svg [pIcon]="item.icon || ''" [size]="17"></svg>
-                  </span>
-                  <span class="relative font-medium text-neutral-300 transition group-hover:text-white data-[active=true]:text-white">{{ item.label }}</span>
+                    <span
+                      class="absolute"
+                      [class.opacity-0]="!item.active"
+                      [class.opacity-100]="item.active"
+                      [style.height]="item.active ? '15px' : null"
+                      [style.background]="item.active ? 'red' : null"
+                      [style.z-index]="item.active ? '100' : null"
+                      [style.left]="item.active ? '5px' : null"
+                      [style.width]="item.active ? '2px' : null"
+                      [style.box-shadow]="item.active ? 'none' : null"
+                    ></span>
+                  <svg
+                    [pIcon]="item.icon || ''"
+                    [size]="18"
+                    class="relative text-slate-300 transition-all duration-300 group-hover:text-red-400 group-hover:drop-shadow-[0_0_14px_rgba(248,113,113,0.9)] data-[active=true]:text-red-500 data-[active=true]:drop-shadow-[0_0_18px_rgba(239,68,68,1)]"
+                  ></svg>
+                  <span
+                    class="relative flex-1 text-sm text-slate-200 transition-all duration-300 group-hover:text-red-400 group-hover:drop-shadow-[0_0_12px_rgba(248,113,113,0.7)] data-[active=true]:text-red-500 data-[active=true]:drop-shadow-[0_0_16px_rgba(239,68,68,0.9)]"
+                    >{{ item.label }}</span
+                  >
                 </a>
               </p-sidebar-menu-item>
             }

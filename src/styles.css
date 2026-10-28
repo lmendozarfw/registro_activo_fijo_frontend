@@ -229,3 +229,32 @@ p-table {
 .shadow-card {
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
+
+#mobile-nav,
+.p-sidebar,
+.p-sidebar-aside {
+  color-scheme: dark;
+}
+
+#mobile-nav .p-sidebar-aside,
+.p-sidebar-aside {
+  background: radial-gradient(120% 120% at 0% 0%, rgba(239, 68, 68, 0.32) 0%, transparent 60%),
+    radial-gradient(140% 140% at 100% 100%, rgba(225, 29, 72, 0.26) 0%, transparent 65%),
+    linear-gradient(180deg, #050506 0%, #010101 100%) !important;
+  color: rgb(241 245 249) !important;
+}
+
+#mobile-nav .p-sidebar-content,
+#mobile-nav .p-sidebar-header,
+#mobile-nav .p-sidebar-footer,
+.p-sidebar-content,
+.p-sidebar-header,
+.p-sidebar-footer {
+  background: transparent !important;
+  color: rgb(241 245 249) !important;
+}
+
+#mobile-nav .p-sidebar-group-label,
+.p-sidebar-group-label {
+  color: rgb(148 163 184) !important;
+}
