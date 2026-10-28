@@ -62,6 +62,19 @@ export class LandingPage implements OnInit {
 
   readonly solutions: SolutionConfig[] = SOLUTIONS;
 
+  readonly otherTools = [
+    {
+      url: 'https://riverline.clickup.com/login',
+      title: 'ClickUp',
+      description: 'Una plataforma de gestión de proyectos y productividad todo en uno.'
+    },
+    {
+      url: 'https://www.microsoft365.com',
+      title: 'Microsoft 365',
+      description: 'Suite de servicios por suscripción de Microsoft que proporciona acceso a aplicaciones de productividad.'
+    }
+  ];
+
   ngOnInit(): void {
     void this.publicNews.loadFeatured(3);
   }
