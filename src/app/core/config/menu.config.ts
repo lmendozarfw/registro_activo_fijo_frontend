@@ -95,6 +95,12 @@ export const COMUNICACION_MENU: MenuItem[] = [
     icon: 'comments',
     route: '/comunicacion/noticias',
   },
+  {
+    key: 'menu-semanal',
+    label: 'Menú semanal',
+    icon: 'calendar',
+    route: '/comunicacion/menu',
+  },
 ];
 
 export const VISITOR_MENU: MenuItem[] = [

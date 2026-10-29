@@ -14,18 +14,16 @@ import { AuthStore } from '../../../auth/stores/auth.store';
       <div
         class="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8"
       >
-        <a
-          routerLink="/"
-          class="flex shrink-0 items-center gap-3"
-          aria-label="Raudal Footwear, inicio"
-        >
-          <img
-            src="assets/images/sinergyHub.jpg"
-            alt="Raudal Footwear"
-            class="h-9 w-auto rounded-md sm:h-10"
-          />
-          <span class="hidden text-sm font-semibold tracking-wide text-neutral-900 sm:block">RAUDAL</span>
-        </a>
+        <div class="flex items-center gap-2 sm:gap-3">
+      <span class="inline-flex items-center px-2 py-1">
+        <img src="assets/images/raudal-logo-r.png" alt="Raudal Footwear" class="h-5 w-auto sm:h-6" />
+      </span>
+      <span class="h-6 w-px bg-white/30" aria-hidden="true"></span>
+      <span class="inline-flex items-center px-2 py-1">
+        <img src="assets/images/Riverlain_Ergonomic_SF-r.png" alt="Riverlain Ergonomic Safety Footwear"
+          class="h-5 w-auto sm:h-6" />
+      </span>
+    </div>
 
         <nav class="ml-auto hidden items-center gap-1 sm:flex">
           <a

@@ -210,7 +210,7 @@
           <form [formGroup]="loginForm" class="flex flex-col gap-4" (ngSubmit)="onSubmit()">
             <div class="flex flex-col gap-1.5">
               <app-form-label required>Nombre de usuario</app-form-label>
-              <input pInputText formControlName="user" type="text" placeholder="nombre.apellido" class="w-full"
+              <input pInputText formControlName="user" type="text" placeholder="número de empleado" class="w-full"
                 [invalid]="!!userError" autocomplete="username" />
               @if (userError) {
               <span class="text-xs text-rose-600">{{ userError }}</span>
@@ -420,18 +420,18 @@
           </p>
 
           <div class="mt-6 flex flex-wrap gap-2">
-            <span class="rounded-full bg-white px-3 py-1.5 text-xs font-medium text-neutral-600">Lunes a viernes</span>
-            <span class="rounded-full bg-white px-3 py-1.5 text-xs font-medium text-neutral-600">Comida corrida</span>
-            <span class="rounded-full bg-white px-3 py-1.5 text-xs font-medium text-neutral-600">Opciones
+            <span class="rounded-full bg-black/20 px-3 py-1.5 text-xs font-medium text-neutral-900 ">Lunes a viernes</span>
+            <span class="rounded-full bg-black/20 px-3 py-1.5 text-xs font-medium text-neutral-900">Comida corrida</span>
+            <span class="rounded-full bg-black/20 px-3 py-1.5 text-xs font-medium text-neutral-900">Opciones
               balanceadas</span>
           </div>
 
-          <a href="assets/images/menu-semanal.svg" target="_blank" rel="noopener noreferrer"
-            class="mt-8 inline-flex w-fit items-center gap-2 rounded-xl bg-neutral-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800 active:scale-[0.99]">
-            <svg [pIcon]="'image'" [size]="16"></svg>
-            Abrir menú completo
-            <svg [pIcon]="'external-link'" [size]="14"></svg>
-          </a>
+          @if (weeklyMenuPeriod(); as period) {
+          <p class="mt-4 inline-flex items-center gap-2 text-sm font-medium text-neutral-700">
+            <svg [pIcon]="'calendar'" [size]="15"></svg>
+            {{ period }}
+          </p>
+          }
         </div>
 
         <div class="relative overflow-hidden bg-neutral-950 p-5 sm:p-7 lg:p-9 flex items-center justify-center">
@@ -439,8 +439,13 @@
           </div>
           <div class="pointer-events-none absolute -bottom-24 -left-16 size-64 rounded-full bg-brand-300/10 blur-3xl">
           </div>
-          <img src="http://192.168.1.100/Img/ImagenNoticia3.jpg" alt="Menú semanal del comedor Raudal"
+          @if (weeklyMenuImageUrl(); as imageUrl) {
+          <img [src]="imageUrl" [alt]="weeklyMenuFileName()"
+            class="relative max-h-[560px] w-auto max-w-full rounded-2xl ring-1 ring-white/10" loading="lazy" />
+          } @else {
+          <img src="assets/images/menu-semanal.svg" [alt]="weeklyMenuTitle()"
             class="relative w-[350px] rounded-2xl ring-1 ring-white/10" loading="lazy" />
+          }
         </div>
       </div>
     </div>

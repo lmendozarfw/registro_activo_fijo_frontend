@@ -92,6 +92,28 @@ export const routes: Routes = [
           import('./features/news/pages/news-form/news-form.page').then((p) => p.NewsFormPage),
       },
       {
+        path: 'menu',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('./features/weekly-menu/pages/weekly-menu-list/weekly-menu-list.page').then(
+            (p) => p.WeeklyMenuListPage,
+          ),
+      },
+      {
+        path: 'menu/nuevo',
+        loadComponent: () =>
+          import('./features/weekly-menu/pages/weekly-menu-form/weekly-menu-form.page').then(
+            (p) => p.WeeklyMenuFormPage,
+          ),
+      },
+      {
+        path: 'menu/:id/editar',
+        loadComponent: () =>
+          import('./features/weekly-menu/pages/weekly-menu-form/weekly-menu-form.page').then(
+            (p) => p.WeeklyMenuFormPage,
+          ),
+      },
+      {
         path: '**',
         redirectTo: 'noticias',
       },

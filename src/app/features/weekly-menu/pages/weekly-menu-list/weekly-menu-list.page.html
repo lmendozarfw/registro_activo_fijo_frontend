@@ -1,0 +1,178 @@
+<div class="flex flex-col gap-4">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div>
+      <h1 class="text-lg font-semibold text-neutral-900">Menú semanal</h1>
+      <p class="mt-1 max-w-2xl text-sm text-neutral-600">
+        Publica el menú del comedor para cada semana. Las fechas no deben
+        traslaparse con otro menú.
+      </p>
+    </div>
+    <button pButton type="button" (click)="create()">
+      <span class="flex items-center gap-2">
+        <svg [pIcon]="'plus'" [size]="16"></svg>
+        Nuevo menú
+      </span>
+    </button>
+  </div>
+
+  <div class="w-full max-w-md">
+    <app-search-input
+      placeholder="Buscar por título..."
+      (searched)="onSearch($event)"
+    />
+  </div>
+
+  @if (store.loading() && store.items().length === 0) {
+    <div class="space-y-2">
+      @for (row of [1, 2, 3, 4, 5]; track row) {
+        <div class="h-12 animate-pulse rounded-md bg-neutral-100"></div>
+      }
+    </div>
+  } @else if (store.listError() && store.items().length === 0) {
+    <div
+      class="flex flex-col items-center justify-center rounded-lg border border-red-200 bg-red-50 px-4 py-10 text-center"
+    >
+      <p class="text-sm text-red-700">{{ store.listError() }}</p>
+      <button
+        pButton
+        type="button"
+        severity="secondary"
+        class="mt-3"
+        (click)="retry()"
+      >
+        Reintentar
+      </button>
+    </div>
+  } @else if (viewItems().length > 0) {
+    <p-table
+      [value]="viewItems()"
+      [loading]="store.loading()"
+      [tableStyle]="{ 'min-width': '980px' }"
+    >
+      <ng-template #header>
+        <tr>
+          <th style="width: 120px">Imagen</th>
+          <th style="width: 340px">Menú</th>
+          <th style="width: 240px">Periodo</th>
+          <th style="width: 130px">Estado</th>
+          <th style="width: 160px">Creado</th>
+          <th style="width: 120px">Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template #body let-menu>
+        <tr>
+          <td>
+            @if (menu.image?.url) {
+              <img
+                [src]="menu.image?.url"
+                [alt]="menu.image?.originalFileName || 'Menú semanal'"
+                class="h-12 w-20 rounded-md object-cover"
+              />
+            } @else {
+              <span
+                class="inline-flex h-12 w-20 items-center justify-center rounded-md bg-neutral-100 text-neutral-400"
+              >
+                <svg [pIcon]="'image'" [size]="16"></svg>
+              </span>
+            }
+          </td>
+          <td>
+            <button
+              type="button"
+              class="cursor-pointer text-left font-medium text-neutral-800 hover:text-brand-500"
+              (click)="edit(menu.id)"
+            >
+              {{ menu.title || 'Menú semanal' }}
+            </button>
+          </td>
+          <td class="text-sm text-neutral-600">{{ menu.period }}</td>
+          <td>
+            <app-weekly-menu-status-tag [status]="menu.status" />
+          </td>
+          <td class="text-sm text-neutral-600">
+            {{ menu.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+          </td>
+          <td>
+            <div class="flex items-center gap-1">
+              <button
+                pButton
+                type="button"
+                severity="secondary"
+                text
+                pTooltip="Editar"
+                aria-label="Editar"
+                (click)="edit(menu.id)"
+              >
+                <svg [pIcon]="'pencil'" [size]="16"></svg>
+              </button>
+              <button
+                pButton
+                type="button"
+                severity="danger"
+                text
+                pTooltip="Eliminar"
+                aria-label="Eliminar"
+                (click)="requestRemove(menu)"
+              >
+                <svg [pIcon]="'trash'" [size]="16"></svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    @if (store.hasMore()) {
+      <div class="flex justify-center pt-2">
+        <button
+          pButton
+          type="button"
+          severity="secondary"
+          [loading]="store.loadingMore()"
+          (click)="store.loadMore()"
+        >
+          Cargar más
+        </button>
+      </div>
+    }
+  } @else {
+    <app-empty-state
+      message="No hay menús semanales"
+      description="Crea el primer menú para que aparezca en el portal de Comunicación Interna."
+    />
+  }
+</div>
+
+<app-form-dialog
+  [visible]="removeDialogVisible()"
+  (visibleChange)="removeDialogVisible.set($event)"
+  header="Eliminar menú semanal"
+  width="30rem"
+>
+  <p class="text-sm text-neutral-600">
+    ¿Eliminar el menú
+    <strong>{{ removeTarget()?.title || removeTarget()?.startDate }}</strong>
+    ? Esta acción no se puede deshacer.
+  </p>
+
+  <div dialog-footer class="flex justify-end gap-2">
+    <button
+      pButton
+      type="button"
+      severity="secondary"
+      (click)="removeDialogVisible.set(false)"
+    >
+      Cancelar
+    </button>
+    <button
+      pButton
+      type="button"
+      severity="danger"
+      [loading]="store.removing()"
+      (click)="confirmRemove()"
+    >
+      Eliminar
+    </button>
+  </div>
+</app-form-dialog>

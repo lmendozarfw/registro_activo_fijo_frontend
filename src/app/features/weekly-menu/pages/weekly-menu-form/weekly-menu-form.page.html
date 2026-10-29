@@ -1,0 +1,203 @@
+<div class="flex flex-col gap-4">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div class="flex flex-col gap-1">
+      <div class="flex flex-wrap items-center gap-2">
+        <h1 class="text-lg font-semibold text-neutral-900">
+          {{ isEditing() ? 'Editar menú semanal' : 'Nuevo menú semanal' }}
+        </h1>
+        @if (detailStatus(); as status) {
+          <app-weekly-menu-status-tag [status]="status" />
+        }
+      </div>
+      <p class="max-w-2xl text-sm text-neutral-600">
+        Define el periodo y sube la imagen del menú que se mostrará en el portal.
+      </p>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button pButton type="button" severity="secondary" (click)="cancel()">
+        Volver
+      </button>
+      <button
+        pButton
+        type="button"
+        [loading]="store.saving()"
+        (click)="save()"
+      >
+        Guardar
+      </button>
+    </div>
+  </div>
+
+  @if (isEditing() && store.detailLoading() && !store.detail()) {
+    <div class="space-y-3">
+      <div class="h-40 animate-pulse rounded-lg bg-neutral-100"></div>
+      <div class="h-80 animate-pulse rounded-lg bg-neutral-100"></div>
+    </div>
+  } @else if (isEditing() && store.detailNotFound()) {
+    <div
+      class="flex flex-col items-center justify-center rounded-lg bg-white px-4 py-12 text-center"
+    >
+      <h2 class="text-base font-semibold text-neutral-800">Menú no encontrado</h2>
+      <p class="mt-1 text-sm text-neutral-500">
+        El menú solicitado no existe o fue eliminado.
+      </p>
+      <button
+        pButton
+        type="button"
+        severity="secondary"
+        class="mt-4"
+        (click)="cancel()"
+      >
+        Volver al listado
+      </button>
+    </div>
+  } @else if (isEditing() && store.detailError() && !store.detail()) {
+    <div
+      class="flex flex-col items-center justify-center rounded-lg border border-red-200 bg-red-50 px-4 py-12 text-center"
+    >
+      <p class="text-sm text-red-700">{{ store.detailError() }}</p>
+      <div class="mt-4 flex gap-2">
+        <button pButton type="button" severity="secondary" (click)="cancel()">
+          Volver
+        </button>
+        <button pButton type="button" (click)="retryLoad()">Reintentar</button>
+      </div>
+    </div>
+  } @else {
+    <form [formGroup]="form" class="flex flex-col gap-4" (ngSubmit)="save()">
+      <section class="flex flex-col gap-4 rounded-lg bg-white p-4">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h2 class="text-sm font-semibold text-neutral-800">Periodo del menú</h2>
+            <p class="text-xs text-neutral-500">
+              El menú estará vigente entre la fecha de inicio y la fecha de fin.
+            </p>
+          </div>
+          <button
+            pButton
+            type="button"
+            severity="secondary"
+            size="small"
+            (click)="selectCurrentWeek()"
+          >
+            Semana actual
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div class="flex flex-col gap-1.5">
+            <app-form-label required>Fecha de inicio</app-form-label>
+            <p-datepicker
+              formControlName="startDate"
+              dateFormat="dd/mm/yy"
+              appendTo="body"
+              class="w-full"
+              [invalid]="
+                form.controls.startDate.invalid &&
+                form.controls.startDate.touched
+              "
+            />
+            @if (
+              form.controls.startDate.invalid &&
+              form.controls.startDate.touched
+            ) {
+              <span class="text-xs text-red-600">
+                Selecciona la fecha de inicio.
+              </span>
+            }
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <app-form-label required>Fecha de fin</app-form-label>
+            <p-datepicker
+              formControlName="endDate"
+              dateFormat="dd/mm/yy"
+              appendTo="body"
+              class="w-full"
+              [invalid]="
+                (form.controls.endDate.invalid &&
+                  form.controls.endDate.touched) ||
+                dateRangeInvalid()
+              "
+            />
+            @if (dateRangeInvalid()) {
+              <span class="text-xs text-red-600">
+                La fecha de fin debe ser igual o posterior a la fecha de inicio.
+              </span>
+            } @else if (
+              form.controls.endDate.invalid &&
+              form.controls.endDate.touched
+            ) {
+              <span class="text-xs text-red-600">
+                Selecciona la fecha de fin.
+              </span>
+            }
+          </div>
+        </div>
+
+        @if (overlapError()) {
+          <p class="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+            {{ overlapError() }}
+          </p>
+        }
+
+        <div class="flex flex-col gap-1.5">
+          <app-form-label>Título</app-form-label>
+          <input
+            pInputText
+            formControlName="title"
+            maxlength="150"
+            class="w-full"
+            placeholder="Ej. Menú de la semana"
+          />
+          <div class="flex items-start justify-between gap-3">
+            @if (
+              form.controls.title.invalid && form.controls.title.touched
+            ) {
+              <span class="text-xs text-red-600">
+                El título debe tener máximo 150 caracteres.
+              </span>
+            } @else {
+              <span class="text-xs text-neutral-500">
+                Opcional. Si se deja vacío se mostrará como “Menú semanal”.
+              </span>
+            }
+            <span class="shrink-0 text-xs text-neutral-400">
+              {{ form.controls.title.value.length }}/150
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section class="flex flex-col gap-4 rounded-lg bg-white p-4">
+        <app-weekly-menu-image-picker
+          [currentUrl]="store.detail()?.image?.url ?? null"
+          [currentFileName]="store.detail()?.image?.originalFileName ?? null"
+          [disabled]="store.saving()"
+          (fileSelected)="onFileSelected($event)"
+        />
+
+        @if (imageError()) {
+          <p class="text-xs text-red-600">
+            Selecciona la imagen del menú semanal.
+          </p>
+        }
+      </section>
+
+      <div class="flex justify-end gap-2">
+        <button
+          pButton
+          type="button"
+          severity="secondary"
+          (click)="cancel()"
+        >
+          Cancelar
+        </button>
+        <button pButton type="submit" [loading]="store.saving()">
+          Guardar
+        </button>
+      </div>
+    </form>
+  }
+</div>

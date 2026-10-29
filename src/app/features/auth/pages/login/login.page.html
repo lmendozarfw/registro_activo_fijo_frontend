@@ -37,7 +37,7 @@
     <form [formGroup]="loginForm" class="flex flex-col gap-5" (ngSubmit)="onSubmit()">
         <div class="flex flex-col gap-1.5">
             <app-form-label required>Nombre de usuario</app-form-label>
-            <input pInputText formControlName="user" type="text" placeholder="nombre.apellido" class="w-full"
+            <input pInputText formControlName="user" type="text" placeholder="número de empleado" class="w-full"
                 [invalid]="!!userError" />
             @if (userError) {
             <span class="text-xs text-rose-600">{{ userError }}</span>
@@ -78,7 +78,7 @@
     </form>
     }
 
-    <button type="button"
+    <button type="button" pButton severity="secondary"
         class="mt-6 flex w-full items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-semibold text-neutral-600 transition hover:border-brand-500 hover:text-brand-600 active:scale-[0.99]"
         (click)="toggleMode()">
         @if (mode() === 'qr') {

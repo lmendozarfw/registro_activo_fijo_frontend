@@ -11,6 +11,7 @@ import {
   SaveNewsRequest,
 } from '../models/news.model';
 import { NewsService } from '../services/news.service';
+import { LoaderService } from '../../../core/services/loader.service';
 
 const LIST_PAGE_SIZE = 25;
 
@@ -50,7 +51,7 @@ export const NewsStore = signalStore(
     detailNotFound: false,
   }),
   withMethods(
-    (store, service = inject(NewsService), toast = inject(ToastService)) => {
+    (store, service = inject(NewsService), toast = inject(ToastService), loader = inject(LoaderService)) => {
       let listRequestId = 0;
       let detailRequestId = 0;
 
@@ -71,6 +72,7 @@ export const NewsStore = signalStore(
         },
 
         async load(reset = true): Promise<void> {
+          loader.show();
           const requestId = ++listRequestId;
           const currentItems = store.items();
           const status = store.status();
@@ -114,6 +116,8 @@ export const NewsStore = signalStore(
               listError: message,
             });
             toast.error(message);
+          } finally {
+            loader.hide();
           }
         },
 
@@ -139,6 +143,7 @@ export const NewsStore = signalStore(
           });
 
           try {
+            loader.show();
             const detail = await firstValueFrom(service.getDetail(id));
             if (requestId !== detailRequestId) return;
 
@@ -167,12 +172,15 @@ export const NewsStore = signalStore(
               detailError: message,
             });
             toast.error(message);
+          } finally {
+            loader.hide();
           }
         },
 
         async create(data: SaveNewsRequest): Promise<string | null> {
           patchState(store, { saving: true });
           try {
+            loader.show();
             const id = await firstValueFrom(service.create(data));
             patchState(store, { saving: false });
 
@@ -194,12 +202,15 @@ export const NewsStore = signalStore(
             patchState(store, { saving: false });
             toast.error(message);
             return null;
+          } finally {
+            loader.hide();
           }
         },
 
         async update(id: string, data: SaveNewsRequest): Promise<boolean> {
           patchState(store, { saving: true });
           try {
+            loader.show();
             await firstValueFrom(service.update(id, data));
             patchState(store, { saving: false });
             toast.success('Noticia actualizada');
@@ -217,12 +228,15 @@ export const NewsStore = signalStore(
             patchState(store, { saving: false });
             toast.error(message);
             return false;
+          } finally {
+            loader.hide();
           }
         },
 
         async publish(id: string): Promise<boolean> {
           patchState(store, { saving: true });
           try {
+            loader.show();
             await firstValueFrom(service.publish(id));
             patchState(store, { saving: false });
             toast.success('Noticia publicada');
@@ -239,12 +253,15 @@ export const NewsStore = signalStore(
             patchState(store, { saving: false });
             toast.error(message);
             return false;
+          } finally {
+            loader.hide();
           }
         },
 
         async schedule(id: string, scheduledPublishAt: string): Promise<boolean> {
           patchState(store, { saving: true });
           try {
+            loader.show();
             await firstValueFrom(
               service.schedule(id, { scheduledPublishAt }),
             );
@@ -266,12 +283,15 @@ export const NewsStore = signalStore(
             patchState(store, { saving: false });
             toast.error(message);
             return false;
+          } finally {
+            loader.hide();
           }
         },
 
         async archive(id: string): Promise<boolean> {
           patchState(store, { saving: true });
           try {
+            loader.show();
             await firstValueFrom(service.archive(id));
             patchState(store, { saving: false });
             toast.success('Noticia archivada');
@@ -288,6 +308,8 @@ export const NewsStore = signalStore(
             patchState(store, { saving: false });
             toast.error(message);
             return false;
+          } finally {
+            loader.hide();
           }
         },
 
@@ -298,6 +320,7 @@ export const NewsStore = signalStore(
         ): Promise<boolean> {
           patchState(store, { uploading: true });
           try {
+            loader.show();
             await firstValueFrom(service.uploadImage(id, file, isCover));
             patchState(store, { uploading: false });
             toast.success('Imagen agregada');
@@ -311,12 +334,15 @@ export const NewsStore = signalStore(
             patchState(store, { uploading: false });
             toast.error(message);
             return false;
+          } finally {
+            loader.hide();
           }
         },
 
         async setCover(id: string, imageId: string): Promise<boolean> {
           patchState(store, { uploading: true });
           try {
+            loader.show();
             await firstValueFrom(service.setCover(id, imageId));
             patchState(store, { uploading: false });
             toast.success('Portada actualizada');
@@ -330,12 +356,15 @@ export const NewsStore = signalStore(
             patchState(store, { uploading: false });
             toast.error(message);
             return false;
+          } finally {
+            loader.hide();
           }
         },
 
         async removeImage(id: string, imageId: string): Promise<boolean> {
           patchState(store, { removingImage: true });
           try {
+            loader.show();
             await firstValueFrom(service.removeImage(id, imageId));
             patchState(store, { removingImage: false });
             toast.success('Imagen eliminada');
@@ -349,6 +378,8 @@ export const NewsStore = signalStore(
             patchState(store, { removingImage: false });
             toast.error(message);
             return false;
+          } finally {
+            loader.hide();
           }
         },
 

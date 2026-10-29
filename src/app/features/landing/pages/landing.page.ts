@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, viewChild } from '@angular/core';
+import { Component, OnInit, computed, inject, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PIcon } from '@primeicons/angular/p-icon';
@@ -15,6 +15,8 @@ import { AuthStore } from '../../auth/stores/auth.store';
 import { PublicNewsCardComponent } from '../../news/components/public-news-card/public-news-card.component';
 import { PublicNewsStore } from '../../news/stores/public-news.store';
 import { SharePointAccessSectionComponent } from '../../sharepoint/components/sharepoint-access-section/sharepoint-access-section.component';
+import { PublicWeeklyMenuStore } from '../../weekly-menu/stores/public-weekly-menu.store';
+import { formatWeeklyMenuPeriod } from '../../weekly-menu/utils/weekly-menu.utils';
 import { AnimateOnScrollDirective } from '../../../core/directives/animate-on-scroll.directive';
 import { ParticlesCanvasComponent } from '../../../shared/components/particles/particles-canvas.component';
 
@@ -39,6 +41,7 @@ import { ParticlesCanvasComponent } from '../../../shared/components/particles/p
 export class LandingPage implements OnInit {
   protected readonly authStore = inject(AuthStore);
   protected readonly publicNews = inject(PublicNewsStore);
+  protected readonly publicWeeklyMenu = inject(PublicWeeklyMenuStore);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly permissions = inject(PermissionsService);
@@ -75,8 +78,25 @@ export class LandingPage implements OnInit {
     }
   ];
 
+  protected readonly weeklyMenuImageUrl = computed(
+    () => this.publicWeeklyMenu.current()?.image?.url ?? null,
+  );
+  protected readonly weeklyMenuFileName = computed(
+    () => this.publicWeeklyMenu.current()?.image?.originalFileName ?? 'Menú semanal',
+  );
+  protected readonly weeklyMenuTitle = computed(
+    () => this.publicWeeklyMenu.current()?.title?.trim() || 'Menú semanal',
+  );
+  protected readonly weeklyMenuPeriod = computed(() => {
+    const current = this.publicWeeklyMenu.current();
+    return current
+      ? formatWeeklyMenuPeriod(current.startDate, current.endDate)
+      : null;
+  });
+
   ngOnInit(): void {
     void this.publicNews.loadFeatured(3);
+    void this.publicWeeklyMenu.loadCurrent();
   }
 
   get userError(): string | null {
