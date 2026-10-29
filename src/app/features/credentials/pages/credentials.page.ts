@@ -20,6 +20,7 @@ import { EmployeeStore } from "../../employees/stores/employee.store";
 import { SystemStore } from "../../configuration/stores/system.store";
 import { PIcon } from '@primeicons/angular/p-icon';
 import { HasPermissionDirective } from "../../../core/directives/has-permission.directive";
+import { HeaderPageSectionComponent } from "../../../shared/components/header-page-section/header-page-section.component";
 type TagSeverity = 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast';
 
 @Component({
@@ -28,7 +29,7 @@ type TagSeverity = 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contr
     styles: [],
     imports: [TableModule, ButtonModule, InputPassword, TextareaModule, ToggleSwitchModule,
     SelectModule, TooltipModule, TagModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent,
-    EmptyStateComponent, SearchInputComponent, PIcon, HasPermissionDirective],
+    EmptyStateComponent, SearchInputComponent, PIcon, HasPermissionDirective, HeaderPageSectionComponent],
 })
 export class CredentialsPage implements OnInit {
     protected readonly store = inject(CredentialStore);
@@ -240,5 +241,9 @@ export class CredentialsPage implements OnInit {
         this.optionsLoaded = true;
         this.employeeStore.load();
         this.systemStore.load();
+    }
+
+    async retry(): Promise<void> {
+        await this.store.loadActive();
     }
 }

@@ -1,69 +1,77 @@
-<div>
-    <div class="mb-4 flex items-start justify-between gap-4">
-        <p class="text-sm text-neutral-600 max-w-[80%]">Gestiona las asignaciones de recursos a empleados.</p>
-        <button pButton type="button" (click)="openCreate()">
-            <span class="flex items-center gap-2">
-                <svg [pIcon]="'plus'" [size]="18"></svg>
-                Nueva asignación
-            </span>
-        </button>
-    </div>
+<div class="flex flex-col gap-4">
+    <app-header-page-section buttonText="Nueva asignación" title="Asignaciones activas registradas"
+        description="Gestiona las asignaciones de recursos a empleados."
+        (create)="openCreate()"></app-header-page-section>
 
-    <div class="mb-4 max-w-md">
-        <app-search-input placeholder="Buscar por activo, recurso, empleado o marca..."
-            (searched)="onSearch($event)" />
-    </div>
+    <section class="overflow-hidden rounded-2xl border border-neutral-200/80 bg-white">
 
-    @if (store.assignments().length > 0) {
-    <p-table [value]="store.assignments()" [loading]="store.loading()" [paginator]="true" [rows]="10"
-        [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '1860px' }">
-        <ng-template #header>
-            <tr>
-                <th style="width: 150px">Activo</th>
-                <th style="width: 250px">Recurso</th>
-                <th style="width: 250px">Marca/Modelo</th>
-                <th style="width: 300px">Empleado</th>
-                <th style="width: 200px">Fecha asignación</th>
-                <th style="width: 200px">Renovación</th>
-                <th style="width: 200px">Devolución</th>
-                <th style="width: 150px">Activa</th>
-                <th style="width: 150px;">Acciones</th>
-            </tr>
-        </ng-template>
-        <ng-template #body let-a>
-            <tr>
-                <td><span class="inline-block rounded-md bg-neutral-100 px-2 py-1 font-mono text-xs">{{ a.assetCode
-                        }}</span></td>
-                <td>{{ a.resourceName }}</td>
-                <td>{{ a.brandName }} / {{ a.modelName }}</td>
-                <td>{{ a.employeeName }}</td>
-                <td>{{ formatDate(a.assignmentDate) }}</td>
-                <td>{{ formatDate(a.renewalDate) }}</td>
-                <td>{{ formatDate(a.returnDate) }}</td>
-                <td><p-tag [value]="a.isActive ? 'Activa' : 'Finalizada'"
-                        [severity]="a.isActive ? 'success' : 'secondary'" /></td>
-                <td>
-                    <div class="flex gap-1">
-                        <button pButton type="button" severity="info" text pTooltip="Carta de asignación"
-                            aria-label="Carta de asignación" [disabled]="a.type !== 'MOBILE'" (click)="openLetter(a)">
-                            <svg [pIcon]="'file-pdf'" [size]="16"></svg>
-                        </button>
-                        <button pButton type="button" severity="danger" text pTooltip="Devolver" aria-label="Devolver"
-                            [disabled]="!a.isActive" (click)="openReturn(a)">
-                            <svg data-p-icon="undo"></svg>
-                        </button>
-                        <button pButton type="button" severity="warn" text pTooltip="Renovar" aria-label="Renovar"
-                            [disabled]="!a.isActive || a.type !== 'MOBILE'" (click)="openRenew(a)">
-                            <svg data-p-icon="arrow-right-arrow-left"></svg>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
-    } @else {
-    <app-empty-state message="No se encontraron asignaciones" description="Puedes agregar una nueva asignación." />
-    }
+        <div class="flex flex-wrap items-center gap-3 border-b border-neutral-100 p-4">
+            <div class="min-w-56 flex-1">
+                <app-search-input placeholder="Buscar por activo, recurso, empleado o marca..." (searched)="onSearch($event)" />
+            </div>
+
+            <button pButton type="button" severity="secondary" text (click)="retry()">
+                <span class="flex items-center gap-2">
+                    <svg [pIcon]="'refresh'" [size]="15"></svg>
+                    Actualizar
+                </span>
+            </button>
+        </div>
+
+        @if (store.assignments().length > 0) {
+        <p-table [value]="store.assignments()" [loading]="store.loading()" [paginator]="true" [rows]="10"
+            [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '1860px' }">
+            <ng-template #header>
+                <tr>
+                    <th style="width: 150px">Activo</th>
+                    <th style="width: 250px">Recurso</th>
+                    <th style="width: 250px">Marca/Modelo</th>
+                    <th style="width: 300px">Empleado</th>
+                    <th style="width: 200px">Fecha asignación</th>
+                    <th style="width: 200px">Renovación</th>
+                    <th style="width: 200px">Devolución</th>
+                    <th style="width: 150px">Activa</th>
+                    <th style="width: 150px;">Acciones</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-a>
+                <tr>
+                    <td><span class="inline-block rounded-md bg-neutral-100 px-2 py-1 font-mono text-xs">{{ a.assetCode
+                            }}</span></td>
+                    <td>{{ a.resourceName }}</td>
+                    <td>{{ a.brandName }} / {{ a.modelName }}</td>
+                    <td>{{ a.employeeName }}</td>
+                    <td>{{ formatDate(a.assignmentDate) }}</td>
+                    <td>{{ formatDate(a.renewalDate) }}</td>
+                    <td>{{ formatDate(a.returnDate) }}</td>
+                    <td><p-tag [value]="a.isActive ? 'Activa' : 'Finalizada'"
+                            [severity]="a.isActive ? 'success' : 'secondary'" /></td>
+                    <td>
+                        <div class="flex gap-1">
+                            <button pButton type="button" severity="info" text pTooltip="Carta de asignación"
+                                aria-label="Carta de asignación" [disabled]="a.type !== 'MOBILE'"
+                                (click)="openLetter(a)">
+                                <svg [pIcon]="'file-pdf'" [size]="16"></svg>
+                            </button>
+                            <button pButton type="button" severity="danger" text pTooltip="Devolver"
+                                aria-label="Devolver" [disabled]="!a.isActive" (click)="openReturn(a)">
+                                <svg data-p-icon="undo"></svg>
+                            </button>
+                            <button pButton type="button" severity="warn" text pTooltip="Renovar" aria-label="Renovar"
+                                [disabled]="!a.isActive || a.type !== 'MOBILE'" (click)="openRenew(a)">
+                                <svg data-p-icon="arrow-right-arrow-left"></svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        } @else {
+        <app-empty-state message="No se encontraron asignaciones" description="Puedes agregar una nueva asignación." />
+        }
+    </section>
+
+
 
     <app-form-dialog [(visible)]="dialogVisible" [header]="'Nueva asignación'" width="46rem">
         <form [formGroup]="form" class="flex flex-col gap-4" (ngSubmit)="save()">
@@ -182,8 +190,8 @@
             @if (renewForm.controls.option.value === renewDeviceOption.ExistingDevice) {
             <div class="flex flex-col gap-1.5">
                 <app-form-label required>Celular disponible</app-form-label>
-                <p-select formControlName="existingMobileResourceId" [options]="availableMobileItems()" optionLabel="name"
-                    optionValue="id" [filter]="true" filterBy="name,assetCode,brandName,modelName"
+                <p-select formControlName="existingMobileResourceId" [options]="availableMobileItems()"
+                    optionLabel="name" optionValue="id" [filter]="true" filterBy="name,assetCode,brandName,modelName"
                     filterPlaceholder="Buscar celular..." placeholder="Selecciona un celular" appendTo="body"
                     class="w-full"
                     [invalid]="renewForm.controls.existingMobileResourceId.invalid && renewForm.controls.existingMobileResourceId.touched">
@@ -204,7 +212,9 @@
                             <div class="flex-auto flex flex-col">
                                 <span class="font-medium">{{ member.name }}</span>
                                 @if (member.brandName || member.modelName) {
-                                <span class="text-xs text-neutral-500">{{ member.brandName }} / {{ member.modelName}} / {{ member.activeLinePhoneNumber ? member.activeLinePhoneNumber : 'Sin línea' }}</span>
+                                <span class="text-xs text-neutral-500">{{ member.brandName }} / {{ member.modelName}} /
+                                    {{ member.activeLinePhoneNumber ? member.activeLinePhoneNumber : 'Sin línea'
+                                    }}</span>
                                 }
                             </div>
                         </div>

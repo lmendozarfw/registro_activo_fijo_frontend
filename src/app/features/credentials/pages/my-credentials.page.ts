@@ -7,13 +7,14 @@ import { PageHeaderService } from "../../../core/services/page-header.service";
 import { ToastService } from "../../../core/services/toast.service";
 import { MyCredentialStore } from "../stores/my-credential.store";
 import { Credential } from "../models/credential.model";
-import { Copy, Eye, EyeSlash, Lock, Spinner } from '@primeicons/angular';
+import { Copy, Eye, EyeSlash, Lock, Spinner, PIcon } from '@primeicons/angular';
+import { HeaderPageSectionComponent } from "../../../shared/components/header-page-section/header-page-section.component";
 
 @Component({
     selector: 'app-my-credentials-page',
     templateUrl: './my-credentials.page.html',
     styles: [],
-    imports: [ButtonModule, TooltipModule, EmptyStateComponent, SearchInputComponent, Copy, Eye, EyeSlash, Lock, Spinner],
+    imports: [ButtonModule, TooltipModule, EmptyStateComponent, SearchInputComponent, Copy, Eye, EyeSlash, Lock, Spinner, HeaderPageSectionComponent, PIcon],
 })
 export class MyCredentialsPage implements OnInit {
     protected readonly store = inject(MyCredentialStore);
@@ -68,5 +69,9 @@ export class MyCredentialsPage implements OnInit {
     protected initials(name?: string | null): string {
         if (!name) return '?';
         return name.trim().charAt(0).toUpperCase();
+    }
+
+    async retry(): Promise<void> {
+        await this.store.load()
     }
 }

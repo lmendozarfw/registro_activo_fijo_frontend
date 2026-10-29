@@ -14,15 +14,16 @@ import { EmployeeStore } from "../stores/employee.store";
 import { Employee, EmployeeRequest } from "../models/employee.model";
 import { JobStore } from "../../configuration/stores/job.store";
 import { DepartmentStore } from "../../configuration/stores/department.store";
-import { Pencil, Plus, Trash } from '@primeicons/angular';
+import { Pencil, Plus, Trash, PIcon } from '@primeicons/angular';
 import { HasPermissionDirective } from "../../../core/directives/has-permission.directive";
+import { HeaderPageSectionComponent } from "../../../shared/components/header-page-section/header-page-section.component";
 
 @Component({
     selector: 'app-employees-page',
     templateUrl: './employees.page.html',
     styles: [],
         imports: [TableModule, ButtonModule, InputText, SelectModule, TooltipModule, ReactiveFormsModule,
-    FormDialogComponent, FormLabelComponent, EmptyStateComponent, SearchInputComponent, Pencil, Plus, Trash, HasPermissionDirective],
+    FormDialogComponent, FormLabelComponent, EmptyStateComponent, SearchInputComponent, Pencil, Plus, Trash, HasPermissionDirective, HeaderPageSectionComponent, PIcon],
 })
 export class EmployeesPage implements OnInit {
     protected readonly store = inject(EmployeeStore);
@@ -145,5 +146,9 @@ export class EmployeesPage implements OnInit {
         return isNaN(date.getTime()) ? '—' : date.toLocaleString('es-ES', {
             day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
         });
+    }
+
+    async retry(): Promise<void> {
+        this.store.loadActive();
     }
 }

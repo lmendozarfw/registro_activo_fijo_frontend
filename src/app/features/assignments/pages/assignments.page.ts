@@ -22,6 +22,8 @@ import { AssignmentDto, CreateAssignmentCommand, NewMobileDeviceDto, RenewDevice
 import { ArrowRightArrowLeft, PIcon, Undo } from '@primeicons/angular';
 import { TooltipModule } from "primeng/tooltip";
 import { AuthStore } from "../../auth/stores/auth.store";
+import { PageHeaderService } from "../../../core/services/page-header.service";
+import { HeaderPageSectionComponent } from "../../../shared/components/header-page-section/header-page-section.component";
 
 @Component({
   selector: 'app-assignments-page',
@@ -29,7 +31,7 @@ import { AuthStore } from "../../auth/stores/auth.store";
   styles: [],
   imports: [TableModule, ButtonModule, SelectModule, DatePickerModule, TextareaModule, TagModule, TooltipModule, InputText,
     InputNumberModule, SelectButtonModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent,
-    SearchInputComponent, Undo, ArrowRightArrowLeft, PIcon],
+    SearchInputComponent, Undo, ArrowRightArrowLeft, PIcon, HeaderPageSectionComponent],
 
 })
 export class AssignmentsPage implements OnInit {
@@ -39,6 +41,7 @@ export class AssignmentsPage implements OnInit {
   protected readonly modelStore = inject(ModelStore);
   private readonly auth = inject(AuthStore);
   private readonly router = inject(Router);
+  private readonly pageHeader = inject(PageHeaderService);
 
   protected readonly renewDeviceOption = RenewDeviceOption;
   protected readonly renewOptions = [
@@ -95,6 +98,7 @@ export class AssignmentsPage implements OnInit {
   });
 
   ngOnInit(): void {
+    this.pageHeader.setTitle("Asignaciones")
     this.store.loadActives();
     this.employeeStore.loadAvailablToAssignments();
     this.resourceStore.loadAvailableToAssign();
@@ -299,5 +303,9 @@ export class AssignmentsPage implements OnInit {
           hour: '2-digit',
           minute: '2-digit',
         });
+  }
+
+  async retry(): Promise<void> {
+    await this.store.loadActives();
   }
 }

@@ -24,6 +24,7 @@ import { STATUS_RESOURCE_LABELS, StatusResourceEnum } from "../models/status-res
 import { Subscription } from "rxjs";
 import { PageHeaderService } from '../../../core/services/page-header.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { HeaderPageSectionComponent } from "../../../shared/components/header-page-section/header-page-section.component";
 
 @Component({
   selector: 'app-resources-page',
@@ -45,7 +46,8 @@ import { ToastService } from '../../../core/services/toast.service';
     SearchInputComponent,
     PIcon,
     CurrencyPipe,
-  ],
+    HeaderPageSectionComponent
+],
 })
 export class ResourcesPage implements OnInit, OnDestroy {
   private readonly router = inject(Router);
@@ -210,6 +212,10 @@ export class ResourcesPage implements OnInit, OnDestroy {
           hour: '2-digit',
           minute: '2-digit',
         });
+  }
+
+  async retry(): Promise<void> {
+    await this.store.loadActive();
   }
 
   ngOnDestroy(): void {

@@ -9,6 +9,7 @@ import { ResourceTypeEnum } from '../../resources/models/resource-type.model';
 import { StatusResourceEnum } from '../../resources/models/status-resource.model';
 import { ResourceReportItemDto } from '../models/report.model';
 import { ReportStore } from '../stores/report.store';
+import { HeaderPageSectionComponent } from '../../../shared/components/header-page-section/header-page-section.component';
 
 interface ReportConfig {
     key: 'inventory' | 'mobile-phones' | 'available-mobile-phones';
@@ -49,7 +50,7 @@ const TONE_STYLES: Record<string, string> = {
 @Component({
     selector: 'app-reports-page',
     templateUrl: './reports.page.html',
-    imports: [CommonModule, PIcon, ButtonModule, SkeletonModule, TableModule],
+    imports: [CommonModule, PIcon, ButtonModule, SkeletonModule, TableModule, HeaderPageSectionComponent],
 })
 export class ReportsPage implements OnInit {
     protected readonly store = inject(ReportStore);

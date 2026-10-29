@@ -1,20 +1,31 @@
-<div>
-    <div class="mb-4 flex items-start justify-between gap-4">
-        <p class="text-sm text-neutral-600 max-w-[70%]">Un empleado es la persona asignada a un activo o a una
-            credencial. Aquí se dan de alta con su número de empleado, puesto y departamento.</p>
-        <button pButton type="button" (click)="openCreate()">
-            <span class="flex items-center gap-2">
-                <svg data-p-icon="plus" [size]="16"></svg>
-                Nuevo empleado
-            </span>
-        </button>
-    </div>
+<div class="flex flex-col gap-4">
 
-    <div class="mb-4 max-w-md">
-        <app-search-input placeholder="Buscar empleados..." (searched)="onSearch($event)" />
-    </div>
+    <app-header-page-section buttonText="Nuevo empleado" title="Empleados registrados" description="Un empleado es la persona asignada a un activo o a una
+            credencial. Aquí se dan de alta con su número de empleado, puesto y departamento." (create)="openCreate()"></app-header-page-section>
 
-    @if (store.employees().length > 0) {
+    <section class="overflow-hidden rounded-2xl border border-neutral-200/80 bg-white">
+        <div class="flex flex-wrap items-center gap-3 border-b border-neutral-100 p-4">
+      <div class="min-w-56 flex-1">
+        <app-search-input
+          placeholder="Buscar por nombre, apelliods, puestos, departamento o correo electrónico..."
+          (searched)="onSearch($event)"
+        />
+      </div>
+
+      <button
+        pButton
+        type="button"
+        severity="secondary"
+        text
+        (click)="retry()"
+      >
+        <span class="flex items-center gap-2">
+          <svg [pIcon]="'refresh'" [size]="15"></svg>
+          Actualizar
+        </span>
+      </button>
+    </div>
+        @if (store.employees().length > 0) {
     <p-table [value]="store.employees()" [loading]="store.loading()" [paginator]="true" [rows]="10"
         [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '2050px' }">
         <ng-template #header>
@@ -63,6 +74,8 @@
         description="Puedes agregar nuevos empleados." />
     }
 
+    </section>
+    
     <app-form-dialog [(visible)]="dialogVisible" [header]="dialogTitle" width="40rem">
         <form [formGroup]="form" class="flex flex-col gap-4" (ngSubmit)="save()">
             <div class="grid grid-cols-2 gap-4">

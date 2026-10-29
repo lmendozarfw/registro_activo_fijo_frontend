@@ -1,16 +1,11 @@
 <div class="flex flex-col gap-4">
-    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-            <h1 class="text-lg font-semibold text-neutral-800">Reportes</h1>
-            <p class="text-sm text-neutral-500">Consulta y descarga los reportes del sistema</p>
-        </div>
-    </div>
+    <app-header-page-section [hasAction]="false" title="Reportes disponibles" description="Consulta, analiza y visualiza la información clave para dar seguimiento al desempeño y facilitar la toma de decisiones."></app-header-page-section>
 
     <div class="flex flex-col gap-3">
         @for (report of reports; track report.key) {
         <section class="rounded-xl bg-white overflow-hidden">
             <button type="button"
-                class="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-neutral-50"
+                class="flex w-full items-center gap-3 px-4 py-3 text-left transition cursor-pointer"
                 (click)="toggle(report.key)">
                 <span class="flex size-10 items-center justify-center rounded-lg" [class]="toneClass(report.tone)">
                     <svg [pIcon]="report.icon" [size]="18"></svg>
@@ -49,7 +44,7 @@
                         <button pButton type="button" size="small" severity="secondary" [text]="true"
                             [disabled]="isLoading(report.key)"
                             (click)="reloadReport(report.key); $event.stopPropagation()">
-                            <svg [pIcon]="'refresh-cw'" [size]="14"></svg>
+                            <svg [pIcon]="'refresh'" [size]="14"></svg>
                             <span>Actualizar</span>
                         </button>
                         <button pButton type="button" size="small" severity="success"

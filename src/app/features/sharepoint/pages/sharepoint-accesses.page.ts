@@ -35,6 +35,7 @@ import {
   SharePointAccessStatusFilter,
 } from '../models/sharepoint-access.model';
 import { SharePointAccessAdminStore } from '../stores/sharepoint-access-admin.store';
+import { HeaderPageSectionComponent } from '../../../shared/components/header-page-section/header-page-section.component';
 
 type SharePointAccessView = SharePointAccessRecord & { safeUrl: string | null };
 
@@ -69,7 +70,8 @@ function httpUrlValidator(control: AbstractControl<string>): ValidationErrors | 
     FormDialogComponent,
     FormLabelComponent,
     SearchInputComponent,
-  ],
+    HeaderPageSectionComponent
+],
 })
 export class SharePointAccessesPage implements OnInit {
   protected readonly store = inject(SharePointAccessAdminStore);
