@@ -17,6 +17,7 @@ export interface LineDto {
     phoneNumber: string;
     operator: string;
     plan?: string | null;
+    planPrice?: number | null;
     activationDate?: string;
     cancellationDate?: string | null;
     observations?: string | null;
@@ -36,6 +37,7 @@ export interface CreateLineCommand {
     phoneNumber: string;
     operator: string;
     plan?: string | null;
+    planPrice?: number | null;
     activationDate: string;
     observations?: string | null;
 }
@@ -44,6 +46,7 @@ export interface UpdateLineCommand {
     phoneNumber: string;
     operator: string;
     plan?: string | null;
+    planPrice?: number | null;
     activationDate: string;
     observations?: string | null;
 }

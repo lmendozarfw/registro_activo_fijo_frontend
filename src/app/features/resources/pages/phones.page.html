@@ -162,12 +162,13 @@
 
                 @if (lineStore.lines().length > 0) {
                 <p-table [value]="lineStore.lines()" [loading]="lineStore.loading()" [paginator]="true" [rows]="10"
-                    [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '1350px' }">
+                    [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '1550px' }">
                     <ng-template #header>
                         <tr>
                             <th style="width: 150px">Número</th>
                             <th style="width: 150px">Operador</th>
-                            <th style="width: 150px">Plan</th>
+                            <th style="width: 200px">Plan</th>
+                            <th style="width: 150px">Precio del plan</th>
                             <th style="width: 200px">Fecha de activación</th>
                             <th style="width: 200px">Fecha de registro</th>
                             <th style="width: 200px">Fecha de modificación</th>
@@ -180,6 +181,7 @@
                             <td>{{ line.phoneNumber }}</td>
                             <td>{{ line.operator || '—' }}</td>
                             <td>{{ line.plan || '—' }}</td>
+                            <td>{{ (line.planPrice | currency : 'MXN' : 'symbol-narrow' : '1.0-0') || '—' }}</td>
                             <td>{{ formatDate(line.activationDate) }}</td>
                             <td>{{ formatDate(line.createdAt) }}</td>
                             <td>{{ formatDate(line.updatedAt) }}</td>
@@ -225,6 +227,11 @@
             <div class="flex flex-col gap-1.5">
                 <app-form-label>Plan</app-form-label>
                 <input pInputText formControlName="plan" class="w-full" />
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <app-form-label>Costo del plan</app-form-label>
+                <p-inputnumber formControlName="planPrice" class="w-full" mode="currency" currency="USD"
+                            locale="en-US" />
             </div>
             <div class="flex flex-col gap-1.5">
                 <app-form-label required>Fecha de activación</app-form-label>

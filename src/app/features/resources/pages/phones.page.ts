@@ -121,6 +121,7 @@ export class PhonesPage implements OnInit {
     phoneNumber: new FormControl('', { nonNullable: true, validators: Validators.required }),
     operator: new FormControl('', { nonNullable: true, validators: Validators.required }),
     plan: new FormControl(''),
+    planPrice: new FormControl<number | null>(null),
     activationDate: new FormControl<Date | null>(null, { validators: Validators.required }),
     observations: new FormControl(''),
   });
@@ -248,6 +249,7 @@ export class PhonesPage implements OnInit {
       phoneNumber: '',
       operator: '',
       plan: '',
+      planPrice: null,
       activationDate: null,
       observations: '',
     });
@@ -261,6 +263,7 @@ export class PhonesPage implements OnInit {
       phoneNumber: line.phoneNumber,
       operator: line.operator,
       plan: line.plan ?? '',
+      planPrice: line.planPrice ?? null,
       activationDate: line.activationDate ? new Date(line.activationDate) : null,
       observations: line.observations ?? '',
     });
@@ -277,6 +280,7 @@ export class PhonesPage implements OnInit {
       phoneNumber: this.lineForm.controls.phoneNumber.value.trim(),
       operator: this.lineForm.controls.operator.value.trim(),
       plan: this.lineForm.controls.plan.value?.trim() || null,
+      planPrice: this.lineForm.controls.planPrice.value || null,
       activationDate:
         this.lineForm.controls.activationDate.value?.toISOString() ?? new Date().toISOString(),
       observations: this.lineForm.controls.observations.value?.trim() || null,
