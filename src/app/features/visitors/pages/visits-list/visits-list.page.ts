@@ -32,6 +32,7 @@ import {
   toUtcEndOfDay,
   toUtcStartOfDay,
 } from '../../utils/visit.utils';
+import { HeaderPageSectionComponent } from '../../../../shared/components/header-page-section/header-page-section.component';
 
 type StatusAction = 'start' | 'finish' | 'cancel';
 
@@ -52,7 +53,8 @@ type StatusAction = 'start' | 'finish' | 'cancel';
     SearchInputComponent,
     EmptyStateComponent,
     VisitStatusTagComponent,
-  ],
+    HeaderPageSectionComponent
+],
 })
 export class VisitsListPage implements OnInit {
   protected readonly store = inject(VisitStore);
