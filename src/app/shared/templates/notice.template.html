@@ -12,6 +12,7 @@
     [open]="sidebarOpen()"
     (openChange)="mobileNavOpen.set($event)"
     width="17rem"
+    iconWidth="55px"
   >
     <p-sidebar-spacer />
       <p-sidebar-aside>
@@ -20,7 +21,7 @@
             <p-sidebar-menu>
               <p-sidebar-menu-item>
                 <div class="flex items-center gap-2">
-                  <div class="w-10 h-10 rounded-lg px-1 flex items-center justify-center bg-brand/20">
+                  <div class="min-w-10 w-10 h-10 rounded-lg px-1 flex items-center justify-center bg-brand/20">
                     <img src="assets/images/isotipo-sinergy-r.png" alt="Raudal Footwear"
                       class="w-full h-full object-contain" />
                   </div>
