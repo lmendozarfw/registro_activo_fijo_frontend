@@ -84,6 +84,13 @@
   --color-rl-red: var(--rl-red);
 }
 
+
+#comunicacion-nav .p-sidebar-aside,
+#main-nav .p-sidebar-aside,
+#comunicacion-nav .p-sidebar-aside  {
+  background: var(--rl-neutral-50) !important;
+}
+
 .p-paginator {
   border: none !important;
   padding: 10px 0 0 0 !important;

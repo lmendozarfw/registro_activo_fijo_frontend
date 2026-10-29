@@ -26,7 +26,7 @@ export class HubPage {
   private readonly router = inject(Router);
 
   protected readonly firstName = computed(
-    () => this.authStore.user()?.fullName.trim().split(/\s+/)[0] ?? '',
+    () => this.authStore.user()?.fullName?.trim().split(/\s+/)[0] ?? ``,
   );
 
   protected readonly accessibleSolutions = computed<SolutionConfig[]>(() =>

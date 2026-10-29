@@ -8,6 +8,9 @@ export const SOLUTION_PERMISSIONS = {
   mantenimiento: 'mantenimiento.acceso'
 } as const;
 
+//registro_visitantes.acceso
+//reserva_sala_juntas.acceso
+//activo_fijo.acceso
 export interface SolutionTheme {
   tone: string;
   gradient: string;

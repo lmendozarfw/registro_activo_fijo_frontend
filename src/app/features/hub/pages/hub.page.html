@@ -36,7 +36,7 @@
           Hub de acceso
         </p>
         <h1 class="mt-2 text-2xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
-          Hola, {{ firstName() }}
+          Hola {{ firstName() ? (',' + firstName()) : '' }}
         </h1>
         <p class="mt-2 max-w-xl text-sm leading-6 text-neutral-600">
           Selecciona un sistema para comenzar. Solo verás aquellos para los que tienes acceso.

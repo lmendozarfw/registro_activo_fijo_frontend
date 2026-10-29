@@ -23,6 +23,7 @@ import {
   formatWeeklyMenuPeriod,
   resolveWeeklyMenuStatus,
 } from '../../utils/weekly-menu.utils';
+import { HeaderPageSectionComponent } from '../../../../shared/components/header-page-section/header-page-section.component';
 
 @Component({
   selector: 'app-weekly-menu-list-page',
@@ -38,7 +39,8 @@ import {
     FormDialogComponent,
     SearchInputComponent,
     WeeklyMenuStatusTagComponent,
-  ],
+    HeaderPageSectionComponent
+],
 })
 export class WeeklyMenuListPage implements OnInit {
   protected readonly store = inject(WeeklyMenuStore);

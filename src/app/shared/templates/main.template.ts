@@ -25,7 +25,8 @@ import { NotesBoardComponent } from '../../features/notes/components/notes-board
           <p-sidebar-backdrop class="absolute!" />
         }
         <p-sidebar
-          id="mobile-nav"
+          id="main-nav"
+          variant="floating"
           [collapsible]="isMobile() ? 'offcanvas' : 'icon'"
           [overlay]="isMobile()"
           [open]="sidebarOpen()"
@@ -90,11 +91,11 @@ import { NotesBoardComponent } from '../../features/notes/components/notes-board
           </p-sidebar-aside>
         </p-sidebar>
         <p-sidebar-main class="min-w-0 overflow-hidden">
-          <header class="flex h-12 shrink-0 items-center gap-2 border-b border-neutral-200 px-4">
+          <header class="m-2 rounded-xl ml-2 lg:ml-0 flex h-14 shrink-0 items-center gap-2 bg-white px-4">
             <button
               pButton
               pSidebarTrigger
-              target="mobile-nav"
+              target="main-nav"
               severity="secondary"
               text
               size="small"
@@ -126,7 +127,7 @@ import { NotesBoardComponent } from '../../features/notes/components/notes-board
               </span>
             </div>
           </header>
-          <div class="flex-1 min-h-0 overflow-y-auto overflow-x-auto p-4 flex flex-col">
+          <div class="flex-1 min-h-0 overflow-y-auto overflow-x-auto pl-2 lg:pl-0 pt-0 pr-2 flex flex-col mt-4">
             <router-outlet />
           </div>
         </p-sidebar-main>

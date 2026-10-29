@@ -28,6 +28,7 @@ import {
 import { NewsDatePipe } from '../../pipes/news-date.pipe';
 import { NewsStore } from '../../stores/news.store';
 import { fromUtcIso, toUtcIso } from '../../utils/news.utils';
+import { HeaderPageSectionComponent } from '../../../../shared/components/header-page-section/header-page-section.component';
 
 @Component({
   selector: 'app-news-list-page',
@@ -47,7 +48,8 @@ import { fromUtcIso, toUtcIso } from '../../utils/news.utils';
     SearchInputComponent,
     NewsStatusTagComponent,
     NewsDatePipe,
-  ],
+    HeaderPageSectionComponent
+],
 })
 export class NewsListPage implements OnInit {
   protected readonly store = inject(NewsStore);
