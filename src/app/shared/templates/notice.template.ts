@@ -1,15 +1,16 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
-import { ChevronDown, Sidebar } from '@primeicons/angular';
-import { PIcon } from '@primeicons/angular/p-icon';
+import { Router, RouterOutlet } from '@angular/router';
+import { Sidebar } from '@primeicons/angular';
 import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { Menu, MenuModule } from 'primeng/menu';
+import { MenuModule } from 'primeng/menu';
 import { SidebarModule } from 'primeng/sidebar';
 import { COMUNICACION_MENU } from '../../core/config/menu.config';
 import { AuthStore } from '../../features/auth/stores/auth.store';
 import { HeaderTitleComponent } from '../components/header-title/header-title.component';
 import { SidebarMenuComponent } from '../components/sidebar-menu/sidebar-menu.component';
+import { SidebarHeaderComponent } from '../components/sidebar-menu/sidebar-header.component';
+import { SidebarFooterComponent } from '../components/sidebar-menu/sidebar-footer.component';
 
 @Component({
   selector: 'notice-template',
@@ -17,16 +18,14 @@ import { SidebarMenuComponent } from '../components/sidebar-menu/sidebar-menu.co
   imports: [
     SidebarModule,
     ButtonModule,
-    PIcon,
     Sidebar,
-    ChevronDown,
-    Menu,
     MenuModule,
     RouterOutlet,
-    RouterLink,
     HeaderTitleComponent,
     SidebarMenuComponent,
-  ],
+    SidebarHeaderComponent,
+    SidebarFooterComponent
+],
 })
 export class NoticeTemplate {
   protected readonly isMobile = signal(false);

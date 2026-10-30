@@ -14,12 +14,14 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
 import { PIcon } from '@primeicons/angular/p-icon';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { InputText } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from 'primeng/tooltip';
+import { WebcamImage, WebcamInitError, WebcamModule } from 'ngx-webcam';
 import { PageHeaderService } from '../../../../core/services/page-header.service';
 import { FormDialogComponent } from '../../../../shared/components/form-dialog/form-dialog.component';
 import { FormLabelComponent } from '../../../../shared/components/form-label/form-label.component';
@@ -54,6 +56,7 @@ interface ConfirmState {
 
 const MAX_DOCUMENT_SIZE = 10 * 1024 * 1024;
 const ALLOWED_DOCUMENT_EXTENSIONS = ['pdf', 'jpg', 'jpeg', 'png', 'webp'];
+const ALLOWED_DOCUMENT_MIME_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
 
 @Component({
   selector: 'app-visit-detail-page',
@@ -67,6 +70,7 @@ const ALLOWED_DOCUMENT_EXTENSIONS = ['pdf', 'jpg', 'jpeg', 'png', 'webp'];
     InputText,
     TextareaModule,
     TooltipModule,
+    WebcamModule,
     FormDialogComponent,
     FormLabelComponent,
     VisitStatusTagComponent,
@@ -147,6 +151,13 @@ export class VisitDetailPage implements OnInit {
   protected readonly selectedDocumentFile = signal<File | null>(null);
   protected readonly documentFileError = signal<string | null>(null);
   protected readonly documentSubmitted = signal(false);
+  protected readonly cameraActive = signal(false);
+  protected readonly cameraError = signal<string | null>(null);
+  protected readonly cameraVideoOptions: MediaTrackConstraints = {
+    facingMode: { ideal: 'environment' },
+  };
+  private readonly cameraTrigger = new Subject<void>();
+  protected readonly cameraTrigger$ = this.cameraTrigger.asObservable();
   protected readonly documentTypeOptions: {
     label: string;
     value: VisitorDocumentType;
@@ -386,6 +397,8 @@ export class VisitDetailPage implements OnInit {
     this.selectedDocumentFile.set(null);
     this.documentFileError.set(null);
     this.documentSubmitted.set(false);
+    this.cameraActive.set(false);
+    this.cameraError.set(null);
     this.documentForm.reset({ documentType: 'NSS' });
     this.documentDialogVisible.set(true);
   }
@@ -394,14 +407,61 @@ export class VisitDetailPage implements OnInit {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0] ?? null;
     input.value = '';
+    this.applySelectedDocumentFile(file);
+  }
 
+  protected startCamera(): void {
+    this.cameraError.set(null);
+    this.cameraActive.set(true);
+  }
+
+  protected stopCamera(): void {
+    this.cameraActive.set(false);
+    this.cameraError.set(null);
+  }
+
+  protected onDocumentDialogVisibleChange(visible: boolean): void {
+    this.documentDialogVisible.set(visible);
+    if (!visible) {
+      this.stopCamera();
+      this.documentVisitor.set(null);
+    }
+  }
+
+  protected capturePhoto(): void {
+    this.cameraTrigger.next();
+  }
+
+  protected onCameraError(error: WebcamInitError): void {
+    this.cameraActive.set(false);
+    this.cameraError.set(
+      error.mediaStreamError?.name === 'NotAllowedError'
+        ? 'Permiso de cámara denegado. Habilítalo en el navegador e intenta de nuevo.'
+        : 'No se pudo acceder a la cámara. Verifica que esté conectada y disponible.',
+    );
+  }
+
+  protected async onCameraCapture(image: WebcamImage): Promise<void> {
+    const blob = await (await fetch(image.imageAsDataUrl)).blob();
+    const extension = blob.type === 'image/png' ? 'png' : 'jpg';
+    const file = new File([blob], `documento-${Date.now()}.${extension}`, {
+      type: blob.type || 'image/jpeg',
+    });
+    this.applySelectedDocumentFile(file);
+    this.cameraActive.set(false);
+  }
+
+  private applySelectedDocumentFile(file: File | null): void {
     this.selectedDocumentFile.set(null);
     this.documentFileError.set(null);
 
     if (!file) return;
 
     const extension = file.name.split('.').pop()?.toLowerCase() ?? '';
-    if (!ALLOWED_DOCUMENT_EXTENSIONS.includes(extension)) {
+    const isAllowed =
+      ALLOWED_DOCUMENT_EXTENSIONS.includes(extension) ||
+      ALLOWED_DOCUMENT_MIME_TYPES.includes(file.type);
+    if (!isAllowed) {
       this.documentFileError.set('Formato no permitido. Usa PDF, JPG, JPEG, PNG o WEBP.');
       return;
     }
@@ -449,6 +509,7 @@ export class VisitDetailPage implements OnInit {
     this.documentDialogVisible.set(false);
     this.documentVisitor.set(null);
     this.selectedDocumentFile.set(null);
+    this.cameraActive.set(false);
   }
 
   protected downloadDocument(visitor: VisitVisitorDto, document: VisitorDocumentDto): void {

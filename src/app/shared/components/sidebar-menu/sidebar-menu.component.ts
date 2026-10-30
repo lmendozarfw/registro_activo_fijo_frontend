@@ -39,7 +39,7 @@ interface MenuItemView extends MenuItem {
                 <a
                   pSidebarMenuButton
                   [isActive]="item.active"
-                  class="group relative flex items-center gap-3 px-1! h-10! transition-colors duration-300 hover:bg-red-500/5! mb-0!"
+                  class="group relative flex items-center gap-3 px-1! min-w-10! h-10! transition-colors duration-300 hover:bg-red-500/5! mb-0!"
                   [style.background]="item.active ? activeItemBackground : null"
                   [style.border-radius]="item.active ? '8px' : null"
                   [style.border-left]="item.active ? '2px solid red' : null"
@@ -111,7 +111,7 @@ interface MenuItemView extends MenuItem {
                   [routerLink]="item.route"
                   [isActive]="item.active"
                   (click)="navigated.emit()"
-                  class="group relative flex items-center gap-3 px-1! h-10! transition-colors duration-300 hover:bg-red-500/5! data-[active=true]:border-l-2! border-brand!"
+                  class="group relative flex items-center gap-3 px-1! min-w-10! h-10! transition-colors duration-300 hover:bg-red-500/5! data-[active=true]:border-l-2! border-brand!"
                   [style.background]="item.active ? activeItemBackground : null"
                   [style.border-radius]="item.active ? '8px' : null"
                 >

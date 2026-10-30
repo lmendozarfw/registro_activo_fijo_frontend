@@ -88,7 +88,12 @@
 #comunicacion-nav .p-sidebar-aside,
 #main-nav .p-sidebar-aside,
 #comunicacion-nav .p-sidebar-aside  {
-  background: var(--rl-neutral-50) !important;
+  background: transparent !important;
+  padding-right: 0 !important;
+}
+
+.p-sidebar[data-variant="floating"] .p-sidebar-panel {
+  border-radius: 12px !important;
 }
 
 .p-paginator {

@@ -613,7 +613,7 @@
 
 <app-form-dialog
   [visible]="documentDialogVisible()"
-  (visibleChange)="documentDialogVisible.set($event)"
+  (visibleChange)="onDocumentDialogVisibleChange($event)"
   header="Cargar documento"
   width="30rem"
 >
@@ -642,12 +642,74 @@
       accept=".pdf,.jpg,.jpeg,.png,.webp"
       (change)="onDocumentFileSelected($event)"
     />
-    <button pButton type="button" severity="secondary" outlined (click)="documentFileInput.click()">
-      <span class="flex items-center gap-2">
-        <svg [pIcon]="'upload'" [size]="14"></svg>
-        Seleccionar archivo
-      </span>
-    </button>
+    <div class="flex flex-col gap-2 sm:flex-row">
+      <button
+        pButton
+        type="button"
+        severity="secondary"
+        outlined
+        class="w-full sm:flex-1"
+        (click)="documentFileInput.click()"
+      >
+        <span class="flex items-center justify-center gap-2">
+          <svg [pIcon]="'upload'" [size]="14"></svg>
+          Seleccionar archivo
+        </span>
+      </button>
+      <button
+        pButton
+        type="button"
+        severity="secondary"
+        outlined
+        class="w-full sm:flex-1"
+        [disabled]="cameraActive()"
+        (click)="startCamera()"
+      >
+        <span class="flex items-center justify-center gap-2">
+          <svg [pIcon]="'camera'" [size]="14"></svg>
+          Tomar foto
+        </span>
+      </button>
+    </div>
+
+    @if (cameraActive()) {
+      <div class="overflow-hidden rounded-lg border border-neutral-200 bg-neutral-900">
+        <webcam
+          class="block w-full [&_video]:h-auto [&_video]:w-full"
+          [trigger]="cameraTrigger$"
+          [videoOptions]="cameraVideoOptions"
+          [mirrorImage]="'auto'"
+          [imageQuality]="0.92"
+          [allowCameraSwitch]="true"
+          [width]="640"
+          [height]="480"
+          (imageCapture)="onCameraCapture($event)"
+          (initError)="onCameraError($event)"
+        ></webcam>
+      </div>
+      <div class="flex flex-col gap-2 sm:flex-row">
+        <button pButton type="button" class="w-full sm:flex-1" (click)="capturePhoto()">
+          <span class="flex items-center justify-center gap-2">
+            <svg [pIcon]="'camera'" [size]="14"></svg>
+            Capturar foto
+          </span>
+        </button>
+        <button
+          pButton
+          type="button"
+          severity="secondary"
+          outlined
+          class="w-full sm:flex-1"
+          (click)="stopCamera()"
+        >
+          Cerrar cámara
+        </button>
+      </div>
+    }
+
+    @if (cameraError()) {
+      <span class="text-xs text-rose-600">{{ cameraError() }}</span>
+    }
 
     @if (selectedDocumentFile(); as file) {
       <div class="rounded-md bg-neutral-50 px-3 py-2 text-xs">
@@ -661,12 +723,18 @@
     }
 
     <p class="text-xs text-neutral-500">
-      Formatos permitidos: PDF, JPG, JPEG, PNG y WEBP. Tamaño máximo: 10 MB.
+      Formatos permitidos: PDF, JPG, JPEG, PNG y WEBP. Tamaño máximo: 10 MB. También puedes
+      tomar una foto con la cámara.
     </p>
   </div>
 
   <div dialog-footer class="flex justify-end gap-2">
-    <button pButton type="button" severity="secondary" (click)="documentDialogVisible.set(false)">
+    <button
+      pButton
+      type="button"
+      severity="secondary"
+      (click)="onDocumentDialogVisibleChange(false)"
+    >
       Cancelar
     </button>
     <button

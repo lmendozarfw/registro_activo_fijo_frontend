@@ -15,6 +15,8 @@ import { AuthStore } from '../../features/auth/stores/auth.store';
 import { NotesStore } from '../../features/notes/stores/note.store';
 import { NotesBoardStore } from '../../features/notes/stores/notes-board.store';
 import { NotesBoardComponent } from '../../features/notes/components/notes-board/notes-board.component';
+import { SidebarFooterComponent } from '../components/sidebar-menu/sidebar-footer.component';
+import { SidebarHeaderComponent } from '../components/sidebar-menu/sidebar-header.component';
 
 @Component({
   selector: 'main-template',
@@ -32,66 +34,23 @@ import { NotesBoardComponent } from '../../features/notes/components/notes-board
           [open]="sidebarOpen()"
           (openChange)="mobileNavOpen.set($event)"
           width="17rem"
-          class="!border-0"
+          iconWidth="47px"
         >
           <p-sidebar-spacer />
           <p-sidebar-aside class="relative overflow-hidden bg-[radial-gradient(120%_120%_at_0%_0%,rgba(239,68,68,0.28)_0%,transparent_58%),radial-gradient(140%_140%_at_100%_100%,rgba(225,29,72,0.22)_0%,transparent_62%),linear-gradient(180deg,#050506_0%,#020203_100%)] text-slate-100 border-r border-white/5" style="color-scheme: dark;">
             <div class="pointer-events-none absolute -left-24 top-0 size-64 rounded-full bg-brand-500/20 blur-[90px]"></div>
             <div class="pointer-events-none absolute -right-28 bottom-10 size-72 rounded-full bg-rose-600/16 blur-[110px]"></div>
             <p-sidebar-panel class="relative">
-              <p-sidebar-header class="border-b border-white/5">
-                <p-sidebar-menu>
-                  <p-sidebar-menu-item>
-                    <div class="flex items-center gap-2">
-                      <div class="w-10 h-10 rounded-lg px-1 flex items-center justify-center bg-brand/20">
-                      <img
-                        src="assets/images/isotipo-sinergy-r.png"
-                        alt="Raudal Footwear"
-                        class="w-full h-full object-contain"
-                      />
-                    </div>
-                    <p class="text-neutral-50 text-xl font-bold">Sinergy<span class="text-brand">Hub</span></p>
-                    </div>
-                  </p-sidebar-menu-item>
-                </p-sidebar-menu>
-              </p-sidebar-header>
+              <app-sidebar-header></app-sidebar-header>
               <p-sidebar-content>
                 <app-sidebar-menu [items]="menuItems" (navigated)="closeNav()" />
               </p-sidebar-content>
-              <p-sidebar-footer class="border-t border-white/5">
-                <p-sidebar-menu>
-                  <p-sidebar-menu-item>
-                    <button
-                      pSidebarMenuButton
-                      class="group relative w-full overflow-hidden rounded-2xl px-1! py-2 transition h-10!"
-                      (click)="userMenu.toggle($event)"
-                    >
-                      <div class="flex items-center gap-2">
-                        <div class="w-8! h-8! rounded-lg px-1 flex items-center justify-center bg-brand">
-                          <span>{{ authStore.user()?.fullName ? authStore.user()?.fullName[0] : 'U' }}</span>
-                        </div>
-                        <span class="relative flex items-center gap-2 truncate mr-4">
-                          {{authStore.user()?.fullName ?? 'Usuario'}}
-                        </span>
-                      </div>
-                      <svg data-p-icon="chevron-down" class="relative ml-auto text-neutral-400 transition group-hover:text-white"></svg>
-                    </button>
-                    <p-menu #userMenu [model]="userItems" [popup]="true" appendTo="body">
-                      <ng-template #item let-item>
-                        <a class="flex items-center gap-2">
-                          <svg [pIcon]="item.icon || ''" [size]="14" class="ml-2"></svg>
-                          <span>{{ item.label }}</span>
-                        </a>
-                      </ng-template>
-                    </p-menu>
-                  </p-sidebar-menu-item>
-                </p-sidebar-menu>
-              </p-sidebar-footer>
+              <app-sidebar-footer [name]="authStore.user()?.fullName" [userItems]="userItems"></app-sidebar-footer>
             </p-sidebar-panel>
           </p-sidebar-aside>
         </p-sidebar>
-        <p-sidebar-main class="min-w-0 overflow-hidden">
-          <header class="m-2 rounded-xl ml-2 lg:ml-0 flex h-14 shrink-0 items-center gap-2 bg-white px-4">
+        <p-sidebar-main class="min-w-0 overflow-hidden pl-2">
+          <header class="m-2 mb-0 shadow-card rounded-xl ml-2 lg:ml-0 flex h-12 shrink-0 items-center gap-2 bg-white px-2 z-100">
             <button
               pButton
               pSidebarTrigger
@@ -127,7 +86,7 @@ import { NotesBoardComponent } from '../../features/notes/components/notes-board
               </span>
             </div>
           </header>
-          <div class="flex-1 min-h-0 overflow-y-auto overflow-x-auto pl-2 lg:pl-0 pt-0 pr-2 flex flex-col mt-4">
+          <div class="flex-1 min-h-0 overflow-y-auto overflow-x-auto pl-2 lg:pl-0 pt-0 pr-2 flex flex-col pb-2 pt-4">
             <router-outlet />
           </div>
         </p-sidebar-main>
@@ -156,7 +115,9 @@ import { NotesBoardComponent } from '../../features/notes/components/notes-board
     HeaderTitleComponent,
     SidebarMenuComponent,
     NotesBoardComponent,
-  ],
+    SidebarFooterComponent,
+    SidebarHeaderComponent
+],
 })
 export class MainTemplate {
   isMobile = signal(false);
