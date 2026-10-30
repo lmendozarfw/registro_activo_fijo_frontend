@@ -96,7 +96,7 @@ export class ResourceMaintenancesPage implements OnInit {
       ];
     }
     return employees.map((e) => ({
-      label: `${e.firstName} ${e.paternalSurname} ${e.maternalSurname} (No. ${e.employeeNumber})`,
+      label: `${e.firstName} ${e.paternalSurname} ${e.maternalSurname ? e.maternalSurname : ''} (No. ${e.employeeNumber})`,
       value: e.id,
     }));
   });

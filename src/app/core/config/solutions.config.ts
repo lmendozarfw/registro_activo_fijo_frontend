@@ -77,7 +77,7 @@ export const SOLUTIONS: SolutionConfig[] = [
   },
   {
     code: 'activo-fijo',
-    name: 'Activo fijo',
+    name: 'Área de sistemas',
     description: 'Administra, asigna y da seguimiento a los activos de la empresa.',
     icon: 'briefcase',
     permission: SOLUTION_PERMISSIONS.activoFijo,

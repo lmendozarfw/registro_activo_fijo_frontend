@@ -3,7 +3,7 @@ export interface Employee {
     employeeNumber: string;
     firstName: string;
     paternalSurname: string;
-    maternalSurname: string;
+    maternalSurname?: string;
     jobTitle: string;
     departmentName: string;
     email?: string | null;
@@ -22,7 +22,7 @@ export interface EmployeeRequest {
     employeeNumber: string;
     firstName: string;
     paternalSurname: string;
-    maternalSurname: string;
+    maternalSurname?: string;
     jobId: string;
     departmentId: string;
     email?: string | null;
@@ -33,7 +33,7 @@ export interface EmployeeUpdateRequest {
     employeeNumber: string;
     firstName: string;
     paternalSurname: string;
-    maternalSurname: string;
+    maternalSurname?: string;
     jobId: string;
     departmentId: string;
     email?: string | null;

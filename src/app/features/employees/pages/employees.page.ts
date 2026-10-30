@@ -40,7 +40,7 @@ export class EmployeesPage implements OnInit {
         employeeNumber: new FormControl('', { nonNullable: true, validators: Validators.required }),
         firstName: new FormControl('', { nonNullable: true, validators: Validators.required }),
         paternalSurname: new FormControl('', { nonNullable: true, validators: Validators.required }),
-        maternalSurname: new FormControl('', { nonNullable: true, validators: Validators.required }),
+        maternalSurname: new FormControl('', { nonNullable: true, validators: [] }),
         jobId: new FormControl('', { nonNullable: true, validators: Validators.required }),
         departmentId: new FormControl('', { nonNullable: true, validators: Validators.required }),
         email: new FormControl('', { nonNullable: true, validators: Validators.email }),
@@ -55,7 +55,7 @@ export class EmployeesPage implements OnInit {
     }
 
     protected fullName(employee: Employee): string {
-        return `${employee.firstName} ${employee.paternalSurname} ${employee.maternalSurname}`;
+        return `${employee.firstName} ${employee.paternalSurname} ${employee.maternalSurname ? employee.maternalSurname : ''}`;
     }
 
     protected async onSearch(value?: string): Promise<void> {
@@ -105,7 +105,7 @@ export class EmployeesPage implements OnInit {
             employeeNumber: value.employeeNumber.trim(),
             firstName: value.firstName.trim(),
             paternalSurname: value.paternalSurname.trim(),
-            maternalSurname: value.maternalSurname.trim(),
+            maternalSurname: (value.maternalSurname ?? '').trim(),
             jobId: value.jobId,
             departmentId: value.departmentId,
             email: value.email.trim() || null,

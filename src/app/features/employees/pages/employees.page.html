@@ -108,7 +108,7 @@
                 </div>
 
                 <div class="flex flex-col gap-1.5">
-                    <app-form-label required>Apellido materno</app-form-label>
+                    <app-form-label>Apellido materno</app-form-label>
                     <input pInputText formControlName="maternalSurname" class="w-full" placeholder="Apellido materno"
                         [invalid]="form.controls.maternalSurname.invalid && form.controls.maternalSurname.touched" />
                     @if (form.controls.maternalSurname.invalid && form.controls.maternalSurname.touched) {

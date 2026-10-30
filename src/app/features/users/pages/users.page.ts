@@ -17,6 +17,7 @@ import { User, CreateUserRequest, UpdateUserRequest } from "../models/user.model
 import { PermissionsGroupByModuleDto } from "../../configuration/models/permission.model";
 import { ChevronDown, Pencil, Trash, PIcon } from '@primeicons/angular';
 import { HeaderPageSectionComponent } from "../../../shared/components/header-page-section/header-page-section.component";
+import { AuthStore } from "../../auth/stores/auth.store";
 
 type ModuleSelectionState = 'all' | 'some' | 'none';
 
@@ -30,6 +31,7 @@ type ModuleSelectionState = 'all' | 'some' | 'none';
 })
 export class UsersPage implements OnInit {
     protected readonly store = inject(UserStore);
+    private readonly authStore = inject(AuthStore);
     private readonly pageHeader = inject(PageHeaderService);
 
     dialogVisible = false;
@@ -125,6 +127,10 @@ export class UsersPage implements OnInit {
             }
 
             success = await this.store.update(this.editingUser.id, payload);
+            const authUser = this.authStore.user();
+            if (this.editingUser.id === authUser?.id) {
+                this.authStore.me();
+            }
         } else {
             const payload: CreateUserRequest = {
                 username: value.username.trim(),

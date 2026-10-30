@@ -329,6 +329,6 @@ export class VisitFormPage implements OnInit {
   }
 
   private employeeFullName(employee: Employee): string {
-    return `${employee.firstName} ${employee.paternalSurname} ${employee.maternalSurname}`.trim();
+    return `${employee.firstName} ${employee.paternalSurname} ${employee.maternalSurname ? employee.maternalSurname : ''}`.trim();
   }
 }
