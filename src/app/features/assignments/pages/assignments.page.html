@@ -19,7 +19,7 @@
         </div>
 
         @if (store.assignments().length > 0) {
-        <p-table [value]="store.assignments()" [loading]="store.loading()" [paginator]="true" [rows]="10"
+        <p-table [value]="store.assignments()" [paginator]="true" [rows]="10"
             [rowsPerPageOptions]="[10, 20]" [tableStyle]="{ 'min-width': '1860px' }">
             <ng-template #header>
                 <tr>
@@ -136,7 +136,7 @@
 
         <div dialog-footer class="flex justify-end gap-2">
             <button pButton type="button" severity="secondary" (click)="dialogVisible = false">Cancelar</button>
-            <button pButton type="button" [loading]="store.saving()" (click)="save()">Guardar</button>
+            <button pButton type="button" (click)="save()">Guardar</button>
         </div>
     </app-form-dialog>
 
@@ -155,7 +155,7 @@
 
         <div dialog-footer class="flex justify-end gap-2">
             <button pButton type="button" severity="secondary" (click)="dialogReturnVisible = false">Cancelar</button>
-            <button pButton type="button" [loading]="store.saving()" (click)="returnResource()">Guardar</button>
+            <button pButton type="button" (click)="returnResource()">Guardar</button>
         </div>
     </app-form-dialog>
 
@@ -289,7 +289,7 @@
 
         <div dialog-footer class="flex justify-end gap-2">
             <button pButton type="button" severity="secondary" (click)="dialogRenewVisible = false">Cancelar</button>
-            <button pButton type="button" [loading]="store.saving()" (click)="renew()">Guardar</button>
+            <button pButton type="button" (click)="renew()">Guardar</button>
         </div>
     </app-form-dialog>
 </div>

@@ -119,7 +119,7 @@
 
     @if (store.hasMore()) {
     <div class="flex justify-center pt-2">
-      <button pButton type="button" severity="secondary" [loading]="store.loadingMore()" (click)="store.loadMore()">
+      <button pButton type="button" severity="secondary" (click)="store.loadMore()">
         Cargar más
       </button>
     </div>
@@ -143,7 +143,7 @@
     <button pButton type="button" severity="secondary" (click)="publishDialogVisible.set(false)">
       Cancelar
     </button>
-    <button pButton type="button" [loading]="store.saving()" (click)="confirmPublish()">
+    <button pButton type="button" (click)="confirmPublish()">
       Publicar
     </button>
   </div>
@@ -171,7 +171,7 @@
     <button pButton type="button" severity="secondary" (click)="scheduleDialogVisible.set(false)">
       Cancelar
     </button>
-    <button pButton type="button" [loading]="store.saving()" [disabled]="!scheduleValue()" (click)="confirmSchedule()">
+    <button pButton type="button" [disabled]="!scheduleValue()" (click)="confirmSchedule()">
       Programar
     </button>
   </div>
@@ -190,7 +190,7 @@
     <button pButton type="button" severity="secondary" (click)="archiveDialogVisible.set(false)">
       Cancelar
     </button>
-    <button pButton type="button" severity="danger" [loading]="store.saving()" (click)="confirmArchive()">
+    <button pButton type="button" severity="danger" (click)="confirmArchive()">
       Archivar
     </button>
   </div>

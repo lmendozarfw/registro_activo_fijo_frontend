@@ -17,7 +17,7 @@
     <div class="flex items-center gap-2">
       <button pButton type="button" severity="secondary" (click)="cancel()">Volver</button>
       @if (canEdit()) {
-        <button pButton type="button" [loading]="store.saving()" (click)="save()">Guardar</button>
+        <button pButton type="button" (click)="save()">Guardar</button>
       }
     </div>
   </div>
@@ -118,7 +118,7 @@
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div class="flex flex-col gap-1.5">
-            <app-form-label required>Unidad de negocio</app-form-label>
+            <app-form-label>Unidad de negocio</app-form-label>
             <p-select
               formControlName="businessUnitId"
               [options]="businessUnitStore.activeItems()"
@@ -138,7 +138,7 @@
           </div>
 
           <div class="flex flex-col gap-1.5">
-            <app-form-label required>Departamento</app-form-label>
+            <app-form-label>Departamento</app-form-label>
             <p-select
               formControlName="departmentId"
               [options]="departmentStore.departments()"
@@ -338,7 +338,7 @@
       <div class="flex flex-wrap items-center justify-end gap-2">
         <button pButton type="button" severity="secondary" (click)="cancel()">Cancelar</button>
         @if (canEdit()) {
-          <button pButton type="submit" [loading]="store.saving()">Guardar visita</button>
+          <button pButton type="submit">Guardar visita</button>
         }
       </div>
     </form>

@@ -43,11 +43,12 @@
     @if (store.items().length > 0) {
     <p-table [value]="store.items()" [loading]="store.loading()" [lazy]="true" [paginator]="true" [first]="store.skip()"
       [rows]="store.take()" [rowsPerPageOptions]="[10, 20, 50]" [totalRecords]="store.totalRecords()"
-      (onPage)="onPage($event)" [tableStyle]="{ 'min-width': '1700px' }">
+      (onPage)="onPage($event)" [tableStyle]="{ 'min-width': '1800px' }">
       <ng-template #header>
         <tr>
           <th style="width: 320px">Visita</th>
-          <th style="width: 300px">Unidad y departamento</th>
+          <th style="width: 200px">Unidad</th>
+          <th style="width: 200px">Departamento</th>
           <th style="width: 250px">Anfitrión</th>
           <th style="width: 250px">Programación</th>
           <th style="width: 220px">Visitantes</th>
@@ -82,17 +83,35 @@
             }
           </td>
           <td>
-            <div class="text-sm text-neutral-800">{{ visit.businessUnitName }}</div>
-            <div class="mt-0.5 text-xs text-neutral-500">{{ visit.departmentName }}</div>
+            <div class="text-sm text-neutral-800">{{ visit.businessUnitName ? visit.businessUnitName : '—' }}</div>
           </td>
           <td>
-            <span class="text-sm text-neutral-700">{{ visit.employeeFullName || '—' }}</span>
+            <div class="mt-0.5 text-xs text-neutral-500">{{ visit.departmentName ? visit.departmentName : '—' }}</div>
           </td>
           <td>
-            <span class="text-sm text-neutral-700">{{ formatSchedule(visit) }}</span>
+            <span class="text-sm text-neutral-700">{{ visit.employeeFullName ? visit.employeeFullName : '—' }}</span>
+          </td>
+          <td>
+            <!-- <span class="text-sm text-neutral-700">{{ formatSchedule(visit) }}</span> -->
+            <div>
+              <div>
+                <span class="text-neutral-500 uppercase text-[10px] font-semibold">Inicio</span>
+                <div class="flex items-center gap-2">
+                  <span class="text-neutral-500 text-xs">{{ visit.scheduledStartAt | date:'d MMM y' }}</span>
+                  <span class="text-neutral-500 font-bold text-xs">{{ visit.scheduledStartAt | date:'hh:mm a' }}</span>
+                </div>
+              </div>
+              <div>
+                <span class="text-neutral-500 uppercase text-[10px] font-semibold">Fin</span>
+                <div class="flex items-center gap-2">
+                  <span class="text-neutral-500 text-xs">{{ visit.scheduledEndAt | date:'d MMM y' }}</span>
+                  <span class="text-neutral-500 font-bold text-xs">{{ visit.scheduledEndAt | date:'hh:mm a' }}</span>
+                </div>
+              </div>
+            </div>
             @if (visit.startedAt) {
-            <div class="mt-0.5 text-[11px] text-neutral-400">
-              Entrada: {{ formatDate(visit.startedAt) }}
+            <div class="text-xs mt-2 text-blue-500 bg-blue-500/10 px-2 py-1 rounded">
+              Entrada: {{ visit.startedAt | date:'d MMM y hh:mm a'}}
             </div>
             }
             @if (visit.finishedAt) {
@@ -175,7 +194,7 @@
     <div dialog-footer class="flex justify-end gap-2">
       <button pButton type="button" severity="secondary" (click)="closeConfirm()">Volver</button>
       <button pButton type="button" [severity]="actionType() === 'cancel' ? 'danger' : 'primary'"
-        [loading]="store.actionLoading()" (click)="confirmAction()">
+        (click)="confirmAction()">
         {{ confirmLabel() }}
       </button>
     </div>

@@ -54,7 +54,7 @@
             Descargar
           </span>
         </button>
-        <button pButton type="button" severity="success" [loading]="store.saving()" [disabled]="!hasLetter()"
+        <button pButton type="button" severity="success" [disabled]="!hasLetter()"
           pTooltip="Subir carta firmada (PDF)" (click)="letterFileInput.click()">
           <span class="flex items-center gap-2">
             <svg [pIcon]="'upload'" [size]="16"></svg>

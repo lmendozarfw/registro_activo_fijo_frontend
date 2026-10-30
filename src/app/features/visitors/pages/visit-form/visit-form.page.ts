@@ -111,11 +111,11 @@ export class VisitFormPage implements OnInit {
       }),
       businessUnitId: new FormControl('', {
         nonNullable: true,
-        validators: [Validators.required],
+        validators: [],
       }),
       departmentId: new FormControl('', {
         nonNullable: true,
-        validators: [Validators.required],
+        validators: [],
       }),
       employeeId: new FormControl<string | null>(null),
       highRiskActivity: new FormControl(false, { nonNullable: true }),

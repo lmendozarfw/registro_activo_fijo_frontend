@@ -292,7 +292,6 @@
     <button
       pButton
       type="button"
-      [loading]="store.saving()"
       [disabled]="isEditing() && (store.detailLoading() || !!store.detailError())"
       (click)="save()"
     >
@@ -322,7 +321,6 @@
       pButton
       type="button"
       severity="danger"
-      [loading]="store.togglingId() === deactivateTarget()?.id"
       (click)="confirmDeactivate()"
     >
       Desactivar

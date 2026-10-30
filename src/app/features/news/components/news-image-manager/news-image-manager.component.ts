@@ -58,7 +58,6 @@ export interface NewsImageUploadRequest {
             pButton
             type="button"
             severity="secondary"
-            [loading]="uploading()"
             [disabled]="uploading()"
             (click)="fileInput.click()"
           >

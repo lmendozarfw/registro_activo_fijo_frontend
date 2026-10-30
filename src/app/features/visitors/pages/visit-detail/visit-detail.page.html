@@ -276,7 +276,6 @@
                       size="small"
                       outlined
                       [disabled]="visitor.accessStatus === 'PERMIT'"
-                      [loading]="store.accessLoadingVisitorId() === visitor.id"
                       (click)="setVisitorAccess(visitor, 'PERMIT')"
                     >
                       Permitir
@@ -288,7 +287,6 @@
                       size="small"
                       outlined
                       [disabled]="visitor.accessStatus === 'DENIED'"
-                      [loading]="store.accessLoadingVisitorId() === visitor.id"
                       (click)="setVisitorAccess(visitor, 'DENIED')"
                     >
                       Denegar
@@ -457,7 +455,6 @@
                               text
                               size="small"
                               aria-label="Descargar documento"
-                              [loading]="store.downloadingDocumentId() === document.id"
                               (click)="downloadDocument(visitor, document)"
                             >
                               <svg [pIcon]="'download'" [size]="12"></svg>
@@ -470,7 +467,6 @@
                                 text
                                 size="small"
                                 aria-label="Eliminar documento"
-                                [loading]="store.documentDeletingId() === document.id"
                                 (click)="requestRemoveDocument(visitor, document)"
                               >
                                 <svg [pIcon]="'trash'" [size]="12"></svg>
@@ -518,7 +514,7 @@
     <button pButton type="button" severity="secondary" (click)="visitorDialogVisible.set(false)">
       Cancelar
     </button>
-    <button pButton type="button" [loading]="store.visitorSaving()" (click)="saveVisitor()">
+    <button pButton type="button" (click)="saveVisitor()">
       Guardar
     </button>
   </div>
@@ -609,7 +605,7 @@
     <button pButton type="button" severity="secondary" (click)="equipmentDialogVisible.set(false)">
       Cancelar
     </button>
-    <button pButton type="button" [loading]="store.equipmentSaving()" (click)="saveEquipment()">
+    <button pButton type="button" (click)="saveEquipment()">
       Guardar
     </button>
   </div>
@@ -676,7 +672,6 @@
     <button
       pButton
       type="button"
-      [loading]="store.documentUploading()"
       [disabled]="!selectedDocumentFile()"
       (click)="uploadDocument()"
     >
@@ -699,7 +694,6 @@
       pButton
       type="button"
       [severity]="confirmState()?.danger ? 'danger' : 'primary'"
-      [loading]="confirmLoading()"
       (click)="runConfirm()"
     >
       {{ confirmState()?.confirmLabel || 'Confirmar' }}

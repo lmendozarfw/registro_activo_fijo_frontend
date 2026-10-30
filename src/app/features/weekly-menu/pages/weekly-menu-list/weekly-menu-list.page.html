@@ -132,7 +132,6 @@
           pButton
           type="button"
           severity="secondary"
-          [loading]="store.loadingMore()"
           (click)="store.loadMore()"
         >
           Cargar más
@@ -173,7 +172,6 @@
       pButton
       type="button"
       severity="danger"
-      [loading]="store.removing()"
       (click)="confirmRemove()"
     >
       Eliminar

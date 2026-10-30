@@ -112,7 +112,7 @@
 
         <div dialog-footer class="flex justify-end gap-2">
             <button pButton type="button" severity="secondary" (click)="dialogVisible = false">Cancelar</button>
-            <button pButton type="button" [loading]="store.saving()" (click)="save()">Guardar</button>
+            <button pButton type="button" (click)="save()">Guardar</button>
         </div>
     </app-form-dialog>
 
@@ -124,7 +124,7 @@
 
         <div dialog-footer class="flex justify-end gap-2">
             <button pButton type="button" severity="secondary" (click)="deleteDialogVisible = false">Cancelar</button>
-            <button pButton type="button" severity="danger" [loading]="store.saving()"
+            <button pButton type="button" severity="danger"
                 (click)="confirmDelete()">Eliminar</button>
         </div>
     </app-form-dialog>

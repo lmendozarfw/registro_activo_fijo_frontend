@@ -139,7 +139,7 @@
                     <div dialog-footer class="flex justify-end gap-2">
                         <button pButton type="button" severity="secondary"
                             (click)="dialogVisible = false">Cancelar</button>
-                        <button pButton type="button" [loading]="store.saving()" (click)="saveMobile()">Guardar</button>
+                        <button pButton type="button" (click)="saveMobile()">Guardar</button>
                     </div>
                 </app-form-dialog>
             </p-tabpanel>
@@ -248,7 +248,7 @@
 
         <div dialog-footer class="flex justify-end gap-2">
             <button pButton type="button" severity="secondary" (click)="lineDialogVisible = false">Cancelar</button>
-            <button pButton type="button" [loading]="lineStore.saving()" (click)="saveLine()">Guardar</button>
+            <button pButton type="button" (click)="saveLine()">Guardar</button>
         </div>
     </app-form-dialog>
 
@@ -259,7 +259,7 @@
 
         <div dialog-footer class="flex justify-end gap-2">
             <button pButton type="button" severity="secondary" (click)="deleteLineDialogVisible = false">Cancelar</button>
-            <button pButton type="button" severity="danger" [loading]="lineStore.saving()"
+            <button pButton type="button" severity="danger"
                 (click)="confirmDeleteLine()">Eliminar</button>
         </div>
     </app-form-dialog>
@@ -271,7 +271,7 @@
 
         <div dialog-footer class="flex justify-end gap-2">
             <button pButton type="button" severity="secondary" (click)="deleteDialogVisible = false">Cancelar</button>
-            <button pButton type="button" severity="danger" [loading]="store.saving()"
+            <button pButton type="button" severity="danger"
                 (click)="confirmDeleteMobile()">Eliminar</button>
         </div>
     </app-form-dialog>

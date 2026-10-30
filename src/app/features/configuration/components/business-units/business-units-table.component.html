@@ -130,7 +130,7 @@
       <button pButton type="button" severity="secondary" (click)="dialogVisible.set(false)">
         Cancelar
       </button>
-      <button pButton type="button" [loading]="store.saving()" (click)="save()">Guardar</button>
+      <button pButton type="button" (click)="save()">Guardar</button>
     </div>
   </app-form-dialog>
 
@@ -159,7 +159,6 @@
         pButton
         type="button"
         [severity]="confirmTarget()?.active ? 'danger' : 'success'"
-        [loading]="store.saving()"
         (click)="confirmToggle()"
       >
         {{ confirmTarget()?.active ? 'Desactivar' : 'Activar' }}

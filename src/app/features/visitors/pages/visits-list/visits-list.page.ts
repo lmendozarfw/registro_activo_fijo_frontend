@@ -33,6 +33,7 @@ import {
   toUtcStartOfDay,
 } from '../../utils/visit.utils';
 import { HeaderPageSectionComponent } from '../../../../shared/components/header-page-section/header-page-section.component';
+import { DatePipe } from '@angular/common';
 
 type StatusAction = 'start' | 'finish' | 'cancel';
 
@@ -53,7 +54,8 @@ type StatusAction = 'start' | 'finish' | 'cancel';
     SearchInputComponent,
     EmptyStateComponent,
     VisitStatusTagComponent,
-    HeaderPageSectionComponent
+    HeaderPageSectionComponent,
+    DatePipe
 ],
 })
 export class VisitsListPage implements OnInit {
