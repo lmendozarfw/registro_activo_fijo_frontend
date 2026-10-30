@@ -1,9 +1,9 @@
 <div class="flex flex-col gap-4">
   <app-header-page-section buttonText="Nueva visita" title="Registro de visitas"
     description="Consulta, programa y da seguimiento al ingreso de visitantes."
-    (create)="newVisit()"></app-header-page-section>
+    (create)="newVisit()" [permissionToAction]="'registro_visitantes.crear'"></app-header-page-section>
 
-  <section class="overflow-hidden rounded-2xl border border-neutral-200/80 bg-white">
+  <section *hasPermission="'registro_visitantes.leer'" class="overflow-hidden rounded-2xl border border-neutral-200/80 bg-white">
     <div class="grid grid-cols-3 items-center gap-3 border-b border-neutral-100 p-4">
       <app-search-input class="col-span-12" placeholder="Buscar por empresa, motivo o visitante..."
         (searched)="onSearch($event)" />
@@ -153,25 +153,25 @@
               </button>
 
               @if (visit.status === 'SCHEDULED') {
-              <button pButton type="button" severity="secondary" text pTooltip="Editar" aria-label="Editar"
+              <button *hasPermission="'registro_visitantes.crear'" pButton type="button" severity="secondary" text pTooltip="Editar" aria-label="Editar"
                 (click)="editVisit(visit)">
                 <svg [pIcon]="'pencil'" [size]="16"></svg>
               </button>
-              <button pButton type="button" severity="success" text pTooltip="Iniciar visita"
+              <button *hasPermission="'registro_visitantes.crear'" pButton type="button" severity="success" text pTooltip="Iniciar visita"
                 aria-label="Iniciar visita" (click)="openAction('start', visit)">
                 <svg [pIcon]="'play'" [size]="16"></svg>
               </button>
               }
 
               @if (visit.status === 'STARTED') {
-              <button pButton type="button" severity="success" text pTooltip="Finalizar" aria-label="Finalizar visita"
+              <button *hasPermission="'registro_visitantes.crear'" pButton type="button" severity="success" text pTooltip="Finalizar" aria-label="Finalizar visita"
                 (click)="openAction('finish', visit)">
                 <svg [pIcon]="'check'" [size]="16"></svg>
               </button>
               }
 
               @if (visit.status === 'SCHEDULED' || visit.status === 'STARTED') {
-              <button pButton type="button" severity="danger" text pTooltip="Cancelar" aria-label="Cancelar visita"
+              <button *hasPermission="'registro_visitantes.crear'" pButton type="button" severity="danger" text pTooltip="Cancelar" aria-label="Cancelar visita"
                 (click)="openAction('cancel', visit)">
                 <svg [pIcon]="'times'" [size]="16"></svg>
               </button>

@@ -38,6 +38,7 @@ import {
 import { NewsDatePipe } from '../../pipes/news-date.pipe';
 import { NewsStore } from '../../stores/news.store';
 import { fromUtcIso, isRichTextEmpty, toUtcIso } from '../../utils/news.utils';
+import { HasPermissionDirective } from '../../../../core/directives/has-permission.directive';
 
 function richTextRequired(control: AbstractControl<string | null>): ValidationErrors | null {
   return isRichTextEmpty(control.value) ? { required: true } : null;
@@ -68,7 +69,8 @@ function scheduleRequired(group: AbstractControl): ValidationErrors | null {
     NewsImageManagerComponent,
     NewsStatusTagComponent,
     NewsDatePipe,
-  ],
+    HasPermissionDirective
+],
 })
 export class NewsFormPage implements OnInit {
   protected readonly store = inject(NewsStore);

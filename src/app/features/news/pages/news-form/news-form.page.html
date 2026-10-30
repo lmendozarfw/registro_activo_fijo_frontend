@@ -20,6 +20,7 @@
         Volver
       </button>
       <button
+        *hasPermission="'comunicacion.crear_noticias'"
         pButton
         type="button"
         (click)="save()"
@@ -196,7 +197,7 @@
         >
           Cancelar
         </button>
-        <button pButton type="submit">
+        <button *hasPermission="'comunicacion.crear_noticias'" pButton type="submit">
           Guardar
         </button>
       </div>

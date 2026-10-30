@@ -15,7 +15,7 @@ import { PageHeaderService } from "../../../core/services/page-header.service";
 import { UserStore } from "../stores/user.store";
 import { User, CreateUserRequest, UpdateUserRequest } from "../models/user.model";
 import { PermissionsGroupByModuleDto } from "../../configuration/models/permission.model";
-import { ChevronDown, Pencil, Plus, Trash, PIcon } from '@primeicons/angular';
+import { ChevronDown, Pencil, Trash, PIcon } from '@primeicons/angular';
 import { HeaderPageSectionComponent } from "../../../shared/components/header-page-section/header-page-section.component";
 
 type ModuleSelectionState = 'all' | 'some' | 'none';
@@ -26,7 +26,7 @@ type ModuleSelectionState = 'all' | 'some' | 'none';
     styles: [],
     imports: [TableModule, ButtonModule, InputText, InputPassword, SelectModule, CheckboxModule, TooltipModule,
     FormsModule, ReactiveFormsModule, FormDialogComponent, FormLabelComponent, EmptyStateComponent,
-    SearchInputComponent, ChevronDown, Pencil, Plus, Trash, HeaderPageSectionComponent, PIcon],
+    SearchInputComponent, ChevronDown, Pencil, Trash, HeaderPageSectionComponent, PIcon],
 })
 export class UsersPage implements OnInit {
     protected readonly store = inject(UserStore);

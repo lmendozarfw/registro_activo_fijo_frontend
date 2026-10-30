@@ -1,8 +1,8 @@
 <div class="flex flex-col gap-4">
   <app-header-page-section buttonText="Nueva noticia" title="Noticias internas" description="Publica, programa y administra las noticias que se muestran en el portal de
-        Comunicación Interna." (create)="create()"></app-header-page-section>
+        Comunicación Interna." (create)="create()" [permissionToAction]="'comunicacion.crear_noticias'"></app-header-page-section>
 
-  <section class="overflow-hidden rounded-2xl border border-neutral-200/80 bg-white">
+  <section *hasPermission="'comunicacion.leer_noticias'" class="overflow-hidden rounded-2xl border border-neutral-200/80 bg-white">
     <div class="flex flex-wrap items-center gap-3 border-b border-neutral-100 p-4">
       <div class="min-w-56 flex-1">
         <app-search-input placeholder="Buscar por título..." (searched)="onSearch($event)" />
@@ -86,27 +86,27 @@
               </a>
               }
 
-              <button pButton type="button" severity="secondary" text pTooltip="Editar" aria-label="Editar"
+              <button *hasPermission="'comunicacion.editar_noticias'" pButton type="button" severity="secondary" text pTooltip="Editar" aria-label="Editar"
                 (click)="edit(news.id)">
                 <svg [pIcon]="'pencil'" [size]="16"></svg>
               </button>
 
               @if (news.canPublish) {
-              <button pButton type="button" severity="secondary" text pTooltip="Publicar" aria-label="Publicar"
+              <button *hasPermission="'comunicacion.crear_noticias'" pButton type="button" severity="secondary" text pTooltip="Publicar" aria-label="Publicar"
                 (click)="openPublish(news)">
                 <svg [pIcon]="'check-circle'" [size]="16"></svg>
               </button>
               }
 
               @if (news.canSchedule) {
-              <button pButton type="button" severity="secondary" text pTooltip="Programar" aria-label="Programar"
+              <button *hasPermission="'comunicacion.crear_noticias'" pButton type="button" severity="secondary" text pTooltip="Programar" aria-label="Programar"
                 (click)="openSchedule(news)">
                 <svg [pIcon]="'calendar'" [size]="16"></svg>
               </button>
               }
 
               @if (news.canArchive) {
-              <button pButton type="button" severity="danger" text pTooltip="Archivar" aria-label="Archivar"
+              <button *hasPermission="'comunicacion.eliminar_noticias'" pButton type="button" severity="danger" text pTooltip="Archivar" aria-label="Archivar"
                 (click)="openArchive(news)">
                 <svg [pIcon]="'inbox'" [size]="16"></svg>
               </button>

@@ -1,6 +1,7 @@
 import { Component, input, output } from "@angular/core";
 import { PIcon } from '@primeicons/angular/p-icon';
 import { ButtonModule } from 'primeng/button';
+import { HasPermissionDirective } from "../../../core/directives/has-permission.directive";
 
 @Component({
   selector: 'app-header-page-section',
@@ -29,6 +30,7 @@ import { ButtonModule } from 'primeng/button';
 
         @if(hasAction()) {
           <button
+          *hasPermission="permissionToAction() ? permissionToAction()! : null"
           type="button"
           class="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-neutral-900 shadow-sm transition hover:bg-brand-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-300"
           (click)="create.emit()"
@@ -46,12 +48,14 @@ import { ButtonModule } from 'primeng/button';
   imports: [
     PIcon,
     ButtonModule,
-  ]
+    HasPermissionDirective
+]
 })
 export class HeaderPageSectionComponent {
   title = input.required<string>();
   description = input<string>();
   buttonText = input<string>('Nuevo');
   hasAction = input<boolean>(true);
+  permissionToAction = input<string>();
   create = output<void>();
 }

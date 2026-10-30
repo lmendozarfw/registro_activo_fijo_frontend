@@ -17,12 +17,12 @@ export class HasPermissionDirective {
   private readonly permissionService = inject(PermissionsService);
   private readonly templateRef = inject(TemplateRef);
   private readonly viewContainer = inject(ViewContainerRef);
-  private readonly permission = signal('');
+  private readonly permission = signal<string | null>('');
   private hasView = false;
 
   constructor() {
     effect(() => {
-      const allowed = this.permissionService.hasPermission(this.permission());
+      const allowed = this.permission() ? this.permissionService.hasPermission(this.permission()) : true;
 
       if (allowed && !this.hasView) {
         this.viewContainer.createEmbeddedView(this.templateRef);
@@ -35,7 +35,7 @@ export class HasPermissionDirective {
   }
 
   @Input()
-  set hasPermission(permission: string) {
+  set hasPermission(permission: string | null) {
     this.permission.set(permission);
   }
 }

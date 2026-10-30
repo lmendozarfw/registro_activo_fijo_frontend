@@ -2,10 +2,8 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { AvatarModule } from 'primeng/avatar';
 import { SidebarModule } from 'primeng/sidebar';
 import { ButtonModule } from 'primeng/button';
-import { ChevronDown, NoteSticky, Sidebar } from '@primeicons/angular';
-import { PIcon } from '@primeicons/angular/p-icon';
+import { NoteSticky, Sidebar } from '@primeicons/angular';
 import { MenuItem } from 'primeng/api';
-import { Menu } from 'primeng/menu';
 import { MenuModule } from 'primeng/menu';
 import { Router, RouterOutlet } from '@angular/router';
 import { HeaderTitleComponent } from '../components/header-title/header-title.component';
@@ -105,11 +103,8 @@ import { SidebarHeaderComponent } from '../components/sidebar-menu/sidebar-heade
     AvatarModule,
     SidebarModule,
     ButtonModule,
-    PIcon,
     Sidebar,
-    ChevronDown,
     NoteSticky,
-    Menu,
     MenuModule,
     RouterOutlet,
     HeaderTitleComponent,

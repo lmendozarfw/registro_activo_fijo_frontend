@@ -14,8 +14,7 @@ import { EmployeeStore } from "../stores/employee.store";
 import { Employee, EmployeeRequest } from "../models/employee.model";
 import { JobStore } from "../../configuration/stores/job.store";
 import { DepartmentStore } from "../../configuration/stores/department.store";
-import { Pencil, Plus, Trash, PIcon } from '@primeicons/angular';
-import { HasPermissionDirective } from "../../../core/directives/has-permission.directive";
+import { Pencil, Trash, PIcon } from '@primeicons/angular';
 import { HeaderPageSectionComponent } from "../../../shared/components/header-page-section/header-page-section.component";
 
 @Component({
@@ -23,7 +22,7 @@ import { HeaderPageSectionComponent } from "../../../shared/components/header-pa
     templateUrl: './employees.page.html',
     styles: [],
         imports: [TableModule, ButtonModule, InputText, SelectModule, TooltipModule, ReactiveFormsModule,
-    FormDialogComponent, FormLabelComponent, EmptyStateComponent, SearchInputComponent, Pencil, Plus, Trash, HasPermissionDirective, HeaderPageSectionComponent, PIcon],
+    FormDialogComponent, FormLabelComponent, EmptyStateComponent, SearchInputComponent, Pencil, Trash, HeaderPageSectionComponent, PIcon],
 })
 export class EmployeesPage implements OnInit {
     protected readonly store = inject(EmployeeStore);

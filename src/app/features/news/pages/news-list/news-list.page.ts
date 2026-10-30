@@ -29,6 +29,7 @@ import { NewsDatePipe } from '../../pipes/news-date.pipe';
 import { NewsStore } from '../../stores/news.store';
 import { fromUtcIso, toUtcIso } from '../../utils/news.utils';
 import { HeaderPageSectionComponent } from '../../../../shared/components/header-page-section/header-page-section.component';
+import { HasPermissionDirective } from '../../../../core/directives/has-permission.directive';
 
 @Component({
   selector: 'app-news-list-page',
@@ -48,7 +49,8 @@ import { HeaderPageSectionComponent } from '../../../../shared/components/header
     SearchInputComponent,
     NewsStatusTagComponent,
     NewsDatePipe,
-    HeaderPageSectionComponent
+    HeaderPageSectionComponent,
+    HasPermissionDirective
 ],
 })
 export class NewsListPage implements OnInit {
