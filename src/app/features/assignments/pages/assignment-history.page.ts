@@ -10,6 +10,7 @@ import { RESOURCE_TYPE_LABELS, ResourceTypeEnum } from '../../resources/models/r
 import { STATUS_RESOURCE_LABELS, StatusResourceEnum } from '../../resources/models/status-resource.model';
 import { AssignmentHistoryEntryDto, ResourceAssignmentHistoryDto } from '../models/assignment.model';
 import { AssignmentHistoryStore } from '../stores/assignment-history.store';
+import { SearchInputComponent } from '../../../shared/components/search-input/search-input.component';
 
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast';
 
@@ -27,7 +28,7 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
             border-radius: 0 0 12px 12px;
         }
         `],
-    imports: [TabsModule, TagModule, InputText, SkeletonModule, PIcon, EmptyStateComponent],
+    imports: [TabsModule, TagModule, InputText, SkeletonModule, PIcon, EmptyStateComponent, SearchInputComponent],
 })
 export class AssignmentHistoryPage implements OnInit {
     protected readonly store = inject(AssignmentHistoryStore);
@@ -101,8 +102,8 @@ export class AssignmentHistoryPage implements OnInit {
         this.activeTab.set(value as string);
     }
 
-    protected onSearch(event: Event): void {
-        this.search.set((event.target as HTMLInputElement).value);
+    protected onSearch(value: string): void {
+        this.search.set(value);
     }
 
     protected isExpanded(resourceId: string): boolean {
@@ -170,6 +171,7 @@ export class AssignmentHistoryPage implements OnInit {
             resource.modelName.toLowerCase().includes(query) ||
             (resource.imei ?? '').toLowerCase().includes(query) ||
             (resource.imei2 ?? '').toLowerCase().includes(query) ||
+            (resource.phoneNumber ?? '').toLowerCase().includes(query) ||
             resource.assignments.some(
                 (entry) =>
                     entry.employeeName.toLowerCase().includes(query) ||

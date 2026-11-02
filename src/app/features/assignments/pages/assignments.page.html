@@ -38,7 +38,14 @@
                 <tr>
                     <td><span class="inline-block rounded-md bg-neutral-100 px-2 py-1 font-mono text-xs">{{ a.assetCode
                             }}</span></td>
-                    <td>{{ a.resourceName }}</td>
+                    <td>
+                        <div>
+                          {{ a.resourceName }}
+                          @if (a.type === ResourceTypeEnum.MOBILE) {
+                            <p class="text-sm text-neutral-700 font-semibold tracking-[1px] bg-neutral-50 px-2 py-1 rounded mt-2 w-max">{{ a.phoneNumber }}</p>
+                          } 
+                        </div>
+                    </td>
                     <td>{{ a.brandName }} / {{ a.modelName }}</td>
                     <td>{{ a.employeeName }}</td>
                     <td>{{ formatDate(a.assignmentDate) }}</td>
@@ -87,7 +94,7 @@
                 <app-form-label required>Recurso</app-form-label>
                 <p-select formControlName="resourceId" [options]="avaiableResources()" [group]="true" optionLabel="name"
                     optionValue="id" optionGroupLabel="name" optionGroupChildren="resourceItems" [filter]="true"
-                    filterBy="name,assetCode" filterPlaceholder="Buscar por activo o recurso..."
+                    filterBy="name,assetCode,metadata.name" filterPlaceholder="Buscar por activo, recurso o teléfono..."
                     placeholder="Selecciona un recurso" appendTo="body" class="w-full">
                     <ng-template #selectedItem let-selectedOption>
                         <div class="flex items-center gap-2">
@@ -101,14 +108,14 @@
                         <div class="px-2 py-1 text-xs font-semibold uppercase text-neutral-500">{{ group.name }}</div>
                     </ng-template>
                     <ng-template let-member #item>
+                        @let phoneNumber = member.metadata?.['name'] ? member.metadata?.['name'] : '';
                         <div class="w-full flex items-center gap-3 py-1">
                             <span
-                                class="inline-block rounded-md bg-neutral-200 px-2 py-1 font-mono text-xs flex-1 max-w-max">{{member.assetCode
-                                }}</span>
+                                class="inline-block rounded-md bg-neutral-200 px-2 py-1 font-mono text-xs flex-1 max-w-max">{{member.assetCode}}</span>
                             <div class="flex-auto flex flex-col">
-                                <span class="font-medium">{{ member.name }}</span>
-                                @if (member.metadata?.['name']) {
-                                <span class="text-xs text-neutral-500">{{ member.metadata['name'] }}</span>
+                                <span class="font-medium">{{ phoneNumber ? phoneNumber : member.name }}</span>
+                                @if (phoneNumber) {
+                                <span class="text-xs text-neutral-500">{{ member.name }}</span>
                                 }
                             </div>
                         </div>

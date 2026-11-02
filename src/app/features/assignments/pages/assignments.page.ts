@@ -24,6 +24,7 @@ import { TooltipModule } from "primeng/tooltip";
 import { AuthStore } from "../../auth/stores/auth.store";
 import { PageHeaderService } from "../../../core/services/page-header.service";
 import { HeaderPageSectionComponent } from "../../../shared/components/header-page-section/header-page-section.component";
+import { ResourceTypeEnum } from "../../resources/models/resource-type.model";
 
 @Component({
   selector: 'app-assignments-page',
@@ -42,6 +43,8 @@ export class AssignmentsPage implements OnInit {
   private readonly auth = inject(AuthStore);
   private readonly router = inject(Router);
   private readonly pageHeader = inject(PageHeaderService);
+
+  protected readonly ResourceTypeEnum = ResourceTypeEnum;
 
   protected readonly renewDeviceOption = RenewDeviceOption;
   protected readonly renewOptions = [

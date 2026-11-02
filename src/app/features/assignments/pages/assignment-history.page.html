@@ -65,8 +65,8 @@
                         <svg [pIcon]="'search'"
                             class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"
                             [size]="16"></svg>
-                        <input pInputText class="w-full pl-10!" [value]="search()" (input)="onSearch($event)"
-                            placeholder="Buscar por activo, serie, marca o empleado..." />
+                                        <app-search-input placeholder="Buscar por activo, recurso, empleado o marca..." (searched)="onSearch($event)" />
+
                     </div>
                     <span class="text-xs text-neutral-500">
                         {{ resources().length }} de {{ activeGroup()?.resources?.length ?? 0 }} recursos
@@ -78,7 +78,7 @@
                     @for (resource of resources(); track resource.resourceId) {
                     <article class="overflow-hidden rounded-xl bg-white">
                         <button type="button"
-                            class="flex w-full items-center gap-3 p-4 text-left transition-colors hover:bg-neutral-50"
+                            class="flex w-full items-center gap-3 p-4 text-left transition-colors bg-neutral-50"
                             (click)="toggle(resource.resourceId)">
                             <span
                                 class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600">
@@ -114,7 +114,7 @@
                                     <span>IMEI 2: {{ resource.imei2 }}</span>
                                     }
                                     @if (resource.phoneNumber) {
-                                    <span>Número celular: {{ resource.phoneNumber }}</span>
+                                    <span>Número celular: <span class="text-neutral-700 font-semibold tracking-[1px]">{{ resource.phoneNumber }}</span></span>
                                     }
                                 </div>
                             </div>

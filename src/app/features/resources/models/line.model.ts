@@ -1,15 +1,13 @@
 export enum StatusLineEnum {
     ACTIVE = 'ACTIVE',
-    CANCELLED = 'CANCELLED',
-    SUSPENDED = 'SUSPENDED',
-    UNKNOWN = 'UNKNOWN',
+    INACTIVE = 'INACTIVE',
+    ASSIGNED = 'ASSIGNED',
 }
 
 export const STATUS_LINE_LABELS: Record<string, string> = {
     [StatusLineEnum.ACTIVE]: 'Activa',
-    [StatusLineEnum.CANCELLED]: 'Cancelada',
-    [StatusLineEnum.SUSPENDED]: 'Suspendida',
-    [StatusLineEnum.UNKNOWN]: 'Desconocido',
+    [StatusLineEnum.INACTIVE]: 'Inactiva',
+    [StatusLineEnum.ASSIGNED]: 'Asignada',
 };
 
 export interface LineDto {
