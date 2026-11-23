@@ -65,6 +65,8 @@ export class CredentialsPage implements OnInit {
     ngOnInit(): void {
         this.pageHeader.setTitle('Credenciales');
         this.store.loadActive();
+        this.employeeStore.loadActive();
+        this.systemStore.loadActive();
     }
 
     protected async onSearch(search?: string): Promise<void> {
