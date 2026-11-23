@@ -7,7 +7,7 @@ import { InputText } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
-import { TagModule } from 'primeng/tag';
+import { TagModule, TagSeverity } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { TabsModule } from 'primeng/tabs';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -21,7 +21,7 @@ import { BrandStore } from "../../configuration/stores/brand.store";
 import { ModelStore } from "../../configuration/stores/model.store";
 import { CreateMobileResourceCommand, MobileResourceDto, UpdateMobileResourceCommand } from "../models/resource.model";
 import { RESOURCE_TYPE_LABELS, ResourceTypeEnum } from "../models/resource-type.model";
-import { STATUS_RESOURCE_LABELS, StatusResourceEnum } from "../models/status-resource.model";
+import { STATUS_RESOURCE_LABELS, STATUS_RESOURCE_SEVERITY, StatusResourceEnum } from "../models/status-resource.model";
 import { PIcon } from '@primeicons/angular';
 import { DatePickerModule } from 'primeng/datepicker';
 import { LineDto, STATUS_LINE_LABELS, UpdateLineCommand } from "../models/line.model";
@@ -318,6 +318,11 @@ export class PhonesPage implements OnInit {
   protected getStatusLabel(status: StatusResourceEnum | string): string {
     const key = status as StatusResourceEnum;
     return STATUS_RESOURCE_LABELS[key] || String(status);
+  }
+
+  protected getStatusSeverity(status: StatusResourceEnum | string): TagSeverity {
+    const key = status as StatusResourceEnum;
+    return STATUS_RESOURCE_SEVERITY[key] || 'secondary';
   }
 
   protected openLetter(mobile: MobileResourceDto): void {

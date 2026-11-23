@@ -43,6 +43,7 @@
   --rl-color-primary-soft: var(--rl-brand-50);
   --rl-color-surface: var(--rl-white);
   --rl-color-surface-muted: var(--rl-gray-01);
+  --rl-color-canvas: #dbdbdb;
   --rl-color-border: var(--rl-gray-02);
   --rl-color-muted: var(--rl-gray-04);
   --rl-color-foreground: var(--rl-black);
@@ -61,6 +62,7 @@
   --color-brand-900: var(--rl-brand-900);
   --color-brand-950: var(--rl-brand-950);
   --color-brand: var(--rl-color-primary);
+  --color-canvas: var(--rl-color-canvas);
 
   --color-neutral-50: var(--rl-neutral-50);
   --color-neutral-100: var(--rl-neutral-100);
@@ -84,6 +86,12 @@
   --color-rl-red: var(--rl-red);
 }
 
+
+main-template .p-sidebar-main,
+notice-template .p-sidebar-main,
+visitor-template .p-sidebar-main {
+  background-color: var(--rl-color-canvas) !important;
+}
 
 #comunicacion-nav .p-sidebar-aside,
 #main-nav .p-sidebar-aside,

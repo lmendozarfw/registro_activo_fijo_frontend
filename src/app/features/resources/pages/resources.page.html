@@ -49,7 +49,7 @@
                     <td>{{ resource.serialNumber || '—' }}</td>
                     <td>{{ resource.price | currency:'MXN':'symbol':'1.2-2' }}</td>
                     <td>
-                        <p-tag [value]="getStatusLabel(resource.status)" />
+                        <p-tag [value]="getStatusLabel(resource.status)" [severity]="getStatusSeverity(resource.status)" />
                     </td>
                     <td>{{ formatDate(resource.createdAt) }}</td>
                     <td>
@@ -92,6 +92,18 @@
                     <p-inputnumber formControlName="price" class="w-full" mode="currency" currency="USD"
                         locale="en-US" />
                 </div>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <app-form-label>Código de activo</app-form-label>
+                <input pInputText formControlName="assetCode" class="w-full" placeholder="Ej. ACT-0001" />
+                <span class="text-xs text-neutral-500">
+                    @if (editingResource) {
+                    Opcional. Si se deja vacío, no se modificará el código actual.
+                    } @else {
+                    Opcional. Si se deja vacío, se generará automáticamente.
+                    }
+                </span>
             </div>
 
             <div class="grid grid-cols-2 gap-4">

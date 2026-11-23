@@ -46,6 +46,7 @@ export interface CreateResourceCommand {
 }
 
 export interface UpdateResourceCommand {
+    assetCode?: string | null;
     serialNumber?: string | null;
     modelId: string;
     type: ResourceTypeEnum;

@@ -8,7 +8,7 @@ import { InputText } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
-import { TagModule } from 'primeng/tag';
+import { TagModule, TagSeverity } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormDialogComponent } from "../../../shared/components/form-dialog/form-dialog.component";
@@ -20,7 +20,7 @@ import { BrandStore } from "../../configuration/stores/brand.store";
 import { ModelStore } from "../../configuration/stores/model.store";
 import { CreateResourceCommand, ResourceDto, UpdateResourceCommand } from "../models/resource.model";
 import { RESOURCE_TYPE_LABELS, ResourceTypeEnum, RESOURCE_TYPE_OPTIONS } from "../models/resource-type.model";
-import { STATUS_RESOURCE_LABELS, StatusResourceEnum } from "../models/status-resource.model";
+import { STATUS_RESOURCE_LABELS, STATUS_RESOURCE_SEVERITY, StatusResourceEnum } from "../models/status-resource.model";
 import { Subscription } from "rxjs";
 import { PageHeaderService } from '../../../core/services/page-header.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -76,6 +76,7 @@ export class ResourcesPage implements OnInit, OnDestroy {
       nonNullable: true,
       validators: Validators.required,
     }),
+    assetCode: new FormControl(''),
     serialNumber: new FormControl(''),
     price: new FormControl<number>(0, {
       nonNullable: true,
@@ -112,6 +113,7 @@ export class ResourcesPage implements OnInit, OnDestroy {
     this.form.reset({
       modelId: '',
       type: ResourceTypeEnum.OTHER,
+      assetCode: '',
       serialNumber: '',
       price: 0,
       observations: '',
@@ -127,6 +129,7 @@ export class ResourcesPage implements OnInit, OnDestroy {
       {
         modelId: resource.modelId ?? '',
         type: resource.type,
+        assetCode: resource.assetCode ?? '',
         serialNumber: resource.serialNumber ?? '',
         price: resource.price ?? 0,
         observations: resource.observations ?? '',
@@ -152,7 +155,10 @@ export class ResourcesPage implements OnInit, OnDestroy {
       return;
     }
 
+    const assetCode = this.form.controls.assetCode.value?.trim() || '';
+
     const payload = {
+      ...(assetCode ? { assetCode } : {}),
       serialNumber: this.form.controls.serialNumber.value?.trim() || null,
       modelId: this.form.controls.modelId.value,
       type: this.form.controls.type.value,
@@ -198,6 +204,11 @@ export class ResourcesPage implements OnInit, OnDestroy {
   protected getStatusLabel(status: StatusResourceEnum | string): string {
     const key = status as StatusResourceEnum;
     return STATUS_RESOURCE_LABELS[key] || String(status);
+  }
+
+  protected getStatusSeverity(status: StatusResourceEnum | string): TagSeverity {
+      const key = status as StatusResourceEnum;
+      return STATUS_RESOURCE_SEVERITY[key] || 'secondary';
   }
 
   protected formatDate(value?: string | null): string {

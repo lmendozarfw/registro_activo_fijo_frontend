@@ -53,7 +53,7 @@
                             <td>{{ m.activeLinePhoneNumber || '—' }} {{ m.activeLineOperator ? '('+m.activeLineOperator+')'
                                 : '' }}</td>
                             <td>{{ m.price != null ? (m.price | currency:'MXN':'symbol':'1.2-2') : '—' }}</td>
-                            <td><p-tag [value]="getStatusLabel(m.status)" /></td>
+                            <td><p-tag [value]="getStatusLabel(m.status)" [severity]="getStatusSeverity(m.status)" /></td>
                             <td>{{ m.observations || '—' }}</td>
                             <td>{{ formatDate(m.createdAt) }}</td>
                             <td>{{ formatDate(m.updatedAt) }}</td>

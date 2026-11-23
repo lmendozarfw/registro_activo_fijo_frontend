@@ -35,7 +35,7 @@ import { SidebarHeaderComponent } from '../components/sidebar-menu/sidebar-heade
           iconWidth="47px"
         >
           <p-sidebar-spacer />
-          <p-sidebar-aside class="relative overflow-hidden bg-[radial-gradient(120%_120%_at_0%_0%,rgba(239,68,68,0.28)_0%,transparent_58%),radial-gradient(140%_140%_at_100%_100%,rgba(225,29,72,0.22)_0%,transparent_62%),linear-gradient(180deg,#050506_0%,#020203_100%)] text-slate-100 border-r border-white/5" style="color-scheme: dark;">
+          <p-sidebar-aside class="relative overflow-hidden bg-canvas! text-slate-100 border-r border-white/5" style="color-scheme: dark;">
             <div class="pointer-events-none absolute -left-24 top-0 size-64 rounded-full bg-brand-500/20 blur-[90px]"></div>
             <div class="pointer-events-none absolute -right-28 bottom-10 size-72 rounded-full bg-rose-600/16 blur-[110px]"></div>
             <p-sidebar-panel class="relative">
