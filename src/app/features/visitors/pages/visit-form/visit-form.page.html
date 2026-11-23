@@ -206,14 +206,34 @@
               <p class="mt-0.5 text-xs text-neutral-500">
                 @if (isEditing()) {
                   No modificable en una visita programada.
+                } @else if (highRiskActivity()) {
+                  No disponible en visitas de alto riesgo.
                 } @else {
                   Registra la entrada de inmediato, sin programación previa.
                 }
               </p>
             </div>
-            <p-toggleswitch formControlName="isWalkIn" [disabled]="isEditing()" />
+            <p-toggleswitch
+              formControlName="isWalkIn"
+              [disabled]="isEditing() || highRiskActivity()"
+            />
           </div>
         </div>
+
+        @if (form.errors?.['highRiskWalkInConflict'] && submitted()) {
+          <span class="text-xs text-rose-600">
+            Una visita de alto riesgo no puede registrarse como walk-in.
+          </span>
+        }
+
+        @if (highRiskActivity() && !isEditing()) {
+          <div
+            class="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800"
+          >
+            Las visitas de alto riesgo se programan: carga los documentos desde el detalle y
+            después inicia la visita.
+          </div>
+        }
 
         @if (!isWalkIn()) {
           <div class="grid grid-cols-1 gap-4 md:grid-cols-2">

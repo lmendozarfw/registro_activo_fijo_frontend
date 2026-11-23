@@ -125,8 +125,13 @@
       <div
         class="rounded-lg bg-neutral-50 px-3 py-2 text-xs text-neutral-600"
       >
-        Esta visita está finalizada o cancelada. La información, los visitantes y los documentos son
-        de solo consulta.
+        @if (visit.status === 'STARTED') {
+          Esta visita ya fue iniciada. La información, los visitantes y los documentos son de solo
+          consulta.
+        } @else {
+          Esta visita está finalizada o cancelada. La información, los visitantes y los documentos
+          son de solo consulta.
+        }
       </div>
     }
 
@@ -163,15 +168,15 @@
           </div>
           <div>
             <dt class="text-xs text-neutral-500">Motivo</dt>
-            <dd class="mt-0.5 font-medium text-neutral-800">{{ visit.reason }}</dd>
+            <dd class="mt-0.5 font-medium text-neutral-800">{{ visit.reason || '—' }}</dd>
           </div>
           <div>
             <dt class="text-xs text-neutral-500">Unidad de negocio</dt>
-            <dd class="mt-0.5 text-neutral-800">{{ visit.businessUnitName }}</dd>
+            <dd class="mt-0.5 text-neutral-800">{{ visit.businessUnitName || '—' }}</dd>
           </div>
           <div>
             <dt class="text-xs text-neutral-500">Departamento</dt>
-            <dd class="mt-0.5 text-neutral-800">{{ visit.departmentName }}</dd>
+            <dd class="mt-0.5 text-neutral-800">{{ visit.departmentName || '—' }}</dd>
           </div>
           <div>
             <dt class="text-xs text-neutral-500">Anfitrión</dt>
@@ -226,7 +231,11 @@
         <div>
           <h2 class="text-sm font-semibold text-neutral-800">Visitantes</h2>
           <p class="text-xs text-neutral-500">
-            Define el acceso, registra equipos y carga documentos de cada visitante.
+            @if (canManage()) {
+              Define el acceso, registra equipos y carga documentos de cada visitante.
+            } @else {
+              Consulta el acceso, los equipos y los documentos de cada visitante.
+            }
           </p>
         </div>
         @if (canManage()) {

@@ -50,6 +50,12 @@ function endAfterStart(group: AbstractControl): ValidationErrors | null {
   return end.getTime() > start.getTime() ? null : { endBeforeStart: true };
 }
 
+function highRiskWalkInConflict(group: AbstractControl): ValidationErrors | null {
+  const isHighRisk = group.get('highRiskActivity')?.value === true;
+  const isWalkIn = group.get('isWalkIn')?.value === true;
+  return isHighRisk && isWalkIn ? { highRiskWalkInConflict: true } : null;
+}
+
 @Component({
   selector: 'app-visit-form-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -124,14 +130,20 @@ export class VisitFormPage implements OnInit {
       scheduledEndAt: new FormControl<Date | null>(null),
       visitors: new FormArray<FormControl<string>>([this.createVisitorControl()]),
     },
-    { validators: [scheduleRequired, endAfterStart] },
+    { validators: [scheduleRequired, endAfterStart, highRiskWalkInConflict] },
   );
 
   private readonly isWalkInValue = toSignal(this.form.controls.isWalkIn.valueChanges, {
     initialValue: this.form.controls.isWalkIn.value,
   });
 
+  private readonly highRiskActivityValue = toSignal(
+    this.form.controls.highRiskActivity.valueChanges,
+    { initialValue: this.form.controls.highRiskActivity.value },
+  );
+
   protected readonly isWalkIn = computed(() => this.isWalkInValue() === true);
+  protected readonly highRiskActivity = computed(() => this.highRiskActivityValue() === true);
 
   constructor() {
     effect(() => {
@@ -153,6 +165,13 @@ export class VisitFormPage implements OnInit {
         if (!isWalkIn) return;
         this.form.controls.scheduledStartAt.reset(null, { emitEvent: false });
         this.form.controls.scheduledEndAt.reset(null, { emitEvent: false });
+      });
+
+    this.form.controls.highRiskActivity.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((highRiskActivity) => {
+        if (!highRiskActivity) return;
+        this.form.controls.isWalkIn.setValue(false);
       });
 
     void Promise.all([
@@ -240,7 +259,7 @@ export class VisitFormPage implements OnInit {
     this.submitted.set(true);
     console.log({form: this.form});
     console.log('es invalido ?', this.form.invalid);
-    if (this.form.invalid) {
+    if (this.form.errors?.['highRiskWalkInConflict'] || this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }

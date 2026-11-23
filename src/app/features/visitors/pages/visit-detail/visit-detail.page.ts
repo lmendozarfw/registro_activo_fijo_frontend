@@ -97,10 +97,7 @@ export class VisitDetailPage implements OnInit {
     () => this.visitors().filter((visitor) => visitor.accessStatus === 'DENIED').length,
   );
 
-  protected readonly canManage = computed(() => {
-    const status = this.detail()?.status;
-    return status === 'SCHEDULED' || status === 'STARTED';
-  });
+  protected readonly canManage = computed(() => this.detail()?.status === 'SCHEDULED');
   protected readonly canEditVisit = computed(() => this.detail()?.status === 'SCHEDULED');
   protected readonly canStart = computed(() => this.detail()?.status === 'SCHEDULED');
   protected readonly canFinish = computed(() => this.detail()?.status === 'STARTED');
@@ -270,6 +267,7 @@ export class VisitDetailPage implements OnInit {
   }
 
   protected async saveVisitor(): Promise<void> {
+    if (!this.canManage()) return;
     this.visitorSubmitted.set(true);
     if (this.visitorForm.invalid) {
       this.visitorForm.markAllAsTouched();
@@ -310,6 +308,7 @@ export class VisitDetailPage implements OnInit {
     visitor: VisitVisitorDto,
     accessStatus: 'PERMIT' | 'DENIED',
   ): Promise<void> {
+    if (!this.canManage()) return;
     const detail = this.detail();
     if (!detail) return;
     await this.store.setVisitorAccess(detail.id, visitor.id, accessStatus);
@@ -346,6 +345,7 @@ export class VisitDetailPage implements OnInit {
   }
 
   protected async saveEquipment(): Promise<void> {
+    if (!this.canManage()) return;
     this.equipmentSubmitted.set(true);
     if (this.equipmentForm.invalid) {
       this.equipmentForm.markAllAsTouched();
@@ -480,6 +480,7 @@ export class VisitDetailPage implements OnInit {
   }
 
   protected async uploadDocument(): Promise<void> {
+    if (!this.canManage()) return;
     this.documentSubmitted.set(true);
 
     const file = this.selectedDocumentFile();
@@ -543,6 +544,11 @@ export class VisitDetailPage implements OnInit {
   protected async runConfirm(): Promise<void> {
     const state = this.confirmState();
     if (!state) return;
+
+    if (state.kind !== 'status' && !this.canManage()) {
+      this.closeConfirm();
+      return;
+    }
 
     const success = await state.action();
     if (success) this.closeConfirm();
