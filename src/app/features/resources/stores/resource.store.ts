@@ -159,7 +159,7 @@ export const ResourceStore = signalStore(
           await firstValueFrom(resourceService.softRemove(id));
           patchState(store, { saving: false });
           toast.success('Recurso eliminado');
-          await this.loadAll();
+          await this.loadActive();
           return true;
         } catch (error) {
           const message = resolveErrorMessage(error, 'No se pudo eliminar el recurso');
