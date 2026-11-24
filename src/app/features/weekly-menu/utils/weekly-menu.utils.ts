@@ -31,6 +31,25 @@ export function todayDateOnly(): string {
   return toDateOnly(new Date()) ?? '';
 }
 
+export function getIsoWeekInfo(
+  date: Date | null | undefined,
+): { week: number; year: number } | null {
+  if (!date || Number.isNaN(date.getTime())) return null;
+
+  const target = new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()),
+  );
+  target.setUTCDate(target.getUTCDate() + 4 - (target.getUTCDay() || 7));
+
+  const year = target.getUTCFullYear();
+  const yearStart = new Date(Date.UTC(year, 0, 1));
+  const week = Math.ceil(
+    ((target.getTime() - yearStart.getTime()) / 86_400_000 + 1) / 7,
+  );
+
+  return { week, year };
+}
+
 export function isValidDateRange(
   startDate: string | null | undefined,
   endDate: string | null | undefined,

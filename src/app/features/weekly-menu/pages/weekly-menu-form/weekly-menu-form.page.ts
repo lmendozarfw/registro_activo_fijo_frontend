@@ -27,6 +27,7 @@ import { WeeklyMenuDto } from '../../models/weekly-menu.model';
 import { WeeklyMenuStore } from '../../stores/weekly-menu.store';
 import {
   fromDateOnly,
+  getIsoWeekInfo,
   hasOverlappingWeeklyMenu,
   resolveWeeklyMenuStatus,
   toDateOnly,
@@ -90,6 +91,12 @@ export class WeeklyMenuFormPage implements OnInit {
   protected readonly endDateValue = toSignal(
     this.form.controls.endDate.valueChanges,
     { initialValue: this.form.controls.endDate.value },
+  );
+
+  protected readonly currentWeek = getIsoWeekInfo(new Date());
+
+  protected readonly selectedWeek = computed(() =>
+    getIsoWeekInfo(this.startDateValue()),
   );
 
   protected readonly dateRangeInvalid = computed(() => {
